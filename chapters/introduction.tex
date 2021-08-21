@@ -1,0 +1,33 @@
+%!TEX root = ../dissertation.tex
+
+\chapter{Introduzione}
+\section{Contesto progetto}
+L'azienda Estilos, attiva già da diversi anni nella consulenza informatica rivolta alle aziende, è specializzata in customizzazioni del popolare gestionale SAP.\\
+Il software gestionale SAP è organizzato a moduli, che possono essere collegati tra loro mettendo in comune le informazioni secondo le esigenze specifiche dei clienti, uno di questi moduli è l'e-commerce hybris, il quale permette alle aziende possessori di SAP di avere un canale online per la vendita integrato con il resto dei sistemi di gestione.\\ 
+In quest'ottica l'azienda A, cliente di Estilos, si è prestata mettendo a disposizione il proprio storico vendite relativo al modulo e-commerce hybris.\\
+Il modulo hybris non è provvisto di un sistema di raccomandazione integrato che permettesse di personalizzare i prodotti consigliati ai diversi utenti, quindi l'azienda al momento mostra per tutti la stessa lista di prodotti e per ogni prodotto è stata selezionata una lista di prodotti complementari e simili a mano.
+
+\section{L'idea}
+Partendo quindi dallo storico vendite del modulo hybris, l'idea era quella di andare ad estrarre dai dati informazioni relative l'interesse di un cliente verso un prodotto rispetto diversi punti di vista, come può essere la quantità acquistata, la recentezza dell'acquisto o la spesa totale per quello specifico articolo.\\
+Una volta organizzate le informazioni in delle matrici cliente-prodotto grezze, si voleva eseguire una sorta di preprocessing su di esse, andando a trasformarle in delle valutazioni d'interesse del cliente rispetto il prodotto. \\
+Fatto questo vi si voleva applicare un sistema di raccomandazione basato su collaborative filtering e content-based filtering, utilizzando diversi algoritmi e affrontando i problemi del popularity bias e del cold start. 
+
+\section{Organizzazione del testo}
+Di seguito viene riportata per ogni capitolo una piccola descrizione delle tematiche trattate:
+\begin{itemize}
+	\item \hyperlink{(chap:capitolo2)}{\textbf{Capitolo 2}}: viene delineato indicativamente una distribuzione temporale del lavoro rispetto le diverse parti della tesi;
+	\item \hyperlink{(chap:capitolo3)}{\textbf{Capitolo 3}}: viene mostrato come sono inizialmente organizzati i dati, come sono stati trattati e quali informazioni si è potuto ricavare;
+	\item \hyperlink{(chap:capitolo4)}{\textbf{Capitolo 4}}: viene fatto un breve riepilogo della teoria sui sistemi di raccomandazione, spiegando meglio gli approcci del collaborative filtering e del content based filtering, oltre che spiegando il funzionamento degli algoritmi utilizzati e delle metriche;
+	\item \hyperlink{(chap:capitolo5)}{\textbf{Capitolo 5}}: vengono spiegate le diverse tecniche di preprocessing utilizzate per trasformare i dati grezzi in valutazioni.
+	\item \hyperlink{(chap:capitolo6)}{\textbf{Capitolo 6}}: viene riportata una descrizione della libreria Cornac, dove sono implementati modelli e metriche per l'esecuzione di test;
+	\item \hyperlink{(chap:capitolo7)}{\textbf{Capitolo 7}}: vengono mostrati i risultati delle metriche rispetto i diversi algoritmi applicati al preprocessing dei dati;
+	\item \hyperlink{(chap:capitolo8)}{\textbf{Capitolo 8}}: vengono mostrati i risultati delle metriche rispetto i diversi algoritmi applicati al preprocessing dei dati nella loro versione combinata;
+	\item \hyperlink{(chap:capitolo9)}{\textbf{Capitolo 9}}: vengono riportate le conclusioni del lavoro svolto, andando a delineare problemi risolti, criticità e sviluppi per il futuro;
+\end{itemize}
+\section{Convenzioni tipografiche}
+Il testo adotta le seguenti convenzioni tipografiche:
+\begin{itemize}
+	\item ogni acronimo, abbreviazione, parola ambigua o tecnica viene spiegata e chiarificata alla fine del testo;
+	\item ogni parola di glossario alla prima apparizione verrà etichetta come segue: $parola^{[g]}$;
+	\item ogni riga di un elenco puntato terminerà con un ; a parte l'ultima riga che si concluderà con un punto.
+\end{itemize}

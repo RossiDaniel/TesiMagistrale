@@ -1,0 +1,131 @@
+%!TEX root = ../dissertation.tex
+
+\hypertarget{(chap:capitolo3)}{}
+\chapter{Analisi dei dati}
+\section{Principali tabelle}
+Come detto precedentemente i dati sono lo storico vendite dell'azienda A estratti dal modulo hybris, questi sono organizzati secondo le tabelle SAP, avremo quindi lo storico delle fatture, dove avremo una tabella per la testata della fattura, ossia la parte descrittiva dove viene riportato l'acquirente, e una tabella per le posizioni della fattura, ossia la parte dovve vengono riportati i materiali acquistati. Abbiamo inoltre due tabelle che riportato rispettivamente l'anagrafica cliente e materiali, dove possiamo trovare informazioni aggiuntive che li descrivono.\\Mi è stata inoltre fornita anche una tabella glossario che riportava per ciascuna tabella una breve spiegazione di ogni campo. \\
+Tutte queste tabelle sono state estratte sotto forma di excel.
+
+Quindi ricapitolando le principali tabelle disponibili sono le seguenti:
+\begin{itemize}
+	\item \textbf{VBAK}: testata della fattura;
+	\item \textbf{VBAP}: posizioni della fattura;
+	\item \textbf{MARA}: anagrafica prodotto;
+	\item \textbf{KNA1}: anagrafica materiali.
+\end{itemize}
+
+Andiamo ora a vedere per ciascuna di queste tabelle i campi annessi e alcune informazioni di natura statistica:
+\subsection{Tabella VBAK}
+La tabella VBAK contiene la testata di circa 35000 fatture, datate dall'anno 2016 fino a maggio 2021.\\
+Ciascuna riga della tabella riporta :
+\begin{itemize}
+	\item \textbf{VBELN}: codice univoco che identifica la fattura;
+	\item \textbf{KUNNR}: codice cliente che identifica l'acquirente;
+	\item \textbf{ERDAT}: data emissione fattura;
+	\item \textbf{ERZET}: orario emisisone fattura;
+	\item \textbf{NETWR}: importo totale fattura;
+	\item \textbf{WAERK}: EUR/USD.
+\end{itemize}
+
+\subsection{Tabella VBAP}
+Ciascuna riga della tabella testata fattura riporta le seguenti informazioni:
+\begin{itemize}
+	\item \textbf{VBELN}: codice della fattura di appartenenza;
+	\item \textbf{MATNR}: codice univoco che identifica materiale;
+	\item \textbf{NETPR}: prezzo netto singola unità;
+	\item \textbf{KWMENG}: quantità acquistata;
+	\item \textbf{NETPR}: prezzo netto;
+	\item \textbf{NETWR}: spesa totale;
+	\item \textbf{WAERK}: EUR/USD.
+\end{itemize}
+
+\subsection{Tabella KNA1}
+Ciascuna riga della tabella anagrafica clienti riporta le seguenti informazioni:
+\begin{itemize}
+	\item \textbf{KUNNR}: codice cliente;
+	\item \textbf{LAND1}: codice paese origine;
+	\item \textbf{NAME1}: nome azienda cliente;
+	\item \textbf{ORT01}: località; 
+	\item \textbf{REGIO}: regione.
+\end{itemize}
+
+\subsection{Tabella MARA}
+Ciascuna riga della tabella anagrafica materiali riporta le seguenti informazioni:
+\begin{itemize}
+	\item \textbf{MATNR}: codice univoco che identifica materiale;
+	\item \textbf{MATKL}: codice gruppo merceologico;
+	\item \textbf{GROES}: dimensioni materiali nel formato (lunghezza X larghezza X altezza);
+	\item \textbf{NTGEW}: peso netto;
+	\item \textbf{GEWEI}: unità di misura del peso;
+	\item \textbf{VOLUM}: volume;
+	\item \textbf{VOLEH}: unità di misura del volume;
+	\item \textbf{LAENG}: lunghezza;
+	\item \textbf{BREIT}: larghezza;
+	\item \textbf{HOEHE}: altezza;
+	\item \textbf{MEABM}: unità di misura lunghezza, larghezza, altezza;
+	\item \textbf{PRODH}: codice gerarchia prodotto; 
+	\item \textbf{MAKTX}: descrizione testuale materiale.
+\end{itemize}
+
+
+\section{Prodotti}
+Nelle sezioni precedenti abbiamo parlato di materiali, l'utilizzo di questo termine è dovuto al fatto che la tabella rappresenta un aggregato di prodotti di natura diversa, sono catalogati come materiali anche i macchinari pronti per la vendita ma anche materiali usati per il loro assemblaggio oltre che ricambi e accessori.\\
+Da questo momento in poi faremo riferimento a loro come prodotti in quanto è possibile acquistarli attraverso l'e-commerce.\\
+In totale nella tabella anagrafica materiali (MARA) sono presenti circa 75000 prodotti univoci, mentre i prodotti effettivamente venduti risultano essere molti meno attestandosi all'incirca verso gli 8000.\\
+Le informazioni riguardo volume e peso sono molto rade infatti rispettivamente il $10\%$ e $20\%$ dei prodotti è provvisto di queste informazioni. \\
+Abbiamo però due campi interessanti che riguardano la gerarchia prodotto (PRODH) e il gruppo merceologico (MATKL), questi due campi ci permettono di studiare la similarità dei prodotti.
+
+\subsection{Gerarchia prodotto (PRODH)}
+Il campo gerarchia prodotto è un campo numerico di 18 cifre utile per separare i prodotti rispetto diverse categorie su più livelli.
+Nella tabella secondaria T179 vengono definiti i livelli di gerarchia e le diverse categorie. 
+Vediamoli di seguito:
+\begin{itemize}
+	\item \textbf{PRODH}: codice gerarchia prodotto;
+	\item \textbf{STUFE}: livello gerarchia;
+	\item \textbf{VTEXT}: descrizione testuale;
+\end{itemize} 
+
+Ciascun codice gerarchia prodotto (PRODH) contenuto nella tabella T179 avrà rispettivamente il seguente numero di cifre in base al livello di gerarchia (STUFE):
+\begin{itemize}
+	\item \textbf{STUFE = 1}: 1° livello della gerarchia, il codice sarà di 5 cifre.
+	\item \textbf{STUFE = 2}: 2° livello della gerarchia, il codice sarà di 10 cifre, dove le prime 5 identificano la categoria di 1° livello a cui appartengono mentre le restanti 5 indentificano la sotto-categoria di 2° livello.
+	\item \textbf{STUFE = 3}: 3° livello della gerarchia, il codice sarà di 18 cifre, dove le prime 10 identificano la categoria di 2° livello a cui appartengono mentre le restanti 8 indentificano la sotto-categoria di 3° livello.
+\end{itemize}
+
+Ciascun prodotto sarà quindi provvisto di un codice di 18 cifre che gli assegna una categoria per ogni livello della gerarchia.
+Inizialmente le categorie di 1° livello erano:\\
+
+
+\begin{minipage}{.5\textwidth}
+	\begin{tabular}{|c|c|}
+		\toprule
+		PRODH &                   VTEXT \\
+		\midrule
+		00010 &              Lavasciuga \\
+		00020 &             Spazzatrici \\
+		00030 &            Monospazzole \\
+		00040 &              Aspiratori \\
+		00050 &      Car washing system \\
+		00090 &     Ricambi / accessori \\
+		00100 & LAVASCIUGA UOMO A TERRA \\
+		00200 & LAVASCIUGA UOMO A BORDO \\
+		00250 &            SANIFICATORI \\
+		00300 &             SPAZZATRICI \\
+		00400 &            MONOSPAZZOLE \\
+		00500 &              ASPIRATORI \\
+		00600 &          WASHING SYSTEM \\
+		00700 &         SISTEMI RICICLO \\
+		00900 &     RICAMBI \& ACCESSORI \\
+		00950 &               CHEMICALS \\
+		09999 &                   ALTRO \\
+		\bottomrule
+		\end{tabular}
+\end{minipage}% This must go next to `\end{minipage}`
+  \begin{minipage}{.5\textwidth}
+	TEXT 2
+  \end{minipage}
+
+
+
+
+
