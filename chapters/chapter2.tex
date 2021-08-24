@@ -2,147 +2,41 @@
 
 \hypertarget{(chap:capitolo2)}{}
 \chapter{Processi e metodologie}
-In questo capitolo verranno riportati in modo approfondito lo scopo e gli obiettivi dello stage, contestualizzazione delle attività alla realtà aziendale e scadenzario delle stesse.
+In questo capitolo andremo a vedere più nel dettaglio il contesto e i motivi che hanno portato all'attivazione della collaborazione nonché gli obiettivi che si volevano raggiungere. 
 
 \section{Contesto}
-Il progetto generale nasce dalla visione di Filippo Sottovia, titolare dell'azienda, di realizzare un software decisionale di supporto che permettesse di soddisfare molteplici obiettivi quali:
+L'azienda Estilos lavora ormai da molti anni nella customizzazione del famoso gestionale SAP, cerchiamo di dare un po' di contesto riguardo questo prodotto software.
+Il software SAP \textit{(System Application and Product in data processing)} è un sistema di tipo ERP \textit{(Enterprise Resource Planning)}, ossia permette la gestione dei processi di businnes e delle funzioni aziendali tramite l'ausilio di un unico software modulare dove la raccolta dei dati è centralizzata.
+SAP è software leader del mercato grazie a queste ed altre caratteristiche:
 \begin{itemize}
-	\item agevolazione degli operatori nello svolgimento delle loro mansioni;
-	\item facilitazione del processo decisionale richiedendo così lavoratori meno esperti;
-	\item nascita di nuove attività frutto del tempo risparmiato grazie all'aumento della produttività;
-	\item condivisione in tempo reale delle informazioni sullo stato dei trasporti;
-	\item stima di costi e profitti disponibile in ogni momento.
+	\item \textbf{Modularità}: in quanto ogni funzione dell'azienda dispone di un modulo proprio che permette di svolgere tutte le funzioni necessarie;
+	\item \textbf{Integrabilità}: dato che i dati sono centralizzati, i diversi moduli sono integrati condividendo i dati tra loro;
+	\item \textbf{Customizzabilità}: è possibile modificare  integrando nuove funzionalità.
 \end{itemize}
 
-Il software fornisce un'interfaccia grafica web intuitiva che fa dell'usabilità la propria punta di diamante. Essa infatti persegue l'idea di rendere il più semplice possibile operare sul sistema senza però mancare di professionalità. Il sistema inoltre è equipaggiato con algoritmi che permettono di ottimizzare gli ordini organizzando al meglio le merci da trasportare ripartendole nei diversi camion della flotta, tenendo conto degli orari di carico e scarico, delle sedi dei clienti/fornitori, delle condizioni di traffico sulle strade, delle pause dovute per legge agli autisti e della particolarità delle merci.
+SAP ERP è quindi un insieme di moduli utilizzabili anche singolarmente, quali:
+\begin{itemize}
+	\item \textbf{SAP ECC}: modulo per gestire contabilità, logistica e risorse umane;
+	\item \textbf{SAP CRM \textit{(Customer Relationship Management)}}: modulo che si occupa di tutte le modalità di gestione delle relazioni con il cliente;
+	\item \textbf{SAP SRM \textit{(Supplier Relationship Management)}}: modulo per la gestione dei rapporti coi fornitori;
+	\item \textbf{SAP PLM \textit{(Product Lifecycle Management)}}: modulo per la gestione del ciclo di vita del prodotto;
+	\item \textbf{SAP SCM \textit{(Supply Chain Management)}}: modulo per la gestione della catena di fornitura dal fornitore al cliente;
+\end{itemize}
+
+Come detto Estilos si occupa di realizzare customizzazioni dei moduli SAP con particolare attenzione all'applicare elementi di intelligenza artificiale ai processi aziendali, siano essi gestionali o della customer experience, questo permette alle aziende di innovarsi intraprendendo la strada della cognitive enterprise, dove l'IA applicata ai dati supporta il processo decisionale delle aziende.
 
 \section{Introduzione al progetto}
-L'azienda per permettere di stimare lo spazio occupato dalle merci ha sviluppato un'\glo{euristica}, questa riceve in input le merci da trasportare divise nei diversi ordini di consegna, le approssima a parallelepipedi e le dispone al meglio sul pianale del camion, sovrapponendole dove possibile, con l'obiettivo di ridurre al minimo lo spazio lineare occupato dalle stesse, così facendo si risparmia spazio per eventuali altre merci da caricare qualora arrivassero nuovi ordini.
-A rendere ancora più complicato il lavoro dell'euristica riportiamo quattro principali problemi da tenere in considerazione:
-\begin{itemize}
-	\item Stabilità degli oggetti: la faccia inferiore di ciascun oggetto deve poggiare per intero sulle facce superiori di altri oggetti sotto di sé o sul pianale del camion;
-	\item Sequenza di scarico: ogni oggetto deve poter essere scaricato lateralmente o frontalmente, questo implica che non può avere intorno a sé merci che ne blocchino lo scarico, in quanto appartenenti ad ordini successivi;
-	\item Baricentro degli oggetti: il peso delle merci deve essere equamente distribuito sul pianale del camion;
-	\item Sovrapponibilità delle merci: alcune merci non sono sovrapponibili.
-\end{itemize}
+Ciascuno di questi moduli di SAP ERP è formato da componenti che permettono di gestire specifici aspetti. Nel caso del SAP CRM, una delle più recenti componenti è la componente e-commerce hybris perfettamente integrato con il resto del sistema. Questa può essere configurato seguendo diverse ricette, per esempio ottenendo un e-commerce BTB o BTC, nel nostro caso l'e-commerce era di tipo BTB, quindi chi acquista prodotti dall'azienda A sono a loro volta aziende che li rivendereanno / noleggeranno, vengono definiti per l'appunto come dealer. Il progetto si proponeva quindi di studiare l'applicazione di un sistema di raccomandazione al suddetto e-commerce, infatti allo stato attuale viene mostrata la stessa lista di prodotti statica per ciascun cliente e per ogni prodotto nella sua pagina associata vengono mostrati una serie di prodotti complementari e simili scelti dal reparto marketing dell'azienda. Quello che si voleva fare era provare diversi approcci per cercare di consigliare a ciascun cliente una lista di prodotti che gli risultassero interessanti. Solitamente le tecniche usate dai sistemi di raccomandazione per fare predizioni sono basate su rating, ossia valutazioni implicite / esplicite da parte del cliente sui prodotti con cui ha interagito, nel caso dello storico ordine non ne abbiamo, ma abbiamo i volumi di vendita e altre informazioni che ci possono permettere di individuare quali prodotti sono potenzialmente di maggior interesse rispetto agli altri.
 
 \section{Vincoli temporali, tecnologici e metodologici}
-Nel periodo di stage svolto presso l'azienda mi è stato chiesto di tenere un \textit{diario} condiviso utilizzando \bit{DropBox}{dropbox}, nel suddetto mi si richiedeva di annotare giornalmente l'avanzare del lavoro riportando idee e osservazioni emerse durante i \glo{brainstorming} quotidiani, criticità rilevate e positività riscontrate negli strumenti utilizzati. Nella cartella condivisa mi è stato chiesto di includere anche gli articoli accademici letti e le presentazioni fatte in azienda man mano che si proseguiva con lo stage.
+La collaborazione si è svolta presso l'azienda Estilos nella sua sede di Mestre (VE) nel periodo tra marzo 2021 e agosto 2021, la mia presenza fisica in azienda è stata di 3 giorni a settimana mentre i restanti 2 giorni in smart working a causa della situazione pandemica. 
+Nei primi due mesi della collaborazione si è proceduto ad uno studio del contesto del progetto e delle dinamiche di vendita, nonché dell'installazione dell'e-commerce prima nella sua versione dockerizzata, poi nella sua versione standard. Una volta a disposizione si è proceduto a vedere le diverse pagine dell'e-commerce e come era diviso, infine ho approfondito nella letterature l'approccio del collaborative filtering.
+Nei successivi tre mesi ho condotto un'analisi dei dati per approfondire le diverse tipologie di prodotti e le informazioni associate allo storico vendite, ho provato diverse tecniche per trasformare tali informazioni in una misura di valutazione che ci permettesse di applicare gli approcci classici dei sistemi di raccomandazione, successivamente abbiamo indagato se fosse possibile attuare un approccio content-based con le informazioni disponibili sui prodotti, infine abbiamo provato l'approccio next basket recommendation in quanto affrontava il problema rispetto un'altra prospettiva.
 
-La presentazione di metà stage è stata un evento importante al quale ha presenziato tutto il team di sviluppo, parte del personale d'amministrazione e il Professor De Giovanni che mi ha fornito preziosi consigli sugli obiettivi su cui orientare gli sforzi per la seconda metà dello stage, alla luce di quanto ottenuto nella prima metà.
+Durante buona parte del periodo della collaborazione ho partecipato settimanalmente ad un colloquio aziendale dove venivano trattati temi terzi rispetto quelli della collaborazione e sempre settimanalmente ho discusso i miei progressi con il team aziendale che seguiva il progetto riguardo dubbi, criticità e soluzioni.
 
-Prima di iniziare lo stage è stato concordato con l'azienda un piano di lavoro su un totale di 320 ore, lavorando 5 giorni a settimana, 8 ore per ciascun giorno. 
+Prima dell'inizio della collaborazione si è concordato che la durata sarebbe stata di 5 mesi e che il sesto mese sarebbe stato utilizzato per la stesura di questo documento. 
 
-\section{Requisiti e obiettivi}
-Nell'elenco di seguito vengono riportati gli obiettivi dello stage, a corredo degli stessi vi sarà un codice univoco ed una breve descrizione.
-
-Ogni obiettivo è provvisto di un codice identificativo formato da una delle seguenti stringhe ob,de,op, che rappresentano il livello di importanza e da un numero incrementale positivo, che rispetta la seguente nomenclatura: 
-\begin{figure}[htp]
-	\centering
-	[importanza][identificativo].
-\end{figure}
-
-Il livello di importanza di ciascun obiettivo può essere uno tra i seguenti:
-\begin{itemize}
-	\item Obbligatorio: individuato dalla stringa \textit{ob}, sono obiettivi fondamentali per la riuscita del progetto, il loro soddisfacimento dovrà verificarsi obbligatoriamente entro la fine dello stage, pena il fallimento dello stesso;
-	\item Desiderabile: individuato dalla stringa \textit{de}, sono obiettivi secondari su cui però si nutre dell'interesse, il loro soddisfacimento è auspicabile entro la fine dello stage;
-	\item Opzionale: individuato dalla stringa \textit{op}, sono obiettivi di contorno su cui si nutre poco interesse, la loro realizzazione si verificherà nel momento in cui si dovessero soddisfare tutti gli obiettivi obbligatori e desiderabili prima della fine dello stage.
-\end{itemize}
-
-\subsection{Lista obiettivi}
-Si prevede lo svolgimento dei seguenti obiettivi:
-\begin{itemize}
-	\item Obbligatori
-	      \begin{itemize}
-	      	\item \underline{\textit{ob01}}: individuazione e analisi \textit{constraints} modello 2D;
-	      	\item \underline{\textit{ob02}}: modello matematico 2D con \textit{framework} di modellazione algebrica;
-	      	\item \underline{\textit{ob03}}: traduzione modello in Python con l'ausilio di Google OR-Tools;
-	      	\item \underline{\textit{ob04}}: test sul modello 2D e confronto con l'euristica;
-	      	\item \underline{\textit{ob05}}: individuazione e analisi \textit{constraints} modello 2DR; 
-	      	\item \underline{\textit{ob06}}: modello matematico 2DR con \textit{framework} di modellazione algebrica;
-	      	\item \underline{\textit{ob07}}: traduzione modello in Python con l'ausilio di Google OR-Tools;
-	      	\item \underline{\textit{ob08}}: test sul modello 2DR e confronto con l'euristica;
-	      \end{itemize}
-	\item Desiderabili
-	      \begin{itemize}
-	      	\item \underline{\textit{de01}}: individuazione e analisi \textit{constraints} modello 3D;
-	      	\item \underline{\textit{de02}}: modello matematico 3D con \textit{framework} di modellazione algebrica;
-	      	\item \underline{\textit{de03}}: traduzione modello in Python con l'ausilio di Google OR-Tools;
-	      	\item \underline{\textit{de04}}: test sul modello 3D e confronto con l'euristica;
-	      \end{itemize}
-	\item Opzionali
-	      \begin{itemize}
-	      	\item \underline{\textit{op01}}: evoluzione euristica, fornita dall'azienda, con nuove funzionalità;
-	      \end{itemize} 
-\end{itemize}
-
-\section{Pianificazione}
-Con le ore a disposizione per questo stage si è proceduto a organizzare come segue le attività:
-\begin{itemize}
-	\item \textbf{Formazione}: si è visto necessario approfondire la programmazione lineare e la letteratura correlata al problema del bin packing, imparare il linguaggio di programmazione \bit{Python}{python}, l'ambiente fornito dallo strumento \bit{Jupyter notebook}{jupyter} e imparare ad usare il framework \bit{Google Or-Tools}{ortools}.
-	\item \textbf{Modello 2D}: questo periodo di stage ha richiesto la prototipazione, realizzazione e test del modello 2D e il confronto con l'euristica.
-	\item \textbf{Modello 2DR}: questo periodo di stage ha richiesto la prototipazione, realizzazione e test del modello 2DR e il confronto con l'euristica.
-	\item \textbf{Modello 3D}: questo periodo di stage ha richiesto la prototipazione, realizzazione e test del modello 3D e il confronto con l'euristica.
-	\item \textbf{Lavoro sviluppo euristica}: periodo richiesto per realizzare delle funzionalità da integrare nell'euristica.
-\end{itemize}
-
-Ogni periodo di sviluppo di un modello sarà poi diviso a sua volta nelle seguenti attività:
-\begin{itemize}
-	\item analisi dei constraints
-	\item prototipazione 
-	\item test del modello
-	\item confronto con l'euristica.
-\end{itemize}
-\newpage
-La pianificazione delle attività è stata distribuita come mostrato nella Tabella \ref{tableofwork}.
-\begin{center}
-	\begin{tabular}{|l|l|c l|}
-		\hline
-		\multicolumn{2}{|l|}{\textbf{Durata in ore}}		&	\multicolumn{2}{l|}{\textbf{Descrizione dell'attività}}\\
-		\hline
-		\multicolumn{2}{|l|}{56}	&	\multicolumn{2}{l|}{\textbf{A}: Formazione}\\
-		\hline
-		\multirow{5}{1cm}{ } & 8  & \hspace{5mm}•\hspace{2mm} & Ricerca \textit{framework} di modellazione algebrica \\
-		\multirow{5}{1cm}{ } & 24 & \hspace{5mm}•\hspace{2mm} & Studio di tale \textit{framework}                    \\
-		\multirow{5}{1cm}{ } & 24 & \hspace{5mm}•\hspace{2mm} & Studio Google OR - Tools                             \\
-		\hline
-																											
-		\multicolumn{2}{|l|}{104}	&	\multicolumn{2}{l|}{\textbf{B}: Versione modello 2D}\\
-		\hline
-		\multirow{5}{1cm}{ } & 8  & \hspace{5mm}•\hspace{2mm} & Individuazione ed analisi \textit{constraints}       \\
-		\multirow{3}{1cm}{ } & 48 & \hspace{5mm}•\hspace{2mm} & Prototipazione modello                               \\
-		\multirow{5}{1cm}{ } & 24 & \hspace{5mm}•\hspace{2mm} & Traduzione in Python - Google OR - Tools             \\
-		\multirow{5}{1cm}{ } & 24 & \hspace{5mm}•\hspace{2mm} & Test e confronto con euristica                       \\	
-		\hline
-																											
-		\multicolumn{2}{|l|}{72}	&	\multicolumn{2}{l|}{\textbf{C}: Versione modello 2D con rotazione}\\
-		\hline
-		\multirow{5}{1cm}{ } & 8  & \hspace{5mm}•\hspace{2mm} & Individuazione ed analisi \textit{constraints}       \\
-		\multirow{3}{1cm}{ } & 24 & \hspace{5mm}•\hspace{2mm} & Prototipazione modello                               \\
-		\multirow{5}{1cm}{ } & 16 & \hspace{5mm}•\hspace{2mm} & Traduzione in Python - Google OR - Tools             \\
-		\multirow{5}{1cm}{ } & 16 & \hspace{5mm}•\hspace{2mm} & Test e confronto con euristica                       \\	
-		\hline
-																											
-		\multicolumn{2}{|l|}{72}	&	\multicolumn{2}{l|}{\textbf{D}: Versione modello 3D con sovrapposizione}\\
-		\hline
-		\multirow{5}{1cm}{ } & 8  & \hspace{5mm}•\hspace{2mm} & Individuazione ed analisi \textit{constraints}       \\
-		\multirow{3}{1cm}{ } & 32 & \hspace{5mm}•\hspace{2mm} & Prototipazione modello                               \\
-		\multirow{5}{1cm}{ } & 16 & \hspace{5mm}•\hspace{2mm} & Traduzione in Python - Google OR - Tools             \\
-		\multirow{5}{1cm}{ } & 24 & \hspace{5mm}•\hspace{2mm} & Test e confronto con euristica                       \\
-		\hline
-																													
-		\multicolumn{2}{|l|}{16}	&	\multicolumn{2}{l|}{\textbf{E}: Lavoro sviluppo euristica}\\
-		\hline
-		\multirow{5}{1cm}{ } & 16 & \hspace{5mm}•\hspace{2mm} & Realizzazione nuove funzioni euristica               \\
-		\hline
-		\multicolumn{2}{|l|}{\textbf{Totale: 320}}		&	\multicolumn{2}{l|}{}\\
-		\hline
-																												
-	\end{tabular}
-	\captionof{table}{Pianificazione concordata nel piano di lavoro}
-	\label{tableofwork}  
-\end{center}
-\newpage
 \section{Ambiente di lavoro}
 \subsection{Metodi di sviluppo}
 Il \glo{ciclo di vita} di un prodotto in Trans-Cel segue il \glo{modello incrementale}, formato da un periodo di concezione dell'idea, analisi della stessa, progettazione ed infine, partendo dagli obiettivi più importanti, si realizza il prodotto rilasciando periodicamente una versione dello stesso, che dovrà mostrare le nuove funzionalità sviluppate dimostrando così l'incremento fatto. In quest'ottica, lo sviluppo di un modello può essere associato ad un incremento, la cui \glo{milestone} è la ricezione dei risultati.
@@ -161,31 +55,3 @@ Per la totalità dello stage si è lavorato utilizzando \bit{Jupyter notebook}{j
 
 Questo linguaggio di programmazione è orientato agli oggetti ed interpretato dinamicamente al momento dell'esecuzione da un interprete. \bit{Python}{python} risulta veramente versatile in quanto fornisce incredibili funzionalità utilizzabili in modo semplice e intuitivo, dispone di moltissimi moduli che permettono le più svariate operazioni, inoltre è stato possibile, grazie alla libreria \bit{Boost}{boost}, esporre costrutti \bit{C++}{cpp} a \bit{Python}{python} permettendo di utilizzarli nei propri programmi, questo ha permesso di mantenere efficienza e modularità.
 
-\section{Analisi dei rischi}
-In questa sezione vengono riportati i principali rischi che si prefiguravano all'inizio dello stage. Ciascuno di essi oltre ad avere una breve descrizione riporta il livello di rischio, in termini di pericolosità per la riuscita dello stage e come si possa fare per evitarlo:
-\begin{itemize}
-	\item \textbf{Difficoltà nelle tecnologie adottate}\\
-	      Ad inizio stage è stato chiaro che \bit{Python}{python} avrebbe avuto un ruolo dominante nel progetto ma la mole di librerie ed estensioni rendeva il linguaggio troppo vasto da poter approfondire nella sua interezza, ed oltre a questo vi era il modulo \bit{Or-Tools}{ortools} e \bit{Pandas}{pandas} da approfondire e utilizzare.
-	      \begin{itemize}
-	      	\item \textbf{Livello di rischio}: Basso;
-	      	\item \textbf{Contromisure}: Studiare approfonditamente il linguaggio \bit{Python}{python} e i moduli sopra citati.
-	      \end{itemize}
-	\item \textbf{Difficoltà di integrazione nel team}\\
-	      Di fondamentale importanza per la riuscita di un progetto è la cooperazione con i colleghi e la creazione di un ambiente di lavoro sano e che stimoli la produttività, essendo un nuovo arrivato inserito in un ambiente soggetto a forte stress per le stringenti scadenze vi era la possibilità di entrare in conflitto con qualche collega.
-	      \begin{itemize}
-	      	\item \textbf{Livello di rischio}: Basso;
-	      	\item \textbf{Contromisure}: Perseguire un atteggiamento positivo, critico e oggettivo.
-	      \end{itemize}
-	\item \textbf{Contrattempi dovuti a malattie e impegni}\\
-	      Un rischio da tenere in considerazione è quello dovuto a impegni o malattie che precludano la possibilità di recarsi nel luogo di lavoro, data la durata dello stage è sicuramente possibile possa verificarsi.
-	      \begin{itemize}
-	      	\item \textbf{Livello di rischio}: Basso;
-	      	\item \textbf{Contromisure}: Organizzare precedentemente ogni impegno non lavorativo e tempo di \glo{slack} per evitare contrattempi.
-	      \end{itemize}
-	\item \textbf{Difficoltà di stima dei tempi previsti}\\
-	      Con un progetto di così lunga durata e l'inesperienza che ci portiamo appresso è possibile che vengano fatti degli errori di valutazione in termini di tempistiche per lo svolgimento delle diverse attività pianificate.
-	      \begin{itemize}
-	      	\item \textbf{Livello di rischio}: Medio;
-	      	\item \textbf{Contromisure}: Rendere partecipi nella definizione del piano di lavoro persone esperte, come il tutor aziendale e il project manager.
-	      \end{itemize}
-\end{itemize}
