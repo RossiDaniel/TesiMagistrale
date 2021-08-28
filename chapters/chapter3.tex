@@ -3,7 +3,8 @@
 \hypertarget{(chap:capitolo3)}{}
 \chapter{Analisi dei dati}
 \section{Principali tabelle}
-Come detto precedentemente i dati sono lo storico vendite dell'azienda A estratti dal modulo hybris, questi sono organizzati secondo le tabelle SAP, avremo quindi lo storico delle fatture, dove avremo una tabella per la testata della fattura, ossia la parte descrittiva dove viene riportato l'acquirente, e una tabella per le posizioni della fattura, ossia la parte dovve vengono riportati i materiali acquistati. Abbiamo inoltre due tabelle che riportato rispettivamente l'anagrafica cliente e materiali, dove possiamo trovare informazioni aggiuntive che li descrivono.\\Mi è stata inoltre fornita anche una tabella glossario che riportava per ciascuna tabella una breve spiegazione di ogni campo. \\
+Come detto precedentemente i dati sono lo storico vendite dell'azienda Cliente estratti dal modulo hybris, questi sono organizzati secondo le tabelle SAP, avremo quindi lo storico delle fatture, dove avremo una tabella per la testata della fattura, ossia la parte descrittiva dove viene riportato l'acquirente, e una tabella per le posizioni della fattura, ossia la parte dovve vengono riportati i materiali acquistati. Abbiamo inoltre due tabelle che riportato rispettivamente l'anagrafica cliente e materiali, dove possiamo trovare informazioni aggiuntive che li descrivono.\\
+Mi è stata inoltre fornita anche una tabella glossario che riportava per ciascuna tabella una breve spiegazione di ogni campo. \\
 Tutte queste tabelle sono state fornite in formato Excel.
 
 Quindi ricapitolando le principali tabelle disponibili sono le seguenti:
@@ -17,61 +18,21 @@ Quindi ricapitolando le principali tabelle disponibili sono le seguenti:
 Andiamo ora a vedere per ciascuna di queste tabelle i campi annessi e alcune informazioni di natura statistica:
 \subsection{Tabella VBAK}
 La tabella VBAK contiene la testata di circa 35000 fatture, datate dall'anno 2016 fino a maggio 2021.\\
-Ciascuna riga della tabella riporta :
-\begin{itemize}
-	\item \textbf{VBELN}: codice univoco che identifica la fattura;
-	\item \textbf{KUNNR}: codice cliente che identifica l'acquirente;
-	\item \textbf{ERDAT}: data emissione fattura;
-	\item \textbf{ERZET}: orario emisisone fattura;
-	\item \textbf{NETWR}: importo totale fattura;
-	\item \textbf{WAERK}: EUR/USD.
-\end{itemize}
+Ciascuna riga della tabella è la testata di una fattura e ne riporta il suo codice identificativo (\textbf{VBELN}) insieme con il codice del cliente a cui è associata (\textbf{KUNNR}). Inoltre ciascuna fattura riporta data e ora (\textbf{ERDAT}, \textbf{ERZET}) in cui è stata emessa e l'importo totale e valuta corrispondente (\textbf{NETWR}, \textbf{WAERK}).
 
 \subsection{Tabella VBAP}
-Ciascuna riga della tabella testata fattura riporta le seguenti informazioni:
-\begin{itemize}
-	\item \textbf{VBELN}: codice della fattura di appartenenza;
-	\item \textbf{MATNR}: codice univoco che identifica materiale;
-	\item \textbf{NETPR}: prezzo netto singola unità;
-	\item \textbf{KWMENG}: quantità acquistata;
-	\item \textbf{NETPR}: prezzo netto;
-	\item \textbf{NETWR}: spesa totale;
-	\item \textbf{WAERK}: EUR/USD.
-	\item \textbf{PRODH}: codice gerarchia prodotto storico; 
-\end{itemize}
+La tabella VBAP è la tabella che contiene le posizioni delle fatture, riporta per ogni fattura il numero prodotti acquistati riportando diverse informazioni, ci sono circa 250000 posizioni.
+Ciascuna riga della tabella riporta quindi il codice identificativo (\textbf{VBELN}) della fattura e il codice identificativo del prodotto acquistato (\textbf{MATNR}), poi vengono riportati per quel prodotto il prezzo unitario (\textbf{NETPR}), la quantità acquistata (\textbf{KWMENG}), la spesa totale con la valuta (\textbf{NETWR}, \textbf{WAERK}) e il codice gerarchia prodotto storico (\textbf{PRODH}), ossia quello salvato in MARA al momento del'emissione della fattura.
 
 \subsection{Tabella KNA1}
-Ciascuna riga della tabella anagrafica clienti riporta le seguenti informazioni:
-\begin{itemize}
-	\item \textbf{KUNNR}: codice cliente;
-	\item \textbf{LAND1}: codice paese origine;
-	\item \textbf{NAME1}: nome azienda cliente;
-	\item \textbf{ORT01}: località; 
-	\item \textbf{REGIO}: regione.
-\end{itemize}
+La tabella KNA1 riporta l'anagrafica cliente, abbiamo salvati circa 3000 clienti, per ciascuna riga abbiamo il codice cliente (\textbf{KUNNR}), il codice paese d'origine (\textbf{LAND1}), il nome dell'azienda (\textbf{NAME1}), la località (\textbf{ORT01}) e la regione (\textbf{REGIO}).
 
 \subsection{Tabella MARA}
-Ciascuna riga della tabella anagrafica materiali riporta le seguenti informazioni:
-\begin{itemize}
-	\item \textbf{MATNR}: codice univoco che identifica materiale;
-	\item \textbf{MATKL}: codice gruppo merceologico;
-	\item \textbf{GROES}: dimensioni materiali nel formato (lunghezza X larghezza X altezza);
-	\item \textbf{NTGEW}: peso netto;
-	\item \textbf{GEWEI}: unità di misura del peso;
-	\item \textbf{VOLUM}: volume;
-	\item \textbf{VOLEH}: unità di misura del volume;
-	\item \textbf{LAENG}: lunghezza;
-	\item \textbf{BREIT}: larghezza;
-	\item \textbf{HOEHE}: altezza;
-	\item \textbf{MEABM}: unità di misura lunghezza, larghezza, altezza;
-	\item \textbf{PRODH}: codice gerarchia prodotto; 
-	\item \textbf{MAKTX}: descrizione testuale materiale.
-\end{itemize}
-
+Come detto la tabella MARA è quella che riporta l'anagrafica dei materiali, nella nostra futura trattazione considereremo questi materiali come prodotti in quanto sono acquistabili all'interno dell'e-commerce.\\
+Ciascuna riga della tabella riporta quindi un prodotto univoco composto dal suo usuale codice identificativo (\textbf{MATNR}), dal codice della gerarchia prodotto (\textbf{PRODH}) e del gruppo merceologico (\textbf{MATKL}) e un breve descrizione testuale (\textbf{MAKTX}), poi abbiamo delle informazioni su dimensioni, volumi e peso, per le dimensioni abbiamo il campo (\textbf{GROES}) che fornisce le dimensioni nel formato (lunghezza X larghezza X altezza), oppure possiamo trovarli nei campi (\textbf{LAENG}, \textbf{BREIT}, \textbf{HOEHE}), rispettivamente lunghezza, larghezza e altezza con l'unità di misura delle dimensioni (\textbf{MEABM}), poi abbiamo per il volume il campo (\textbf{VOLUM}) con l'unità di misura (\textbf{VOLEH}), e per il peso il campo (\textbf{NTGEW}) con l'unità di misura (\textbf{GEEWI}).
 
 \section{Prodotti}
-Nelle sezioni precedenti abbiamo parlato di materiali, l'utilizzo di questo termine è dovuto al fatto che la tabella rappresenta un aggregato di prodotti di natura diversa, sono catalogati come materiali i macchinari pronti per la vendita ma anche materiali usati per il loro assemblaggio oltre che ricambi e accessori.\\
-Da questo momento in poi faremo riferimento a loro chiamandoli prodotti in quanto è possibile acquistarli attraverso l'e-commerce.\\
+Da questo momento in poi faremo riferimento ai materiali chiamandoli prodotti come detto in precedenza.\\
 In totale nella tabella anagrafica materiali (MARA) sono presenti circa 75000 prodotti diversi, mentre i prodotti effettivamente venduti risultano essere molti meno attestandosi all'incirca verso gli 8000.\\
 Abbiamo però due campi interessanti che riguardano la gerarchia prodotto (PRODH) e il gruppo merceologico (MATKL), questi due campi ci permettono di studiare la similarità dei prodotti.
 
@@ -102,26 +63,26 @@ Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
 		\toprule
 		PRODH &    \#tot &  \#sold &                  titolo \\
 		\midrule
-		00010 &    28 &    0 &              Lavasciuga \\
-		00020 &     0 &    0 &             Spazzatrici \\
-		00030 &     0 &    0 &            Monospazzole \\
-		00040 &     5 &    0 &              Aspiratori \\
-		00050 &     2 &    0 &      Car washing system \\
-		00090 &     2 &    0 &     Ricambi / accessori \\
-		00100 &  1117 &  173 & LAVASCIUGA UOMO A TERRA \\
-		00200 &   645 &  130 & LAVASCIUGA UOMO A BORDO \\
-		00250 &    31 &   11 &            SANIFICATORI \\
-		00300 &   405 &   92 &             SPAZZATRICI \\
-		00400 &   525 &   36 &            MONOSPAZZOLE \\
-		00500 &  1715 &   70 &              ASPIRATORI \\
-		00600 &   334 &    6 &          WASHING SYSTEM \\
-		00700 &     1 &    0 &         SISTEMI RICICLO \\
-		00900 & 70441 & 7702 &     RICAMBI \& ACCESSORI \\
-		00950 &    28 &    1 &               CHEMICALS \\
-		09999 &   215 &    0 &                   ALTRO \\
+		00010 &    28 &    0 &              categoria1 \\ %               Lavasciuga \\
+		00020 &     0 &    0 &              categoria2 \\ %              Spazzatrici \\
+		00030 &     0 &    0 &              categoria3 \\ %             Monospazzole \\
+		00040 &     5 &    0 &              categoria4 \\ %               Aspiratori \\
+		00050 &     2 &    0 &              categoria5 \\ %      Car washing system \\
+		00090 &     2 &    0 &              categoria6 \\ %      Ricambi / accessori \\
+		00100 &  1117 &  173 &              CATEGORIA1 \\ %  LAVASCIUGA UOMO A TERRA \\
+		00200 &   645 &  130 &              CATEGORIA2 \\ %  LAVASCIUGA UOMO A BORDO \\
+		00250 &    31 &   11 &              CATEGORIA3 \\ %             SANIFICATORI \\
+		00300 &   405 &   92 &              CATEGORIA4 \\ %              SPAZZATRICI \\
+		00400 &   525 &   36 &              CATEGORIA5 \\ %             MONOSPAZZOLE \\
+		00500 &  1715 &   70 &              CATEGORIA6 \\ %               ASPIRATORI \\
+		00600 &   334 &    6 &              CATEGORIA7 \\ %           WASHING SYSTEM \\
+		00700 &     1 &    0 &              CATEGORIA8 \\ %          SISTEMI RICICLO \\
+		00900 & 70441 & 7702 &              CATEGORIA9 \\ %      RICAMBI \& ACCESSORI \
+		00950 &    28 &    1 &             CATEGORIA10 \\ %                CHEMICALS \\
+		09999 &   215 &    0 &                   ALTRO \\ %                    ALTRO \\
 		\bottomrule
 		\end{tabular}
-		
+
 }
 \end{minipage}
 \begin{minipage}[H]{0.6\textwidth}
@@ -139,14 +100,14 @@ Inoltre le categorie SISTEMI RICICLO (00700) e CHEMICALS (00950), dato il basso 
 $PRODH$ &    $\#posizioni$ &  $\sum_{KWMENG}$ &  $\mathbb{E}_{KWMENG}$ &     $\mathbb{E}_{NETPR}$ &     $\sum_{NETWR}$ &     $\mathbb{E}_{NETWR}$ &      $titolo$\\
       &                  &              &              &       (€)      &      (€)       &        (€)     &            \\
 \midrule
-00100 &      5908 &    15461 &    2.61 &   1613.44 &   3865.97 &  22840167.61 &  LAVASCIUGA UOMO A TERRA \\
-00200 &      1936 &     3219 &    1.66 &   5898.09 &   8640.59 &  16745496.87 &  LAVASCIUGA UOMO A BORDO \\
-00250 &       333 &     2949 &    8.85 &    552.99 &   3772.04 &   1377422.72 &             SANIFICATORI \\
-00300 &       745 &     1390 &    1.86 &   4353.24 &   5364.34 &   3996430.94 &              SPAZZATRICI \\
-00400 &       389 &     1651 &    4.24 &    708.17 &   2404.47 &    940777.84 &             MONOSPAZZOLE \\
-00500 &      1133 &    12984 &   11.46 &    175.75 &   1034.63 &   1172236.58 &               ASPIRATORI \\
-00600 &       153 &      494 &    3.23 &    448.52 &   1338.80 &     83501.04 &           WASHING SYSTEM \\
-00900 &    239740 &  1070334 &    4.46 &     26.67 &     66.61 &  15968039.56 &     RICAMBI \& ACCESSORI \\
+00100 &      5908 &    15461 &    2.61 &   1613.44 &   3865.97 &  22840167.61 &  CATEGORIA1 \\
+00200 &      1936 &     3219 &    1.66 &   5898.09 &   8640.59 &  16745496.87 &  CATEGORIA2 \\
+00250 &       333 &     2949 &    8.85 &    552.99 &   3772.04 &   1377422.72 &  CATEGORIA3 \\
+00300 &       745 &     1390 &    1.86 &   4353.24 &   5364.34 &   3996430.94 &  CATEGORIA4 \\
+00400 &       389 &     1651 &    4.24 &    708.17 &   2404.47 &    940777.84 &  CATEGORIA5 \\
+00500 &      1133 &    12984 &   11.46 &    175.75 &   1034.63 &   1172236.58 &  CATEGORIA6 \\
+00600 &       153 &      494 &    3.23 &    448.52 &   1338.80 &     83501.04 &  CATEGORIA7 \\
+00900 &    239740 &  1070334 &    4.46 &     26.67 &     66.61 &  15968039.56 &  CATEGORIA9 \\
 \midrule
       &   250339  &  1108493.51 &   4.72 & 1706.86 &   3225.75 &  63124073.16 &       valori riassuntivi \\
 
