@@ -22,8 +22,9 @@ Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, la quant
 	\includegraphics[width=5.5cm]{figures/Sample-of-user-item-matrix}
 \end{minipage}
 \begin{minipage}[H]{0.55\textwidth}
-	I rating sono organizzati in matrici, dette appunto user-item interaction matrix, dove sulle righe abbiamo gli user mentre sulle colonne abbiamo gli item, nell'incrocio abbiamo riportato il rating. 
+	I rating sono organizzati in matrici, dette appunto user-item interaction matrix o semplicemente matrici dei rating (R), dove sulle righe abbiamo gli user mentre sulle colonne abbiamo gli item, nell'incrocio abbiamo riportato il rating. 
 	Può essere di rating sia impliciti che espliciti e le celle vuote corrispondono allo 0.
+	Quando scriviamo $r_{ui}$ dove $u$ è lo user e $i$ è l'item.
 \end{minipage}
 
 \section{Task}
@@ -47,14 +48,33 @@ Ci sono due approcci possibili al collaborative filtering:
 \end{itemize}
 
 \subsubsection{UserKnn}
-UserKnn è un metodo memory-based che fa uso della matrice dei rating, ogni user avrà quindi un proprio "profilo", ossia la sua riga nella matrice dei rating. L'idea è quella di calcolare la similarità tra tutti gli user, e per ciascuno di essi selezionare i K più simili.
-Una volta fatta questa operazione è possibile calcolare il rating di un prodotto andando 
+UserKnn è un metodo memory-based che fa uso della matrice dei rating, ogni user avrà quindi un proprio "profilo", ossia la propria riga nella matrice dei rating. L'idea è quella di calcolare la similarità tra tutti gli user e fatta questa operazione è possibile calcolare il rating previsto per ogni item non valutato rispetto ad uno user.
+Per fare ciò andiamo a selezionare i k user con similarità più alta con il nostro user target e calcoliamo la media pesata dei loro rating usando come pesi la similarità.\\
+Fatto questo si procede ad ordinare per ciascuno user tutti i prodotti secondo i rating ottenuti e si ottiene così la lista $TopN$ degli item più interessanti.\\
+Questo metodo funziona senza informazioni relative alle caratteristiche degli user o item e può gestire rating espliciti o impliciti con formule leggermente diverse.
 
 \subsubsection{ItemKnn}
-
+ItemKnn è un metodo memory-based molto simile al precedente, qui si va a considerare però gli item da raccomandare e il loro "profilo" è la propria colonna della rating matrix. Si calcola la similarità tra tutti gli item e dato uno user si procede a calcolare il rating stimato sugli item che non ha valutato andando a trovare per ciascuno di essi la lista di K item che ha valutato più simili ad esso, poi calcola la media pesata dei rating dei K item selezionati usando come peso la similarità. 
+ 
 \subsubsection{Matrix Factorization (MF)}
+Nell'approccio model-based Matrix Factorization (MF) è uno dei modelli più famosi, questo si basa sul concetto che si possa mappare user e item verso uno spazio delle feature comune di una certa dimensionalità K, possiamo quindi creare due matrici P e Q, dove P è una matrice avente sulle righe gli user e come colonne le K feature, mentre Q è una matrice avente sulle righe le k feature e sulle colonne gli item, quello che vogliamo ottenere è una approsimazione della rating matrix attraverso la moltiplicazione di P e Q, ossia $R \approx P \cdot Q^{T} = \hat{R}$.\\
+\includegraphics[width=14.5cm]{figures/MF_disegno}
+
+Quello che otteniamo è quindi un profilo sia per gli user che per gli item rispetto lo stesso spazio delle feature, il problema maggiore risulta però nell'ottenere queste due matrici, possiamo farlo creando una funzione di loss apposita e andando ad allenare in modo alternato le matrici P e Q, cercheremo quindi di ridurre dopo ciascuna iterazione la differenza tra $R$ e $\hat{R}$.\\
+Una volta che il modello è allenato possiamo predire il rating dato da uno user u su un item i moltiplicando i profili corrispondenti $\hat{r}_{ui} = P_u \cdot Q_{i}^{T}$.
 
 \subsubsection{Variational Auto-Encoder for CF (VAECF)}
+Ancora da scrivere.
 
 \subsection{Content-based filtering}
+Il content-based filtering è un approccio che si basa sull'idea di consigliare item simili a quelli con cui si è già interagito.\\
+Ciascun item possiede delle feature, per esempio nel caso si abbia come item dei film queste potrebbero essere i generi, l'insieme delle feature può essere mappata su di un vettore delle feature, per ogni item quindi si riporta nel vettore 1 se possiede quella feature, 0 altrimenti, questo permette di definire un profilo per l'item.
+Una volta fatto ciò si procede a creare anche un profilo per lo user, ci sono diversi modi per farlo ma per esempio si può considerare tutti i profili degli item con cui si è interagito e farne quindi la media pesata basata sui rating corrispondenti.
+Ottenuto un profilo anche per lo user si può calcolare la similarità tra di esso e quello degli item per poi ordinarli secondo similarità ottenendo così la lista $TopN$.
 
+\section{Valutazione}
+Quanto abbiamo visto finora sono metodi che ci permettono di effettuare le raccomandazioni, vogliamo trovare anche il modo per poterle valutare. Per prima cosa dobbiamo dividere le matrici dei rating in training e test set.\\
+Per fare ciò andiamo ad eseguire uno shuffle delle coppie (user,item) e per ogni user andiamo ad assegnare al training set l'80\% delle coppie e le restanti al test set.
+Date le raccomandazioni fornite dal RS vogliamo valutarle rispetto due aspetti principali: il rating e il ranking.
+Il primo semplicemente calcola la diversità tra i rating stimati da quelli reali delle coppie (user,item) del test set, non viene solitamente usato in quanto non è un buon modo per valutare un RS perché non ci permette di valutare la lista di item restituiti.
+Andando invece a considerare 
