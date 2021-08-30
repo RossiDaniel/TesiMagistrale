@@ -73,8 +73,26 @@ Una volta fatto ciò si procede a creare anche un profilo per lo user, ci sono d
 Ottenuto un profilo anche per lo user si può calcolare la similarità tra di esso e quello degli item per poi ordinarli secondo similarità ottenendo così la lista $TopN$.
 
 \section{Valutazione}
-Quanto abbiamo visto finora sono metodi che ci permettono di effettuare le raccomandazioni, vogliamo trovare anche il modo per poterle valutare. Per prima cosa dobbiamo dividere le matrici dei rating in training e test set.\\
-Per fare ciò andiamo ad eseguire uno shuffle delle coppie (user,item) e per ogni user andiamo ad assegnare al training set l'80\% delle coppie e le restanti al test set.
+Quanto abbiamo visto finora sono metodi che ci permettono di effettuare le raccomandazioni, vogliamo trovare però anche il modo per poterle valutare. Per prima cosa dobbiamo dividere le matrici dei rating in training e test set.\\
+Per fare ciò andiamo ad eseguire uno shuffle delle coppie (user,item) e si va ad assegnare al training set l'80\% delle coppie e le restanti al test set, questo sistema non ci assicura che uno user sia presente nel training set.
 Date le raccomandazioni fornite dal RS vogliamo valutarle rispetto due aspetti principali: il rating e il ranking.
-Il primo semplicemente calcola la diversità tra i rating stimati da quelli reali delle coppie (user,item) del test set, non viene solitamente usato in quanto non è un buon modo per valutare un RS perché non ci permette di valutare la lista di item restituiti.
-Andando invece a considerare 
+Il primo aspetto riguarda semplicemente la diversità tra i rating stimati da quelli reali delle coppie (user,item) del test set, queste metriche non vengono solitamente usate in quanto non è un buon modo per valutare un RS perché non ci permette di capire se un'item consigliato sia rilevante.
+Andando invece a considerare il concetto di ranking ci rendiamo conto che sia più legato a ciò che vogliamo andare a valutare, le metriche annesse considerano rilevanti gli item presenti nel test set e vanno a verificarne la posizione nella lista $TopN$.
+In generale le metriche si applicano a ciascuno user e il risultato finale è la media dei singoli risultati.
+
+\subsection{AUC}
+L'AUC (area under the curve) è un metrica che permette di valutare un RS basandosi sul numero di coppie di item presenti nella $TopN$ che sono in ordine sbagliato, vediamo di seguito la formula:
+$$AUC = \frac{1}{|N^{+}|\cdot|N^{-}|}\sum_{i \in N^{+}} \sum_{j \in N^{-}} [s(i) > s(j)]$$
+Il termine $N^{+}$ è l'insieme degli item presenti nel test set, mentre $N^{-}$ sono tutti gli item rimanenti. $s(i)$ è la valutazione data dal RS sull'item i, quello che si fa è andare a calcolare il numero di coppie di item non in ordine nella $TopN$ andando a vedere lo score assegnatogli.
+
+\subsection{nDCG@k}
+La metrica nDCG@k (normalized Discount Cumulative Gain) è una metrica che ci permette di calcolare una misura basata sulla posizione degli item rilevanti, ossia quelli del test set.
+
+\begin{minipage}[H]{0.5\textwidth}
+	$$DCG@k = \sum_{i=1}^{k} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
+\end{minipage}
+\begin{minipage}[H]{0.5\textwidth}
+	$$IDCG@k = \sum_{i=1}^{|REL_i|} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
+\end{minipage}
+Possiamo vedere come la nDCG sia in realtà la normalizzazione - daconcludere
+$$IDCG@k = \frac{DCG@k}{IDCG@k}$$
