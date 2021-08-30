@@ -281,7 +281,7 @@
 	\scshape{\large{Dipartimento di Matematica "Tullio Levi Civita"}} \\
 
 	\vspace{5pt}
-	\small{\textit{Corso di laurea in}}
+	\small{\textit{Corso di Laurea Magistrale in}}
 	\@mastername
 
 	\setstretch{2.5}

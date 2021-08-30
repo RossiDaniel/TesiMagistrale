@@ -17,7 +17,7 @@ Solitamente le informazioni che legano user e item, ossia i rating, possono esse
 
 Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, la quantità per esempio potrebbe essere considerata come un dato esplicito ma non è definita su una scala discreta, mentre se lo considerassimo implicito trascureremmo delle informazioni che possono in qualche modo fornire una misura di interesse.
 
-\section{User-item interaction matrix}
+\subsection{User-item interaction matrix}
 \begin{minipage}[H]{0.40\textwidth}
 	\includegraphics[width=5.5cm]{figures/Sample-of-user-item-matrix}
 \end{minipage}
@@ -27,7 +27,7 @@ Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, la quant
 	Quando scriviamo $r_{ui}$ dove $u$ è lo user e $i$ è l'item.
 \end{minipage}
 
-\section{Task}
+\subsection{Task}
 L'obiettivo del sistema può essere quello di consigliare ad uno user una lista di N item, detta \textbf{$TopN$} che si ritiene possano interessargli, oppure dato un item si può trovare una lista di item che si considerino simili allo stesso.
 
 \section{Approcci}
@@ -64,7 +64,7 @@ Quello che otteniamo è quindi un profilo sia per gli user che per gli item risp
 Una volta che il modello è allenato possiamo predire il rating dato da uno user u su un item i moltiplicando i profili corrispondenti $\hat{r}_{ui} = P_u \cdot Q_{i}^{T}$.
 
 \subsubsection{Variational Auto-Encoder for CF (VAECF)}
-Ancora da scrivere.
+Rispetto ai modelli precedenti che potevano funzionare sia con rating espliciti o impliciti, il VAECF accetta solo quest'ultimi. Il modello prende in input la matrice dei rating impliciti andando a considerare ogni riga come una distribuzione associata allo user.
 
 \subsection{Content-based filtering}
 Il content-based filtering è un approccio che si basa sull'idea di consigliare item simili a quelli con cui si è già interagito.\\
@@ -84,6 +84,7 @@ In generale le metriche si applicano a ciascuno user e il risultato finale è la
 L'AUC (area under the curve) è un metrica che permette di valutare un RS basandosi sul numero di coppie di item presenti nella $TopN$ che sono in ordine sbagliato, vediamo di seguito la formula:
 $$AUC = \frac{1}{|N^{+}|\cdot|N^{-}|}\sum_{i \in N^{+}} \sum_{j \in N^{-}} [s(i) > s(j)]$$
 Il termine $N^{+}$ è l'insieme degli item presenti nel test set, mentre $N^{-}$ sono tutti gli item rimanenti. $s(i)$ è la valutazione data dal RS sull'item i, quello che si fa è andare a calcolare il numero di coppie di item non in ordine nella $TopN$ andando a vedere lo score assegnatogli.
+Il valore dell'$AUC \in [0,1]$, dove più il valore si avvicina ad 1 più minori saranno le coppie in ordine sbagliato.
 
 \subsection{nDCG@k}
 La metrica nDCG@k (normalized Discount Cumulative Gain) è una metrica che ci permette di calcolare una misura basata sulla posizione degli item rilevanti, ossia quelli del test set.
@@ -94,5 +95,16 @@ La metrica nDCG@k (normalized Discount Cumulative Gain) è una metrica che ci pe
 \begin{minipage}[H]{0.5\textwidth}
 	$$IDCG@k = \sum_{i=1}^{|REL_i|} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
 \end{minipage}
-Possiamo vedere come la nDCG sia in realtà la normalizzazione - daconcludere
-$$IDCG@k = \frac{DCG@k}{IDCG@k}$$
+
+
+Ed infine per cacolare la $nDCG@k$ usiamo la seguente formula:
+$$nDCG@k = \frac{DCG@k}{IDCG@k}$$
+
+Per prima cosa dobbiamo dire che la metrica lavora su una parte della lista $TopN$, ossia la parte contentente i primi K item che definiamo come $TopK$. Gli item più rilevanti nel nostro caso sono gli item presenti nel test set.\\
+Andiamo ora ad analizzare numerato e denomicatore per capire meglio la loro funzione.
+\begin{itemize}
+	\item La $DCG@k$ si basa sull'idea che gli item più rilevanti debbano trovarsi il più possibile in testa alla lista $TopK$, ossia la lista contentente i primi K item della lista $TopN$, quindi si vuole penalizzare un item sempre di più via via questo si trovi nella coda della lista, per far ciò il denominatore aumenta all'aumentare della posizione seguendo una scala logaritmica. 
+	\item La $IDCG@k$ è equivalente a calcolare la $DCG@k$ sulla lista $TopK$ ideale, ossia la lista riportante tutti gli item ordinati in modo ideale secondo score nella posizione corretta, questo equivale al valore massimo ottenibile dalla metrica. 
+\end{itemize}
+
+Quindi andando a dividere il numeratore con il denominatore si attua una normalizzazione, il valore finale di $nDCG@k \in [0,1]$, dove più si avvicina ad 1 più la lista $TopK$ assomiglia a quella ideale.
