@@ -2,35 +2,37 @@
 
 \chapter{Introduzione}
 \section{Contesto progetto}
-Nel mondo dei software ERP \textit{(Enterprise Resource Planning)}, ossia prodotti software pensati per le aziende che permettono la gestione e il controllo dei procesi e delle funzioni aziendali, uno dei più famosi è di certo il gestionale SAP, il quale è sviluppato in moduli integrabili e a seconda delle esigenze dell'azienda utilizzatrice se ne possono attivare in qualunque combinazione.\\
-Uno di questi moduli è l'e-commerce hybris, utilizzato dalle aziende come canale di vendita online e alcune delle sue potenzialità sono che è altamente personalizzabile e perfettamente integrato con i sistemi SAP, come per esempio con il modulo CRM (\textit{(Customer Relationship Management)}), il quale si occupa di tutte le modalità di gestione delle relazioni con il cliente.
+Nel mondo dei software ERP \textit{(Enterprise Resource Planning)}, ossia prodotti software pensati per le aziende che permettono la gestione e il controllo dei processi e delle funzioni aziendali, uno dei più famosi è di certo il gestionale SAP, il quale è sviluppato in moduli integrabili che, a seconda delle esigenze dell'azienda utilizzatrice, possono essere attivati in qualunque combinazione.\\
+Uno di questi moduli è l'e-commerce hybris, utilizzato dalle aziende come canale di vendita online e alcune delle sue potenzialità sono: l'alto livello di personalizzazione e la possibilità di essere perfettamente integrato con i sistemi SAP, come per esempio con il modulo CRM (\textit{(Customer Relationship Management)}), il quale si occupa di tutte le modalità di gestione delle relazioni con il cliente.
 
 
 \section{L'idea di progetto}
-L'idea nasce, in un'ottica di innovazione del prodotto, all'interno di un progetto aziendale che mira all'ampliamento e miglioramento delle funzionalità di hybris, dove uno degli aspetti su cui si vuole lavorare è quello della personalizzazione dei prodotti mostrati agli utenti dell'e-commerce, si vuole sperimentare raccomandazioni sui prodotti basate sullo storico vendite e non sui feedback lasciati dall'utente in quanto la loro raccolta non è prevista dal sistema.
-Partendo quindi dallo storico vendite di un'azienda Cliente, con hybris configurato in versione BTB, l'obiettivo era quello di utilizzare i dati disponibili per raccomandare a ciascun cliente una lista di prodotti $TopN$ che gli risultassero interessanti e per ciascun prodotto una lista di prodotti simili ad esso, sempre interessanti per il cliente a cui viene mostrato quello specifico prodotto.\\
-Come detto solitamente si parte da feedback impliciti / espliciti dati dagli utenti ai prodotti, ma non essendo disponibili si cercherà di estrarre informazioni relative l'interesse del cliente verso un prodotto rispetto diversi punti di vista, quali può essere la quantità acquistata, la recentezza dell'acquisto, il numero di fatture in cui compare o la spesa totale per quello specifico articolo.\\
-Una volta organizzate le informazioni in delle matrici cliente-prodotto grezze, si voleva eseguire una sorta di preprocessing su di esse, andando a trasformarle in dei rating rispetto una scala comune che fornisse una misura d'interesse del cliente rispetto il prodotto. Si è voluto applicare le tecniche più popolari usate nei sistemi di raccomandazione, quali il collaborative filtering alle rating matrix ottenute dal preprocessing descritto precedentemente e il content-based filtering ai dati descrittivi dei prodotti.
-Data la non disponibilità di rating si è poi pensato di considerare il problema anche come una next basket recommendation, dove si vanno a vedere le sessioni d'acquisto e in base a queste si predice quella finale, questo approccio potrebbe funzionare nel caso i clienti acquistino spesso gli stessi prodotti.
+L'idea nasce, in un'ottica di innovazione del prodotto, all'interno di un progetto aziendale che mira all'ampliamento e miglioramento delle funzionalità di hybris. Uno degli aspetti su cui si vuole lavorare è quello della personalizzazione dei prodotti mostrati agli utenti dell'e-commerce: si vuole quindi sperimentare raccomandazioni sui prodotti basate sullo storico vendite e non sui feedback lasciati dall'utente, in quanto la loro raccolta non è prevista dal sistema trattandosi di un e-commerce BTB (dove gli acquirenti sono dealer, ossia aziende che a loro volta rivendono i prodotti).
+Partendo quindi dallo storico vendite di un'azienda Cliente, con hybris configurato in versione BTB, l'obiettivo era quello di utilizzare i dati disponibili per raccomandare a ciascun cliente una lista di prodotti $TopN$ che gli risultassero interessanti.\\ 
+Inoltre per ciascun prodotto si vuole presentare una lista di prodotti simili ad esso, sempre interessanti per il cliente a cui viene mostrato quello specifico articolo.\\
+Come detto solitamente si parte da feedback impliciti/espliciti dati dagli utenti ai prodotti, ma non essendo disponibili si cercherà di estrarre informazioni relative l'interesse del cliente rispetto diversi punti di vista, quali può essere la quantità acquistata, la recentezza dell'acquisto, il numero di fatture in cui compare o la spesa totale per quello specifico articolo.\\
+Una volta che le informazioni sono state organizzate in matrici grezze user-item, si voleva eseguire una sorta di preprocessing su di esse, andando a trasformarle in dei rating rispetto una scala comune che fornisse una misura d'interesse del cliente.\\
+Sono state applicate le tecniche più popolari usate nei sistemi di raccomandazione, quali il collaborative filtering alle rating matrix ottenute dal preprocessing descritto precedentemente e il content-based filtering ai dati descrittivi dei prodotti.
+Data la non disponibilità di rating si è poi pensato di considerare il problema anche come una next basket recommendation, dove si vanno a considerare le sessioni d'acquisto e in base a queste si predice quella finale, questo approccio potrebbe funzionare nel caso in sui i clienti acquistino spesso gli stessi prodotti.
 
 \section{Organizzazione del testo}
 Di seguito viene riportata per ogni capitolo una piccola descrizione delle tematiche trattate:
 \begin{itemize}
-	\item \hyperlink{(chap:capitolo3)}{\textbf{Capitolo 2}}: viene mostrato come sono inizialmente organizzati i dati, come sono stati trattati e quali informazioni si è potuto ricavare;
-	\item \hyperlink{(chap:capitolo4)}{\textbf{Capitolo 3}}: viene fatto un breve riepilogo della teoria sui sistemi di raccomandazione, spiegando meglio gli approcci del collaborative filtering e del content based filtering, oltre che spiegando il funzionamento degli algoritmi utilizzati e delle metriche;
-	\item \hyperlink{(chap:capitolo5)}{\textbf{Capitolo 4}}: vengono spiegate le diverse tecniche di preprocessing utilizzate per trasformare i dati grezzi in valutazioni.
-	\item \hyperlink{(chap:capitolo6)}{\textbf{Capitolo 5}}: viene riportata una descrizione della libreria Cornac, dove sono implementati modelli e metriche per l'esecuzione di test;
-	\item \hyperlink{(chap:capitolo7)}{\textbf{Capitolo 6}}: vengono mostrati i risultati delle metriche rispetto i diversi algoritmi applicati al preprocessing dei dati;
-	\item \hyperlink{(chap:capitolo8)}{\textbf{Capitolo 7}}: vengono mostrati i risultati delle metriche rispetto i diversi algoritmi applicati al preprocessing dei dati nella loro versione combinata;
-	\item \hyperlink{(chap:capitolo9)}{\textbf{Capitolo 8}}: vengono mostrati i risultati delle metriche considerando il problema come un next basket recommendation;
-	\item \hyperlink{(chap:capitolo10)}{\textbf{Capitolo 9}}: vengono riportate le conclusioni del lavoro svolto, andando a delineare problemi risolti, criticità e sviluppi per il futuro;
+	\item \hyperlink{(chap:capitolo3)}{\textbf{Capitolo 2}}: organizzazione dei dati, come sono stati trattati e quali informazioni si sono potute ricavare;
+	\item \hyperlink{(chap:capitolo4)}{\textbf{Capitolo 3}}: breve riepilogo della teoria sui sistemi di raccomandazione, spiegando meglio gli approcci del collaborative filtering e del content based filtering, oltre che descrivendo il funzionamento degli algoritmi utilizzati e delle metriche;
+	\item \hyperlink{(chap:capitolo5)}{\textbf{Capitolo 4}}: le diverse tecniche di preprocessing utilizzate per trasformare i dati grezzi in valutazioni;
+	\item \hyperlink{(chap:capitolo5)}{\textbf{Capitolo 5}}: le modalità con cui sono stati combinati i dati;
+	\item \hyperlink{(chap:capitolo6)}{\textbf{Capitolo 6}}: una descrizione della libreria Cornac, dove sono implementati modelli e metriche per l'esecuzione di test;
+	\item \hyperlink{(chap:capitolo7)}{\textbf{Capitolo 7}}: i risultati delle metriche rispetto i diversi algoritmi applicati al preprocessing dei dati;
+	\item \hyperlink{(chap:capitolo8)}{\textbf{Capitolo 8}}: i risultati delle metriche rispetto i diversi algoritmi applicati al preprocessing dei dati nella loro versione combinata;
+	\item \hyperlink{(chap:capitolo9)}{\textbf{Capitolo 9}}: i risultati delle metriche considerando il problema come un next basket recommendation;
+	\item \hyperlink{(chap:capitolo10)}{\textbf{Capitolo 10}}: le conclusioni del lavoro svolto, andando a delineare problemi risolti, criticità e sviluppi per il futuro.
 \end{itemize}
 \section{Convenzioni tipografiche}
 Il testo adotta le seguenti convenzioni tipografiche:
 \begin{itemize}
 	\item ogni acronimo, abbreviazione, parola ambigua o tecnica viene spiegata e chiarificata alla fine del testo;
-	\item ogni parola di glossario alla prima apparizione verrà etichetta come segue: $parola^{[g]}$;
-	\item ogni riga di un elenco puntato terminerà con un ; a parte l'ultima riga che si concluderà con un punto.
+	\item ogni parola di glossario alla prima apparizione verrà etichetta come segue $parola^{[g]}$.
 \end{itemize}
 
 

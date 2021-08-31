@@ -6,7 +6,7 @@
 Uno dei campi più popolari al momento verso cui si rivolge una particolare attenzione è quello dei sistemi di raccomandazione, da ora in poi RS, in quanto l'attività online sta aumentando sempre più e nascono sempre più spesso nuovi servizi che permettono di scegliere oggetti, siano questi prodotti, video, musica, film o molto altro, da cataloghi vastissimi. I sistemi di raccomandazione permettono di navigare questi cataloghi andando a cercare gli oggetti che risultino più interessanti per l'utente.
 
 \section{Preliminari}
-In generale possiamo dire che un RS si compone di diversi elementi, in primo luogo abbiamo i cosidetti "attori" del problema, gli user, ossia gli utenti del sistema, e gli item, ossia gli oggetti che si vuole consigliare. Abbiamo a disposizione inoltre informazioni riguardo l'interazione tra user e item solitamente sotto forma di feedback implicito o esplicito, questa misura viene definito rating. Questi vengono utilizzati dal RS, insieme con eventuali dati legati al contesto di user e item, per effettuare raccomandazioni.
+In generale possiamo dire che un RS si compone di diversi elementi, in primo luogo abbiamo i cosidetti "attori" del problema, gli user e gli item, rispettivamente gli utenti del sistema e gli oggetti che si vuole consigliare. Abbiamo a disposizione inoltre informazioni riguardo l'interazione tra user e item solitamente sotto forma di feedback implicito o esplicito, questa misura viene definita rating. Questi vengono utilizzati dal RS, insieme con eventuali dati legati al contesto di user e item, per effettuare raccomandazioni.
 
 \subsection{Feedback impliciti / espliciti}
 Solitamente le informazioni che legano user e item, ossia i rating, possono essere di due tipi:
@@ -15,7 +15,7 @@ Solitamente le informazioni che legano user e item, ossia i rating, possono esse
 	\item Esplicito: valutazione numerica intera in una scala da 1 a N, 0 se non c'è stata interazione.
 \end{itemize}
 
-Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, la quantità per esempio potrebbe essere considerata come un dato esplicito ma non è definita su una scala discreta, mentre se lo considerassimo implicito trascureremmo delle informazioni che possono in qualche modo fornire una misura di interesse.
+Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, se per esempio considerassimo la quantità come un dato esplicito ci troveremmo così ad avere un dato su una scala non continua, mentre se lo facessimo come se fosse implicito trascureremmo delle informazioni che possono in qualche modo fornire una misura di interesse.
 
 \subsection{User-item interaction matrix}
 \begin{minipage}[H]{0.40\textwidth}
@@ -23,23 +23,24 @@ Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, la quant
 \end{minipage}
 \begin{minipage}[H]{0.55\textwidth}
 	I rating sono organizzati in matrici, dette appunto user-item interaction matrix o semplicemente matrici dei rating (R), dove sulle righe abbiamo gli user mentre sulle colonne abbiamo gli item, nell'incrocio abbiamo riportato il rating. 
-	Può essere di rating sia impliciti che espliciti e le celle vuote corrispondono allo 0.
-	Quando scriviamo $r_{ui}$ dove $u$ è lo user e $i$ è l'item.
+	La matrice come detto può essere implicita o esplicita e le celle vuote corrispondono allo 0.
+	Quando scriviamo $r_{ui}$ intendiamo che $u$ è lo user e $i$ è l'item.
 \end{minipage}
 
 \subsection{Task}
-L'obiettivo del sistema può essere quello di consigliare ad uno user una lista di N item, detta \textbf{$TopN$} che si ritiene possano interessargli, oppure dato un item si può trovare una lista di item che si considerino simili allo stesso.
+L'obiettivo del sistema può essere quello di consigliare ad uno user una lista di N item, detta \textbf{$TopN$} che si ritiene possano interessargli, oppure dato un item si può trovare una lista di item che si considerino simili allo stesso in acccordo con i 'gusti' dello user.
 
 \section{Approcci}
 Definito quindi il task abbiamo diversi modi per poter soddisfare il nostro obiettivo, in generale abbiamo due principali categorie di RS:
 \begin{itemize}
-	\item \textbf{Non Personalizzato}: andiamo a consigliare i prodotti che globalmente risultano più popolari, ossia che abbiamo complessivamente ricevuto più valutazioni, o quelli con rating più alto. Questo approccio non va a considerare le informazioni relative il singolo user;
-	\item \textbf{Personalizzato}: ci sono diversi approcci che vedremo nelle sezioni successive, in generale si fanno raccomandazioni basate sulle informazioni dello user.
+	\item \textbf{Non Personalizzato}: andiamo a consigliare i prodotti che globalmente risultano più popolari, ossia che abbiano complessivamente ricevuto più valutazioni, o quelli con rating più alto. Questo approccio non va a considerare le informazioni relative il singolo user;
+	\item \textbf{Personalizzato}: ci sono diversi approcci che vedremo nelle sezioni successive, in generale si fanno raccomandazioni basate sulla similarità tra user. I due approcci più famosi sono il collaborative filtering, dove si cerca di consigliare item ad uno user basandosi su user simili, e il content-based filtering si cerca di raccomandare item simili a quelli con cui si ha già interagito.
 \end{itemize}
-I due approcci più famosi negli RS sono il collaborative filtering, dove si cerca di consigliare item ad uno user basandosi su user simili, mentre nel content-based filtering si cerca di raccomandare item simili a quelli con cui si ha già interagito;
+
+Nelle sezione successive andiamo a spiegare più nel dettaglio il collaborative e conte-based filtering.
 
 \subsection{Collaborative filtering}
-Collaborative filtering è un approccio agli RS basato sulla similarità, raccomandiamo ad uno user item interessanti per altri user simili ad esso, e viceversa item simili ad altri item per cui ha dimostrato interesse.
+Il collaborative filtering è un approccio agli RS basato sulla similarità, raccomandiamo ad uno user item interessanti per altri user simili ad esso, e viceversa item simili ad altri item per cui ha dimostrato interesse.
 La similarità può essere quindi di due tipi: item-based, basata quindi sulla similarità tra prodotti o user-based ossia su quella tra user.
 Ci sono due approcci possibili al collaborative filtering:
 \begin{itemize}
@@ -57,14 +58,14 @@ Questo metodo funziona senza informazioni relative alle caratteristiche degli us
 ItemKnn è un metodo memory-based molto simile al precedente, qui si va a considerare però gli item da raccomandare e il loro "profilo" è la propria colonna della rating matrix. Si calcola la similarità tra tutti gli item e dato uno user si procede a calcolare il rating stimato sugli item che non ha valutato andando a trovare per ciascuno di essi la lista di K item che ha valutato più simili ad esso, poi calcola la media pesata dei rating dei K item selezionati usando come peso la similarità. 
  
 \subsubsection{Matrix Factorization (MF)}
-Nell'approccio model-based Matrix Factorization (MF) è uno dei modelli più famosi, questo si basa sul concetto che si possa mappare user e item verso uno spazio delle feature comune di una certa dimensionalità K, possiamo quindi creare due matrici P e Q, dove P è una matrice avente sulle righe gli user e come colonne le K feature, mentre Q è una matrice avente sulle righe le k feature e sulle colonne gli item, quello che vogliamo ottenere è una approsimazione della rating matrix attraverso la moltiplicazione di P e Q, ossia $R \approx P \cdot Q^{T} = \hat{R}$.\\
+Nell'approccio model-based, Matrix Factorization (MF) è uno dei modelli più famosi, questo si basa sul concetto che si possa mappare user e item verso uno spazio delle feature comune di una certa dimensionalità K, possiamo quindi creare due matrici P e Q, dove P è una matrice avente sulle righe gli user e come colonne le K feature, mentre Q è una matrice avente sulle righe le k feature e sulle colonne gli item, quello che vogliamo ottenere è una approsimazione della rating matrix attraverso la moltiplicazione di P e Q, ossia $R \approx P \cdot Q^{T} = \hat{R}$.\\
 \includegraphics[width=14.5cm]{figures/MF_disegno}
 
-Quello che otteniamo è quindi un profilo sia per gli user che per gli item rispetto lo stesso spazio delle feature, il problema maggiore risulta però nell'ottenere queste due matrici, possiamo farlo creando una funzione di loss apposita e andando ad allenare in modo alternato le matrici P e Q, cercheremo quindi di ridurre dopo ciascuna iterazione la differenza tra $R$ e $\hat{R}$.\\
+Quello che otteniamo è quindi un profilo sia per gli user che per gli item rispetto lo stesso spazio delle feature. Il problema maggiore risulta però essere quello di ottenere queste due matrici, possiamo farlo creando una funzione di loss apposita e andando ad allenare in modo alternato le matrici P e Q, carcando quindi di ridurre dopo ciascuna iterazione la differenza tra $R$ e $\hat{R}$.\\
 Una volta che il modello è allenato possiamo predire il rating dato da uno user u su un item i moltiplicando i profili corrispondenti $\hat{r}_{ui} = P_u \cdot Q_{i}^{T}$.
 
 \subsubsection{Variational Auto-Encoder for CF (VAECF)}
-Rispetto ai modelli precedenti che potevano funzionare sia con rating espliciti o impliciti, il VAECF accetta solo quest'ultimi. Il modello prende in input la matrice dei rating impliciti andando a considerare ogni riga come una distribuzione associata allo user.
+Rispetto ai modelli precedenti che potevano funzionare sia con rating espliciti o impliciti, il VAECF accetta solo quest'ultimi. Il modello prende in input la matrice dei rating impliciti andando a considerare ogni riga come una distribuzione associata allo user. \textbf{Da completare}.
 
 \subsection{Content-based filtering}
 Il content-based filtering è un approccio che si basa sull'idea di consigliare item simili a quelli con cui si è già interagito.\\
@@ -74,20 +75,21 @@ Ottenuto un profilo anche per lo user si può calcolare la similarità tra di es
 
 \section{Valutazione}
 Quanto abbiamo visto finora sono metodi che ci permettono di effettuare le raccomandazioni, vogliamo trovare però anche il modo per poterle valutare. Per prima cosa dobbiamo dividere le matrici dei rating in training e test set.\\
-Per fare ciò andiamo ad eseguire uno shuffle delle coppie (user,item) e si va ad assegnare al training set l'80\% delle coppie e le restanti al test set, questo sistema non ci assicura che uno user sia presente nel training set.
+Per fare ciò andiamo ad eseguire uno shuffle delle coppie (user, item) e si va ad assegnare al training set l'80\% delle coppie e le restanti al test set, questo sistema non ci assicura che uno user sia presente nel training set.
 Date le raccomandazioni fornite dal RS vogliamo valutarle rispetto due aspetti principali: il rating e il ranking.
-Il primo aspetto riguarda semplicemente la diversità tra i rating stimati da quelli reali delle coppie (user,item) del test set, queste metriche non vengono solitamente usate in quanto non è un buon modo per valutare un RS perché non ci permette di capire se un'item consigliato sia rilevante.
+Il primo aspetto riguarda semplicemente la diversità tra i rating stimati da quelli reali delle coppie (user, item) del test set, queste metriche non vengono solitamente usate in quanto non è un buon modo per valutare un RS perché non ci permette di capire se un'item consigliato sia rilevante.
 Andando invece a considerare il concetto di ranking ci rendiamo conto che sia più legato a ciò che vogliamo andare a valutare, le metriche annesse considerano rilevanti gli item presenti nel test set e vanno a verificarne la posizione nella lista $TopN$.
 In generale le metriche si applicano a ciascuno user e il risultato finale è la media dei singoli risultati.
 
 \subsection{AUC}
-L'AUC (area under the curve) è un metrica che permette di valutare un RS basandosi sul numero di coppie di item presenti nella $TopN$ che sono in ordine sbagliato, vediamo di seguito la formula:
+L'AUC (Area Under the Curve) è una metrica che permette di valutare un RS basandosi sul numero di coppie di item rivelanti e non, presenti nella $TopN$ in ordine, dove un item non rilevante ha uno score minore rispetto a quello di uno rilevante, vediamo di seguito la formula:
 $$AUC = \frac{1}{|N^{+}|\cdot|N^{-}|}\sum_{i \in N^{+}} \sum_{j \in N^{-}} [s(i) > s(j)]$$
-Il termine $N^{+}$ è l'insieme degli item presenti nel test set, mentre $N^{-}$ sono tutti gli item rimanenti. $s(i)$ è la valutazione data dal RS sull'item i, quello che si fa è andare a calcolare il numero di coppie di item non in ordine nella $TopN$ andando a vedere lo score assegnatogli.
-Il valore dell'$AUC \in [0,1]$, dove più il valore si avvicina ad 1 più minori saranno le coppie in ordine sbagliato.
+Il termine $N^{+}$ è l'insieme degli item presenti nel test set, mentre $N^{-}$ sono tutti gli item rimanenti. $s(i)$ è la valutazione data dal RS sull'item $i$, quello che si fa è andare a contare il numero di coppie di item in ordine nella $TopN$ andando a vedere gli score assegnati loro.
+Utilizziamo la funzione $[s(i) > s(j)]$ che restituisce 1 se lo score dell'item rilevante è maggiore, 0 altrimenti. Infine dividiamo il numero di coppie ordinate in modo correto per il numero di coppie totali.\\
+Il valore dell'$AUC \in [0,1]$, dove più il valore si avvicina ad 1, minori saranno le coppie in ordine sbagliato.
 
 \subsection{nDCG@k}
-La metrica nDCG@k (normalized Discount Cumulative Gain) è una metrica che ci permette di calcolare una misura basata sulla posizione degli item rilevanti, ossia quelli del test set.
+La metrica nDCG@k (normalized Discount Cumulative Gain) ci permette di calcolare una misura basata sulla posizione degli item rilevanti nella lista $TopN$, ossia quelli del test set.
 
 \begin{minipage}[H]{0.5\textwidth}
 	$$DCG@k = \sum_{i=1}^{k} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
@@ -95,15 +97,16 @@ La metrica nDCG@k (normalized Discount Cumulative Gain) è una metrica che ci pe
 \begin{minipage}[H]{0.5\textwidth}
 	$$IDCG@k = \sum_{i=1}^{|REL_i|} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
 \end{minipage}
-
+\newline
 
 Ed infine per cacolare la $nDCG@k$ usiamo la seguente formula:
 $$nDCG@k = \frac{DCG@k}{IDCG@k}$$
 
-Per prima cosa dobbiamo dire che la metrica lavora su una parte della lista $TopN$, ossia la parte contentente i primi K item che definiamo come $TopK$. Gli item più rilevanti nel nostro caso sono gli item presenti nel test set.\\
-Andiamo ora ad analizzare numerato e denomicatore per capire meglio la loro funzione.
+Per prima cosa dobbiamo dire che la metrica lavora su una parte della lista $TopN$, ossia la parte contentente i primi K item che definiamo come $TopK$.\\
+Gli item più rilevanti nel nostro caso sono gli item presenti nel test set.\\
+Andiamo ora ad analizzare numeratore e denomicatore per capire meglio la loro funzione.
 \begin{itemize}
-	\item La $DCG@k$ si basa sull'idea che gli item più rilevanti debbano trovarsi il più possibile in testa alla lista $TopK$, ossia la lista contentente i primi K item della lista $TopN$, quindi si vuole penalizzare un item sempre di più via via questo si trovi nella coda della lista, per far ciò il denominatore aumenta all'aumentare della posizione seguendo una scala logaritmica. 
+	\item La $DCG@k$ si basa sull'idea che gli item più rilevanti debbano trovarsi il più possibile in testa alla lista $TopK$, quindi si vuole penalizzare un item sempre di più via via questo si trovi nella coda della lista, per far ciò il denominatore aumenta all'aumentare della posizione seguendo una scala logaritmica. 
 	\item La $IDCG@k$ è equivalente a calcolare la $DCG@k$ sulla lista $TopK$ ideale, ossia la lista riportante tutti gli item ordinati in modo ideale secondo score nella posizione corretta, questo equivale al valore massimo ottenibile dalla metrica. 
 \end{itemize}
 
