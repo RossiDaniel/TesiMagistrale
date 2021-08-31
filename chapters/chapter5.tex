@@ -1,78 +1,14 @@
 %!TEX root = ../dissertation.tex
 
 \hypertarget{(chap:capitolo5)}{}
-\chapter{Test e validazione}
-Una attività di fondamentale importanza è stata quella di testing dei modelli.
-\section{Istanze}
-Diamo prima una definizione di istanza:
-\begin{center}
-	Una \textbf{istanza} è un insieme formato dai pacchi da disporre nel contenitore.
-\end{center}
-Diamo inoltre la definizione di gruppo di istanze:
-\begin{center}
-	Un \textbf{gruppo di istanze} è un insieme di istanze accomunate tra loro dalle simili dimensioni dei pacchi o dal numero di oggetti.
-\end{center}
-La prassi generale nell'eseguire il testing dei modelli è stata quella di creare un centinaio di istanze casuali, eseguire il modello sulle istanze generate e verificare la correttezza delle soluzioni fornite, con l'obiettivo di individuare imperfezioni e testare la tenuta dei vincoli.
-La verifica della correttezza delle soluzioni veniva fatta attraverso funzioni realizzate appositamente che verranno illustrate nelle sezioni successive.
-Questa procedura richiedeva circa una ventina di minuti di esecuzione ed è stata utilizzata solo dopo che i modelli avessero espresso, attraverso i loro vincoli, correttamente tutti i requisiti di partenza. La loro esecuzione è avvenuta su istanze con pochi oggetti per risparmiare tempo e individuare subito eventuali errori.
+\chapter{Preprocessing storico vendite}
+In questo capitolo andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
 
-Dopo la realizzazione di tutti i modelli, sicuri delle soluzioni fornite grazie alla validazione effettuata, si è passati all'esecuzione di 100 test per ciascun gruppo di istanze, riportate di seguito per ottenere maggiori informazioni in merito, il tutto eseguito per ciascun modello.
-\begin{center}
-	\begin{tabular}{lrrrr}
-		\toprule
-		{}
-		\#ist & width\_a & width\_b & depth\_a & depth\_b \\
-		\midrule
-		0     & 0.5      & 2.45     & 0.5      & 2.45     \\
-		1     & 0.5      & 1.50     & 0.5      & 4.00     \\
-		2     & 1.5      & 2.45     & 0.5      & 4.00     \\
-		3     & 0.5      & 1.50     & 3.0      & 4.00     \\
-		4     & 1.5      & 2.45     & 3.0      & 4.00     \\
-		5     & 0.1      & 1.00     & 0.1      & 1.00     \\
-		6     & 0.1      & 1.00     & 3.0      & 4.00     \\
-		7     & 2.0      & 2.45     & 3.0      & 4.00     \\
-		8     & 2.0      & 2.45     & 2.0      & 2.45     \\
-		9     & 0.1      & 1.00     & 0.1      & 4.00     \\
-		\bottomrule
-	\end{tabular}
-	\captionof{table}{Le dimensioni dei gruppi di istanze eseguite}
-	\label{tab:istanze}
-\end{center}
+\section{Normalizzazione Min-Max}
+Una delle tecniche che si può usare è quella di andare a 
 
-Nella Tabella \ref{tab:istanze} l'indice \#ist è un codice identificativo del gruppo di istanze. Vengono riportati anche gli intervalli entro cui si è deciso debbano rientrare le dimensioni casuali dei pacchi per ogni gruppo di istanze, gli intervalli sono stati così definiti:
-\begin{itemize}
-	\item \textbf{Larghezza}: [width\_a, width\_b]
-	\item \textbf{Profondità}: [depth\_a, depth\_b]
-\end{itemize}
+\section{Metodo prodotto}
 
-\section{Numero di oggetti}
-Fin dal modello 2D abbiamo capito che il numero di pacchi per ogni istanza sarebbe dovuto essere limitato in quanto già con sette pacchi i tempi di esecuzione aumentavano vertiginosamente, abbiamo quindi deciso di scegliere in modo casuale in un intervallo [3,10] il numero di pacchi da assegnare a ciascuna istanza, imponendo un \glo{time limit} di 300 secondi.
-Questo portava ad ottenere soluzioni ottime e soluzioni \glo{best bound}, l'analisi dei risultati sarà divisa in queste due categorie.
+\section{Metodo Globale}
 
-\begin{figure}[!ht]
-	\begin{center} \includegraphics[scale=0.8]{figures/time_nitems}
-		\caption[Grafico tempi esecuzione]{Grafico tempi esecuzione modello con diversi oggetti}  
-		\label{fig:times}
-	\end{center}
-\end{figure}
-
-Nel grafico in Figura \ref{fig:times} viene riportato come ascissa il numero di oggetti e come ordinata il tempo espresso in secondi, mostrando che aumentando il numero di oggetti cresca notevolmente il tempo di esecuzione, passando da pochi secondi a minuti.
-
-Risultano molto interessanti quelle istanze che nonostante abbiano molti oggetti richiedano meno tempo per essere eseguiti, forse questo dovuto alle particolari dimensioni degli oggetti.
-
-\section{Validazione soluzioni fornite}
-Di fondamentale importanza per il confronto è stato che le soluzioni fornite dal modello fossero corrette, questo ha richiesto lo sviluppo di alcune funzioni che controllassero la validità delle stesse. 
-\newpage
-Per fare ciò sono state realizzate le seguenti funzioni:
-\begin{itemize}
-	\item \textbf{CheckFeasible}: utilizzata per controllare che non vi fossero pacchi intersecati tra loro;
-	\item \textbf{CheckSequence}: realizzata in due versioni:
-	      \begin{itemize}
-	      	\item \textbf{2D}: considerando che tutti gli oggetti fossero alla stessa altezza controllava che ciascun pacco avesse almeno una via attraverso cui essere scaricato;
-	      	\item \textbf{3D}: considerava anche la sovrapposizione tra pacchi e oltre a controllare di avere almeno una delle tre direzioni libere rispetto l'altezza a cui si trovava, controllava anche se sopra ciascun pacco al momento dello scarico vi fossero altri pacchi;
-	      \end{itemize}
-	\item \textbf{CheckStable}: utilizzata per controllare la stabilità degli oggetti, verificava che l'area di base inferiore poggiasse completamente sulle basi superiori degli oggetti sottostanti;
-	\item \textbf{ProjectionCommonArea}: utilizzata per verificare se due parallelepipedi avessero intersezioni tra le loro proiezioni rispetto ad una coppia di assi come altezza e profondità.
-\end{itemize}
-
-Inoltre per natura stessa dei modelli essi ricercano la soluzione ottima. Si può quindi dire che se le soluzioni trovate vengono individuate entro il tempo limite e vengono verificate dalle funzioni precedentemente riportate, allora queste possono dirsi effettivamente ottime e reali, perfette candidate per un confronto con le soluzioni corrispettive fornite dall'euristica.
+\section{Metodo Singolo}
