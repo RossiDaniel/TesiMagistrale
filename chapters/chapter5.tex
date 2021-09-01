@@ -4,8 +4,19 @@
 \chapter{Preprocessing storico vendite}
 In questo capitolo andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
 
+\section{Preliminari}
+Dobbiamo tenere presente che i metodi che andremo a vedere si propongono di ottenere delle matrici dei rating in una scala $[1,N]$, inoltre spesso si farà riferimento ad una divisione dei rating secondo una distribuzione uniforme discreta e una gaussian-like. Quando ci si troverà ad applicare queste distribuzioni avremo una lista di coppie user-item ordinate secondo un certo criterio, andiamo a vedere come vengono assegnati i rating secondo queste due distribuzioni:
+\
+
 \section{Normalizzazione Min-Max}
-Una delle tecniche che si può usare è quella di andare a 
+Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla in generale si fornisce un vettore di numeri e vi si applica la seguente formula:
+$$z = \frac{x - min(x)}{max(x) - min(x)}$$
+
+Ora tutti i valori dell'iniziale lista si troveranno in un intervallo $[0,1]$, se volessimo portarlo invece in un intervallo tra $[1,N]$ allora dovremmo applicare la seguente formula:
+$$z = (N -1) \cdot \frac{x - min(x)}{max(x) - min(x)} + 1$$
+
+Ora questo metodo è stato applicato alla lista di 
+
 
 \section{Metodo prodotto}
 
