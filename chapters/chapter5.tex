@@ -5,18 +5,17 @@
 In questo capitolo andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
 
 \section{Preliminari}
-Ciascuno di questi metodi si propone di restituire delle matrici dei rating in una scala $[1,scale]$ a partire dalle matrici grezze. Spesso si farà riferimento ad una assegnazione dei rating secondo una distribuzione uniforme discreta o gaussian-like. Quando ci si troverà ad applicare queste distribuzioni avremo una lista di coppie user-item ordinate secondo un certo criterio, andiamo a vedere come vengono assegnati i rating secondo queste due distribuzioni:
+Ciascuno di questi metodi si propone di restituire delle matrici dei rating in un intervallo $[1,scale]$ a partire dalle matrici grezze. Spesso si farà riferimento ad una assegnazione dei rating secondo una distribuzione uniforme discreta o gaussian-like. Quando ci si troverà ad applicare queste distribuzioni avremo una lista di coppie user-item ordinate secondo un certo criterio, andiamo a vedere come vengono assegnati i rating secondo queste due distribuzioni:
 \begin{itemize}
-    \item uniforme discreta: divide la lista in modo tale che ogni valore nella scala dei rating compaia lo stesso numero di volte;
-    \item gaussian like: si va a definire una distribuzione normale $N(0,scale/3)$, poi si vanno a generare una quantità sufficiente di numeri secondo la suddetta distribuzione. Fatto questo si convertono tutti i numeri decimali in interi, andiamo a selezionare solo gli interi nell'intervallo $[-scale/2,scale/2]$ e trasliamo nell'intervallo $[1,scale]$.\\
+    \item uniforme discreta: divide la lista in modo tale che ogni valore nella scala dei rating compaia lo stesso numero di volte, assegnandoli in modo crescente, dal capo alla coda della lista;
+    \item gaussian-like: si va a definire una distribuzione normale $N(0,scale/3)$, poi si generano una quantità sufficiente di numeri secondo la suddetta distribuzione. Fatto questo si convertono tutti i numeri decimali in interi, si selezionano solo gli interi nell'intervallo $[-scale/2,scale/2]$ e si traslano nell'intervallo $[1,scale]$.\\
     Infine calcoliamo la probabilità per ciascun numero intero nella scala.\\
-    Per dividere la lista non si fa altro che iterare sugli interi dell'intervallo $[1,scale]$:
-    \begin{itemize}
+    Per assegnare i rating alla lista non si fa altro che iterare sugli interi dell'intervallo $[1,scale]$, andando ad eseguire in sequenza le seguenti operazioni:
+    \begin{enumerate}
         \item moltiplico la probabilità di quell'intero per la lunghezza della lista;
-        \item converto il valore risultante ad intero;
-        \item ho quindi il numero di coppie che dovranno avere quel rating;
-        \item partendo dall'inizio della lista assegno quel rating a quel numero di coppie, e poi procedo col successivo numero partendo dalla coppia successiva all'ultima di questa iterazione.
-    \end{itemize}
+        \item converto il valore risultante ad intero, ottenendo quindi il numero di coppie che dovranno avere quel rating;
+        \item partendo dall'inizio della lista assegno quel rating a quel numero di coppie e poi procedo col successivo numero andando a considerare la coppia seguente all'ultima di questa iterazione.
+    \end{enumerate}
 \end{itemize}
 
 \section{Normalizzazione Min-Max}
