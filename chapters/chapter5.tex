@@ -5,19 +5,38 @@
 In questo capitolo andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
 
 \section{Preliminari}
-Dobbiamo tenere presente che i metodi che andremo a vedere si propongono di ottenere delle matrici dei rating in una scala $[1,N]$, inoltre spesso si farà riferimento ad una divisione dei rating secondo una distribuzione uniforme discreta e una gaussian-like. Quando ci si troverà ad applicare queste distribuzioni avremo una lista di coppie user-item ordinate secondo un certo criterio, andiamo a vedere come vengono assegnati i rating secondo queste due distribuzioni:
-\
+Ciascuno di questi metodi si propone di restituire delle matrici dei rating in una scala $[1,scale]$ a partire dalle matrici grezze. Spesso si farà riferimento ad una assegnazione dei rating secondo una distribuzione uniforme discreta o gaussian-like. Quando ci si troverà ad applicare queste distribuzioni avremo una lista di coppie user-item ordinate secondo un certo criterio, andiamo a vedere come vengono assegnati i rating secondo queste due distribuzioni:
+\begin{itemize}
+    \item uniforme discreta: divide la lista in modo tale che ogni valore nella scala dei rating compaia lo stesso numero di volte;
+    \item gaussian like: si va a definire una distribuzione normale $N(0,scale/3)$, poi si vanno a generare una quantità sufficiente di numeri secondo la suddetta distribuzione. Fatto questo si convertono tutti i numeri decimali in interi, andiamo a selezionare solo gli interi nell'intervallo $[-scale/2,scale/2]$ e trasliamo nell'intervallo $[1,scale]$.\\
+    Infine calcoliamo la probabilità per ciascun numero intero nella scala.\\
+    Per dividere la lista non si fa altro che iterare sugli interi dell'intervallo $[1,scale]$:
+    \begin{itemize}
+        \item moltiplico la probabilità di quell'intero per la lunghezza della lista;
+        \item converto il valore risultante ad intero;
+        \item ho quindi il numero di coppie che dovranno avere quel rating;
+        \item partendo dall'inizio della lista assegno quel rating a quel numero di coppie, e poi procedo col successivo numero partendo dalla coppia successiva all'ultima di questa iterazione.
+    \end{itemize}
+\end{itemize}
 
 \section{Normalizzazione Min-Max}
 Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla in generale si fornisce un vettore di numeri e vi si applica la seguente formula:
 $$z = \frac{x - min(x)}{max(x) - min(x)}$$
 
-Ora tutti i valori dell'iniziale lista si troveranno in un intervallo $[0,1]$, se volessimo portarlo invece in un intervallo tra $[1,N]$ allora dovremmo applicare la seguente formula:
+Ora tutti i valori dell'iniziale lista si troveranno in un intervallo $[0,1]$, per portarlo invece nell'intervallo $[1,N]$ dobbiamo applicare la seguente formula:
 $$z = (N -1) \cdot \frac{x - min(x)}{max(x) - min(x)} + 1$$
 
-Ora questo metodo è stato applicato alla lista di 
+Inoltre una volta applicata la formula, oltre che tenere i rating così come sono nel dominio dei numeri reali, si è provato anche a convertirli in numeri interi, verranno chiamate rispettivamente \textit{continous} e \textit{rint}.\\
+Questo metodo è stato applicato andando a considerare come lista delle coppie:
+\begin{itemize}
+    \item La lista di tutte le coppie (item,user);
+    \item La lista delle coppie separatamente per ciascuno user;
+    \item La lista delle coppie della stessa categoria per ciascuno user;
+\end{itemize}
 
-
+Si voleva provare in questo modo per capire intanto se gli user avessero volumi d'acquisto diversi e se prodotti delle stesse coppie avessero logiche d'acquisto simili. 
+Inoltre dobbiamo puntualizzare che se guardiamo la distribuzione della quantità totale rispetto i prodotti, noteremo che risulta essere una curva discendente, quindi ci sono molti prodotti acquistati in bassa quantità e pochi in grande quantità. Applicando questo metodo, che non va a cambiare la distribuzione iniziale dei valori ma va solo a scalarli, otterremo quindi molti rating bassi.
+ 
 \section{Metodo prodotto}
 
 \section{Metodo Globale}
