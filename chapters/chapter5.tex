@@ -3,41 +3,69 @@
 \hypertarget{(chap:capitolo5)}{}
 \chapter{Preprocessing storico vendite}
 In questo capitolo andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
+Nei capitoli legati ai risultati andremo a vedere pro e contro di queste tecniche.\\
 
 \section{Preliminari}
-Ciascuno di questi metodi si propone di restituire delle matrici dei rating in un intervallo $[1,scale]$ a partire dalle matrici grezze. Spesso si farà riferimento ad una assegnazione dei rating secondo una distribuzione uniforme discreta o gaussian-like. Quando ci si troverà ad applicare queste distribuzioni avremo una lista di coppie user-item ordinate secondo un certo criterio, andiamo a vedere come vengono assegnati i rating secondo queste due distribuzioni:
+Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e le matrici grezze user-item $RG$.
+Ciascuna tecnica lavora andando a considerare le matrici $RG$ come un vettore di triplette $V = [(u, i, RG_{(u,i)} \neq 0) |  \forall (u \in U,i \in I)]$ con $RG_{(u,i)} \in \mathbb{R}$.\\
+Facciamo inoltre riferimento a $V_c$ come il vettore delle coppie (user,item), $V_{(u,i)}$ come il valore della tripletta di user u e item i, $V_u$ il vettore dei valori delle triplette con user u e $V_i$ il vettore dei valori delle triplette con item i.\\
+Ciascuna tecnica implementa una diversa funzione $f$ biettiva di trasformazione che possiamo riassumere come segue:
+$$f: [(u, i, V_{(u,i)}) |  \forall (u,i) \in V_c] \rightarrow [(u, i, r \in [1,scale] | \forall (u,i) \in V_c]$$
+Queste tecniche si propongono di trasformare il valore $V_{(u,i)}$ di ciascuna tripletta in un rating $r \in [1,scale]$, con $scale$ sempre dispari.\\ 
+Alcune tecniche faranno riferimento ad una distribuzione dei rating uniforme discreta o gaussian-like su gruppi di elementi. Quando ci si troverà ad applicare queste distribuzioni avremo un vettore di elementi ordinati secondo un certo criterio.\\
+Vediamo come vengono assegnati i rating secondo queste due distribuzioni:
 \begin{itemize}
-    \item uniforme discreta: divide la lista in modo tale che ogni valore nella scala dei rating compaia lo stesso numero di volte, assegnandoli in modo crescente, dal capo alla coda della lista;
+    \item uniforme discreta: divide il vettore in modo tale che ogni valore nella scala dei rating compaia lo stesso numero di volte, assegnandoli in modo crescente, dal capo alla coda del vettore;
     \item gaussian-like: si va a definire una distribuzione normale $N(0,scale/3)$, poi si generano una quantità sufficiente di numeri secondo la suddetta distribuzione. Fatto questo si convertono tutti i numeri decimali in interi, si selezionano solo gli interi nell'intervallo $[-scale/2,scale/2]$ e si traslano nell'intervallo $[1,scale]$.\\
     Infine calcoliamo la probabilità per ciascun numero intero nella scala.\\
-    Per assegnare i rating alla lista non si fa altro che iterare sugli interi dell'intervallo $[1,scale]$, andando ad eseguire in sequenza le seguenti operazioni:
+    Per assegnare i rating al vettore non si fa altro che iterare sugli interi dell'intervallo $[1,scale]$, andando ad eseguire in sequenza le seguenti operazioni:
     \begin{enumerate}
-        \item moltiplico la probabilità di quell'intero per la lunghezza della lista;
-        \item converto il valore risultante ad intero, ottenendo quindi il numero di coppie che dovranno avere quel rating;
-        \item partendo dall'inizio della lista assegno quel rating a quel numero di coppie e poi procedo col successivo numero andando a considerare la coppia seguente all'ultima di questa iterazione.
+        \item moltiplico la probabilità di quell'intero per la lunghezza del vettore;
+        \item converto il valore risultante ad intero, ottenendo quindi il numero di elementi che dovranno avere quel rating;
+        \item partendo dall'inizio del vettore assegno quel rating a quello specifico numero di elementi e poi una volta raggiunto l'ultimo procedo col successivo intero della scala a partire dall'elemento seguente.
     \end{enumerate}
 \end{itemize}
+L'assegnazione dei rating secondo tali distribuzioni è implementato da due funzioni che restituiscono un vettore di coppie, formate dall'elemento e dal rating corrispondente.
 
-\section{Normalizzazione Min-Max}
-Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla in generale si fornisce un vettore di numeri e vi si applica la seguente formula:
-$$z = \frac{x - min(x)}{max(x) - min(x)}$$
+\section{Tecnica product-based}
+La tecnica \textit{prodotto globale} prevede di andare a considerare gli item da un pusto di vista globale. Si procede andando a considerare gli item in termini assoluti, vediamo di seguito le operazioni per applicarlo:
+\begin{enumerate}
+    \item otteniamo il seguente vettore $[(i,\sum V_i) \forall i \in I]$;
+    \item ordiniamo il vettore ottenuto basandoci sul secondo termine e conserviamo solo il vettore degli item ordinati;
+    \item andiamo ad applicare la funzione uniforme discreta / gaussian-like a tale vettore, ottenendo per ogni item un rating;
+    \item per ogni tripletta di partenza (user,item,\_) andiamo ad assegnare il rating usato per quello specifico item. 
+\end{enumerate}
 
-Ora tutti i valori dell'iniziale lista si troveranno in un intervallo $[0,1]$, per portarlo invece nell'intervallo $[1,N]$ dobbiamo applicare la seguente formula:
-$$z = (N -1) \cdot \frac{x - min(x)}{max(x) - min(x)} + 1$$
+Questa tecnica porta ad avere a dispetto dello user la stessa valutazione per ogni item ed è quindi molto sensibile alla popolarità di un'item nello storico vendite.
 
-Inoltre una volta applicata la formula, oltre che tenere i rating così come sono nel dominio dei numeri reali, si è provato anche a convertirli in numeri interi, verranno chiamate rispettivamente \textit{continous} e \textit{rint}.\\
-Questo metodo è stato applicato andando a considerare come lista delle coppie:
+\section{Tecniche group-based}
+Le tecniche presenti in questa sezione permettono di dividere il vettore delle triplette $V$ in diversi gruppi, applicare separatamente a ciascuno di essi il metodo ed infine unire insieme i vettori risultati. 
+Deve essere rispettata la condizione che l'intersezione tra tutti i gruppi deve essere nulla.\\
+Vediamo le possibili divisioni in gruppi delle triplette di volta in volta:
 \begin{itemize}
-    \item La lista di tutte le coppie (item,user);
-    \item La lista delle coppie separatamente per ciascuno user;
-    \item La lista delle coppie della stessa categoria per ciascuno user;
+    \item un unico gruppo con tutte le triplette;
+    \item un gruppo per ogni user contenente solo le sue triplette;
+    \item per ogni user e per ogni categoria un gruppo contente tutte le triplette di quello user con l'item che appartiene a quella categoria;
 \end{itemize}
 
-Si voleva provare in questo modo per capire intanto se gli user avessero volumi d'acquisto diversi e se prodotti delle stesse coppie avessero logiche d'acquisto simili. 
-Inoltre dobbiamo puntualizzare che se guardiamo la distribuzione della quantità totale rispetto i prodotti, noteremo che risulta essere una curva discendente, quindi ci sono molti prodotti acquistati in bassa quantità e pochi in grande quantità. Applicando questo metodo, che non va a cambiare la distribuzione iniziale dei valori ma va solo a scalarli, otterremo quindi molti rating bassi.
- 
-\section{Metodo prodotto}
+Vediamo ora i diversi metodi applicati ad un singolo gruppo.
+\subsection{Normalizzazione Min-Max}
+Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla andiamo a considerare un gruppo $G \subseteq V$ e applichiamo a ciascuna tripletta la seguente funzione:
+$$[(u, i, \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} \in [0,1]) |  \forall (u,i) \in G_{(u,i)})]$$
 
-\section{Metodo Globale}
+Ora tutti i valori delle triplette di $G$ si troveranno in un intervallo $[0,1]$, per portarlo invece nell'intervallo $[1,scale]$ dobbiamo applicare la seguente formula:
+$$[(u, i, (scale -1) \cdot \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} + 1 \in [1,scale]) |  \forall (u,i) \in G_{(u,i)})]$$
 
-\section{Metodo Singolo}
+Inoltre una volta applicata la formula, oltre che tenere i rating così come sono nel dominio dei numeri reali, si è provato anche a convertirli in numeri interi, verranno chiamate rispettivamente \textit{continous} e \textit{rint}.\\
+Si voleva provare in questo modo a capire intanto se gli user avessero volumi d'acquisto diversi e se prodotti delle stesse coppie avessero logiche d'acquisto simili. 
+Inoltre dobbiamo puntualizzare che se guardiamo per esempio la distribuzione della quantità totale rispetto i prodotti, noteremo che risulta assumere il comportamento di una curva discendente, quindi ci sono molti prodotti acquistati in bassa quantità e pochi in grande quantità. Applicando questo metodo, che non va a cambiare la distribuzione iniziale dei valori ma va solo a scalarli, otterremo quindi molti rating bassi.
+
+\subsection{Tecnica ordered-based}
+Il seguente metodo prevede di lavorare su un gruppo di triplette $G \subseteq V$ e di eseguire le seguenti operazioni:
+\begin{enumerate}
+    \item ordiniamo il vettore $G$ secondo valore;
+    \item andiamo ad applicare la funzione uniforme discreta / gaussian-like a tale vettore;
+    \item andiamo a sostituire al valore della tripletta quello del rating assegnatogli.
+\end{enumerate}
+
+Questa tecnica permette di andare a confrontare le triplette attraverso l'ordinamento, permette una migliore distribuzione dei rating rispetto la normalizzazione min-max, ma è da verificare se questa ci fornisca risultati sperimentalmente migliori.
