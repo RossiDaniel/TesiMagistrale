@@ -1,146 +1,113 @@
 %!TEX root = ../dissertation.tex
 
 \hypertarget{(chap:capitolo3)}{}
-\chapter{Analisi dei dati}
-\section{Principali tabelle}
-Lo storico vendite dell'azienda Cliente è stato estratto dal modulo hybris, questo è organizzato secondo le tabelle SAP, avremo quindi lo storico delle fatture, composto da una tabella per la testata della fattura, ossia la parte descrittiva dove viene riportato l'acquirente, e una tabella per le posizioni della fattura, ossia la parte dove vengono riportati i materiali acquistati.\\
-Abbiamo inoltre due tabelle che contengono rispettivamente l'anagrafica cliente e materiali, dove possiamo trovare informazioni aggiuntive che li descrivono.\\
-Mi è stato inoltre fornito un glossario che riportava per ciascuna tabella una breve spiegazione di ogni campo.\\
-Tutte queste tabelle sono in formato Excel.
+\chapter{Sistemi di raccomandazione}
+\section{Introduzione}
+Uno dei campi più popolari al momento verso cui si rivolge una particolare attenzione è quello dei sistemi di raccomandazione, da ora in poi RS, in quanto l'attività online sta aumentando sempre più e nascono sempre più spesso nuovi servizi che permettono di scegliere oggetti, siano questi prodotti, video, musica, film o molto altro, da cataloghi vastissimi. I sistemi di raccomandazione permettono di navigare questi cataloghi andando a cercare gli oggetti che risultino più interessanti per l'utente.
 
-Quindi ricapitolando le principali tabelle disponibili sono le seguenti:
+\section{Preliminari}
+In generale possiamo dire che un RS si compone di diversi elementi, in primo luogo abbiamo i cosidetti "attori" del problema, gli user e gli item, rispettivamente gli utenti del sistema e gli oggetti che si vuole consigliare. Abbiamo a disposizione inoltre informazioni riguardo l'interazione tra user e item solitamente sotto forma di feedback implicito o esplicito, questa misura viene definita rating. Questi vengono utilizzati dal RS, insieme con eventuali dati legati al contesto di user e item, per effettuare raccomandazioni.
+
+\subsection{Feedback impliciti / espliciti}
+Solitamente le informazioni che legano user e item, ossia i rating, possono essere di due tipi:
 \begin{itemize}
-	\item \textbf{VBAK}: testata della fattura;
-	\item \textbf{VBAP}: posizioni della fattura;
-	\item \textbf{MARA}: anagrafica prodotto;
-	\item \textbf{KNA1}: anagrafica materiali.
+	\item Implicito: 1 se c'è stata interazione tra lo user e l'item, 0 se non c'è stata;
+	\item Esplicito: valutazione numerica intera in una scala da 1 a N, 0 se non c'è stata interazione.
 \end{itemize}
 
-Andiamo ora a vedere per ciascuna di queste tabelle i campi annessi e alcune informazioni di natura statistica.
-\subsection{Tabella VBAK}
-La tabella VBAK contiene la testata di circa 35000 fatture, datate dall'anno 2016 fino a maggio 2021.\\
-Ciascuna riga della tabella è la testata di una fattura e ne riporta il suo codice identificativo (\textbf{VBELN}) insieme con il codice del cliente a cui è associata (\textbf{KUNNR}). Inoltre ciascuna fattura riporta data e ora (\textbf{ERDAT}, \textbf{ERZET}) in cui è stata emessa, l'importo totale e la valuta corrispondente (\textbf{NETWR}, \textbf{WAERK}).
+Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, se per esempio considerassimo la quantità come un dato esplicito ci troveremmo così ad avere un dato su una scala non continua, mentre se lo facessimo come se fosse implicito trascureremmo delle informazioni che possono in qualche modo fornire una misura di interesse.
 
-\subsection{Tabella VBAP}
-La tabella VBAP contiene le posizioni delle fatture (circa 250000), riporta per ognuna di esse la lista di prodotti acquistati indicando diverse informazioni.
-Ciascuna riga della tabella riporta quindi il codice identificativo (\textbf{VBELN}) della fattura e il codice identificativo del prodotto acquistato (\textbf{MATNR}), poi vengono riportati per quel prodotto il prezzo unitario (\textbf{NETPR}), la quantità acquistata (\textbf{KWMENG}), la spesa totale con la valuta (\textbf{NETWR}, \textbf{WAERK}) e il codice gerarchia prodotto storico (\textbf{PRODH}), ossia quello salvato in MARA al momento del'emissione della fattura.
+\subsection{User-item interaction matrix}
+\begin{minipage}[H]{0.40\textwidth}
+	\includegraphics[width=5.5cm]{figures/Sample-of-user-item-matrix}
+\end{minipage}
+\begin{minipage}[H]{0.55\textwidth}
+	I rating sono organizzati in matrici, dette appunto user-item interaction matrix o semplicemente matrici dei rating (R), dove sulle righe abbiamo gli user mentre sulle colonne abbiamo gli item, nell'incrocio abbiamo riportato il rating. 
+	La matrice come detto può essere implicita o esplicita e le celle vuote corrispondono allo 0.
+	Quando scriviamo $r_{ui}$ intendiamo che $u$ è lo user e $i$ è l'item.
+\end{minipage}
 
-\subsection{Tabella KNA1}
-La tabella KNA1 riporta l'anagrafica cliente (circa 3000), per ciascuna riga abbiamo il codice cliente (\textbf{KUNNR}), il codice paese d'origine (\textbf{LAND1}), il nome dell'azienda (\textbf{NAME1}), la località (\textbf{ORT01}) e la regione (\textbf{REGIO}).
+\subsection{Task}
+L'obiettivo del sistema può essere quello di consigliare ad uno user una lista di N item, detta \textbf{$TopN$} che si ritiene possano interessargli, oppure dato un item si può trovare una lista di item che si considerino simili allo stesso in acccordo con i 'gusti' dello user.
 
-\subsection{Tabella MARA}
-Come detto la tabella MARA è quella che riporta l'anagrafica dei materiali, nella nostra futura trattazione considereremo questi materiali come prodotti in quanto sono acquistabili all'interno dell'e-commerce.\\
-Ciascuna riga della tabella riporta quindi un prodotto univoco composto dal suo usuale codice identificativo (\textbf{MATNR}), dal codice della gerarchia prodotto (\textbf{PRODH}) e del gruppo merceologico (\textbf{MATKL}) e una breve descrizione testuale (\textbf{MAKTX}), poi abbiamo delle informazioni su dimensione, volume e peso.\\
-Per le dimensioni abbiamo un campo (\textbf{GROES}) che le fornisce nel formato lunghezza X larghezza X altezza, oppure altri (\textbf{LAENG}, \textbf{BREIT}, \textbf{HOEHE}), che indicano rispettivamente lunghezza, larghezza e altezza e l'unità di misura per entrambi i formati viene riportata nello stesso campo (\textbf{MEABM}). \\
-Poi abbiamo due campi per volume e peso (\textbf{VOLUM}, \textbf{NTGEW}) e altri due per le loro rispettive unità di misura (\textbf{VOLEH}, \textbf{GEEWI}).
-
-\section{Prodotti}
-Da questo momento in poi faremo riferimento ai materiali chiamandoli prodotti come detto in precedenza.\\
-In totale nella tabella anagrafica materiali (MARA) sono presenti circa 75000 prodotti diversi, mentre i prodotti effettivamente venduti risultano essere molti meno attestandosi all'incirca verso gli 8000.\\
-Abbiamo però due campi interessanti che riguardano la gerarchia prodotto (PRODH) e il gruppo merceologico (MATKL), questi due ci permettono di studiare la similarità dei prodotti.
-
-\subsection{Gerarchia prodotto (PRODH)}
-Il campo gerarchia prodotto (PRODH) è un campo numerico di 18 cifre utile per separare i prodotti rispetto le diverse categorie su più livelli.
-Nella tabella secondaria T179 vengono definiti i livelli di gerarchia e le diverse categorie. 
-Vediamoli di seguito:
+\section{Approcci}
+Definito quindi il task abbiamo diversi modi per poter soddisfare il nostro obiettivo, in generale abbiamo due principali categorie di RS:
 \begin{itemize}
-	\item \textbf{PRODH}: codice gerarchia prodotto;
-	\item \textbf{STUFE}: livello gerarchia;
-	\item \textbf{VTEXT}: descrizione testuale.
-\end{itemize} 
-
-Ciascun codice PRODH contenuto nella tabella T179 avrà rispettivamente il seguente numero di cifre in base al livello di gerarchia (STUFE):
-\begin{itemize}
-	\item \textbf{STUFE = 1}: 1° livello della gerarchia, il codice sarà di 5 cifre;
-	\item \textbf{STUFE = 2}: 2° livello della gerarchia, il codice sarà di 10 cifre, dove le prime 5 identificano la categoria di 1° livello a cui appartengono mentre le restanti 5 indentificano la sotto-categoria di 2° livello;
-	\item \textbf{STUFE = 3}: 3° livello della gerarchia, il codice sarà di 18 cifre, dove le prime 10 identificano la categoria di 2° livello a cui appartengono mentre le restanti 8 indentificano la sotto-categoria di 3° livello.
+	\item \textbf{Non Personalizzato}: andiamo a consigliare i prodotti che globalmente risultano più popolari, ossia che abbiano complessivamente ricevuto più valutazioni, o quelli con rating più alto. Questo approccio non va a considerare le informazioni relative il singolo user;
+	\item \textbf{Personalizzato}: ci sono diversi approcci che vedremo nelle sezioni successive, in generale si fanno raccomandazioni basate sulla similarità tra user. I due approcci più famosi sono il collaborative filtering, dove si cerca di consigliare item ad uno user basandosi su user simili, e il content-based filtering si cerca di raccomandare item simili a quelli con cui si ha già interagito.
 \end{itemize}
-Ciascun prodotto sarà quindi provvisto di un codice di 18 cifre che identificherà una categoria per ogni livello.\\
-Nella tabella VBAP ci sono alcune posizioni dove a parità di codice prodotto (MATNR) si hanno codici PRODH diversi, questo è dovuto al diverso momento temporale in cui sono stati acquistati, infatti nella tabella VBAP il codice PRODH è storico, ho provveduto per semplicità ad aggiornarli tutti al codice PRODH più recente riportato nella tabella anagrafica materiali MARA.
-Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
-\subsubsection{Selezione categorie di 1° livello}
 
-\begin{minipage}[H]{0.4\textwidth}
-	\scalebox{0.45}{%
-	\begin{tabular}{|l|rr|l|}
-		\toprule
-		PRODH &    $\#tot$ &  $\#sold$ &                  titolo \\
-		\midrule
-		00010 &    28 &    0 &              categoria1 \\ %               Lavasciuga \\
-		00020 &     0 &    0 &              categoria2 \\ %              Spazzatrici \\
-		00030 &     0 &    0 &              categoria3 \\ %             Monospazzole \\
-		00040 &     5 &    0 &              categoria4 \\ %               Aspiratori \\
-		00050 &     2 &    0 &              categoria5 \\ %      Car washing system \\
-		00090 &     2 &    0 &              categoria6 \\ %      Ricambi / accessori \\
-		00100 &  1117 &  173 &              CATEGORIA1 \\ %  LAVASCIUGA UOMO A TERRA \\
-		00200 &   645 &  130 &              CATEGORIA2 \\ %  LAVASCIUGA UOMO A BORDO \\
-		00250 &    31 &   11 &              CATEGORIA3 \\ %             SANIFICATORI \\
-		00300 &   405 &   92 &              CATEGORIA4 \\ %              SPAZZATRICI \\
-		00400 &   525 &   36 &              CATEGORIA5 \\ %             MONOSPAZZOLE \\
-		00500 &  1715 &   70 &              CATEGORIA6 \\ %               ASPIRATORI \\
-		00600 &   334 &    6 &              CATEGORIA7 \\ %           WASHING SYSTEM \\
-		00700 &     1 &    0 &              CATEGORIA8 \\ %          SISTEMI RICICLO \\
-		00900 & 70441 & 7702 &              CATEGORIA9 \\ %      RICAMBI \& ACCESSORI \
-		00950 &    28 &    1 &             CATEGORIA10 \\ %                CHEMICALS \\
-		09999 &   215 &    0 &                   ALTRO \\ %                    ALTRO \\
-		\bottomrule
-	\end{tabular}
+Nelle sezione successive andiamo a spiegare più nel dettaglio il collaborative e conte-based filtering.
 
-}
+\subsection{Collaborative filtering}
+Il collaborative filtering è un approccio agli RS basato sulla similarità, raccomandiamo ad uno user item interessanti per altri user simili ad esso, e viceversa item simili ad altri item per cui ha dimostrato interesse.
+La similarità può essere quindi di due tipi: item-based, basata quindi sulla similarità tra prodotti o user-based ossia su quella tra user.
+Ci sono due approcci possibili al collaborative filtering:
+\begin{itemize}
+	\item Memory-based: utilizziamo la matrice dei rating per calcolare la similarità tra user e item, metodi basati sull'algoritmo K nearest neighbour;
+	\item Model-based: utilizziamo dei modelli che attraverso degli algoritmi permettono di predire il rating su item non valutati.
+\end{itemize}
+
+\subsubsection{UserKnn}
+UserKnn è un metodo memory-based che fa uso della matrice dei rating, ogni user avrà quindi un proprio "profilo", ossia la propria riga nella matrice dei rating. L'idea è quella di calcolare la similarità tra tutti gli user e fatta questa operazione è possibile calcolare il rating previsto per ogni item non valutato rispetto ad uno user.
+Per fare ciò andiamo a selezionare i k user con similarità più alta con il nostro user target e calcoliamo la media pesata dei loro rating usando come pesi la similarità.\\
+Fatto questo si procede ad ordinare per ciascuno user tutti i prodotti secondo i rating ottenuti e si ottiene così la lista $TopN$ degli item più interessanti.\\
+Questo metodo funziona senza informazioni relative alle caratteristiche degli user o item e può gestire rating espliciti o impliciti con formule leggermente diverse.
+
+\subsubsection{ItemKnn}
+ItemKnn è un metodo memory-based molto simile al precedente, qui si va a considerare però gli item da raccomandare e il loro "profilo" è la propria colonna della rating matrix. Si calcola la similarità tra tutti gli item e dato uno user si procede a calcolare il rating stimato sugli item che non ha valutato andando a trovare per ciascuno di essi la lista di K item che ha valutato più simili ad esso, poi calcola la media pesata dei rating dei K item selezionati usando come peso la similarità. 
+ 
+\subsubsection{Matrix Factorization (MF)}
+Nell'approccio model-based, Matrix Factorization (MF) è uno dei modelli più famosi, questo si basa sul concetto che si possa mappare user e item verso uno spazio delle feature comune di una certa dimensionalità K, possiamo quindi creare due matrici P e Q, dove P è una matrice avente sulle righe gli user e come colonne le K feature, mentre Q è una matrice avente sulle righe le k feature e sulle colonne gli item, quello che vogliamo ottenere è una approsimazione della rating matrix attraverso la moltiplicazione di P e Q, ossia $R \approx P \cdot Q^{T} = \hat{R}$.\\
+\includegraphics[width=14.5cm]{figures/MF_disegno}
+
+Quello che otteniamo è quindi un profilo sia per gli user che per gli item rispetto lo stesso spazio delle feature. Il problema maggiore risulta però essere quello di ottenere queste due matrici, possiamo farlo creando una funzione di loss apposita e andando ad allenare in modo alternato le matrici P e Q, carcando quindi di ridurre dopo ciascuna iterazione la differenza tra $R$ e $\hat{R}$.\\
+Una volta che il modello è allenato possiamo predire il rating dato da uno user u su un item i moltiplicando i profili corrispondenti $\hat{r}_{ui} = P_u \cdot Q_{i}^{T}$.
+
+\subsubsection{Variational Auto-Encoder for CF (VAECF)}
+Rispetto ai modelli precedenti che potevano funzionare sia con rating espliciti o impliciti, il VAECF accetta solo quest'ultimi. Il modello prende in input la matrice dei rating impliciti andando a considerare ogni riga come una distribuzione associata allo user. \textbf{Da completare}.
+
+\subsection{Content-based filtering}
+Il content-based filtering è un approccio che si basa sull'idea di consigliare item simili a quelli con cui si è già interagito.\\
+Ciascun item possiede delle feature, per esempio nel caso si abbia come item dei film queste potrebbero essere i generi, l'insieme delle feature può essere mappata su di un vettore delle feature, per ogni item quindi si riporta nel vettore 1 se possiede quella feature, 0 altrimenti, questo permette di definire un profilo per l'item.
+Una volta fatto ciò si procede a creare anche un profilo per lo user, ci sono diversi modi per farlo ma per esempio si può considerare tutti i profili degli item con cui si è interagito e farne quindi la media pesata basata sui rating corrispondenti.
+Ottenuto un profilo anche per lo user si può calcolare la similarità tra di esso e quello degli item per poi ordinarli secondo similarità ottenendo così la lista $TopN$.
+
+\section{Valutazione}
+Quanto abbiamo visto finora sono metodi che ci permettono di effettuare le raccomandazioni, vogliamo trovare però anche il modo per poterle valutare. Per prima cosa dobbiamo dividere le matrici dei rating in training e test set.\\
+Per fare ciò andiamo ad eseguire uno shuffle delle coppie (user, item) e si va ad assegnare al training set l'80\% delle coppie e le restanti al test set, questo sistema non ci assicura che uno user sia presente nel training set.
+Date le raccomandazioni fornite dal RS vogliamo valutarle rispetto due aspetti principali: il rating e il ranking.
+Il primo aspetto riguarda semplicemente la diversità tra i rating stimati da quelli reali delle coppie (user, item) del test set, queste metriche non vengono solitamente usate in quanto non è un buon modo per valutare un RS perché non ci permette di capire se un'item consigliato sia rilevante.
+Andando invece a considerare il concetto di ranking ci rendiamo conto che sia più legato a ciò che vogliamo andare a valutare, le metriche annesse considerano rilevanti gli item presenti nel test set e vanno a verificarne la posizione nella lista $TopN$.
+In generale le metriche si applicano a ciascuno user e il risultato finale è la media dei singoli risultati.
+
+\subsection{AUC}
+L'AUC (Area Under the Curve) è una metrica che permette di valutare un RS basandosi sul numero di coppie di item rivelanti e non, presenti nella $TopN$ in ordine, dove un item non rilevante ha uno score minore rispetto a quello di uno rilevante, vediamo di seguito la formula:
+$$AUC = \frac{1}{|N^{+}|\cdot|N^{-}|}\sum_{i \in N^{+}} \sum_{j \in N^{-}} [s(i) > s(j)]$$
+Il termine $N^{+}$ è l'insieme degli item presenti nel test set, mentre $N^{-}$ sono tutti gli item rimanenti. $s(i)$ è la valutazione data dal RS sull'item $i$, quello che si fa è andare a contare il numero di coppie di item in ordine nella $TopN$ andando a vedere gli score assegnati loro.
+Utilizziamo la funzione $[s(i) > s(j)]$ che restituisce 1 se lo score dell'item rilevante è maggiore, 0 altrimenti. Infine dividiamo il numero di coppie ordinate in modo correto per il numero di coppie totali.\\
+Il valore dell'$AUC \in [0,1]$, dove più il valore si avvicina ad 1, minori saranno le coppie in ordine sbagliato.
+
+\subsection{nDCG@k}
+La metrica nDCG@k (normalized Discount Cumulative Gain) ci permette di calcolare una misura basata sulla posizione degli item rilevanti nella lista $TopN$, ossia quelli del test set.
+
+\begin{minipage}[H]{0.5\textwidth}
+	$$DCG@k = \sum_{i=1}^{k} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
 \end{minipage}
-\begin{minipage}[H]{0.6\textwidth}
-	Nella tabella vengono mostrati i codici PRODH delle categorie di 1° livello, nella colonna $\#tot$ il numero di prodotti diversi per quella categoria, nella colonna $\#sold$ il numero di prodotti diversi acquistati almeno una volta appartententi a quella categoria ed infine il titolo della categoria.\\
-	Come possiamo vedere le prime sei categorie con titolo in minuscolo hanno pochi prodotti catalogati in MARA e nessun prodotto venduto.\\
+\begin{minipage}[H]{0.5\textwidth}
+	$$IDCG@k = \sum_{i=1}^{|REL_i|} \frac{2^{rel_i} - 1}{log_{2} (i + 1)}$$
 \end{minipage}
-Chiaramento il fatto che siano tutti a zero è dovuto all'aggiornamento dei codici PRODH di cui abbiamo parlato precedentemente, a prescindere da ciò il numero di posizioni che prima riportavano codici appartenenti alle categorie prese in considerazione non superava la decina, quindi non considerare queste categorie in quanto si è smesso di usarle sembra la scelta più logica.\\
-La categoria ALTRO (09999) non è stata considerata in quanto riporta prodotti che non sono disponibili sull'e-commerce.
-Inoltre le categorie CATEGORIA8 (00700) e CATEGORIA10 (00950), dato il basso numero di prodotti presenti in MARA e le basse vendite, si è preferito non considerarle.
-\subsubsection{Overview categorie di 1° livello}
-
-\scalebox{0.6}{%
-\begin{tabular}{|l|rrrccc|l|}
-\toprule
-$PRODH$ &    $\#posizioni$ &  $\sum_{KWMENG}$ &  $\mathbb{E}_{KWMENG}$ &     $\mathbb{E}_{NETPR}$ &     $\sum_{NETWR}$ &     $\mathbb{E}_{NETWR}$ &      $titolo$\\
-      &                  &              &              &       (€)      &      (€)       &        (€)     &            \\
-\midrule
-00100 &      5908 &    15461 &    2.61 &   1613.44 &   3865.97 &  22840167.61 &  CATEGORIA1 \\
-00200 &      1936 &     3219 &    1.66 &   5898.09 &   8640.59 &  16745496.87 &  CATEGORIA2 \\
-00250 &       333 &     2949 &    8.85 &    552.99 &   3772.04 &   1377422.72 &  CATEGORIA3 \\
-00300 &       745 &     1390 &    1.86 &   4353.24 &   5364.34 &   3996430.94 &  CATEGORIA4 \\
-00400 &       389 &     1651 &    4.24 &    708.17 &   2404.47 &    940777.84 &  CATEGORIA5 \\
-00500 &      1133 &    12984 &   11.46 &    175.75 &   1034.63 &   1172236.58 &  CATEGORIA6 \\
-00600 &       153 &      494 &    3.23 &    448.52 &   1338.80 &     83501.04 &  CATEGORIA7 \\
-00900 &    239740 &  1070334 &    4.46 &     26.67 &     66.61 &  15968039.56 &  CATEGORIA9 \\
-\midrule
-      &   250339  &  1108493.51 &   4.72 & 1706.86 &   3225.75 &  63124073.16 &       valori riassuntivi \\
-
-\bottomrule
-\end{tabular}}
 \newline
 
-Nella tabella per ogni categoria $PRODH$ di 1° livello possiamo vedere:
+Ed infine per cacolare la $nDCG@k$ usiamo la seguente formula:
+$$nDCG@k = \frac{DCG@k}{IDCG@k}$$
+
+Per prima cosa dobbiamo dire che la metrica lavora su una parte della lista $TopN$, ossia la parte contentente i primi K item che definiamo come $TopK$.\\
+Gli item più rilevanti nel nostro caso sono gli item presenti nel test set.\\
+Andiamo ora ad analizzare numeratore e denomicatore per capire meglio la loro funzione.
 \begin{itemize}
-	\item $\#posizioni$: numero di posizioni in cui compaiono prodotti di quella categoria in fattura;
-	\item $\sum_{KWMENG}$: quantità totale di prodotti acquistati appartenenti a quella categoria;
-	\item $\mathbb{E}_{KWMENG}$: quantità media per fattura di prodotti acquistati appartenti a quella categoria;
-	\item $\mathbb{E}_{NETPR}$: prezzo medio per fattura di prodotti acquistati di quella categoria;
-	\item $\sum_{NETWR}$: spesa totale per prodotti di quella categoria;
-	\item $\mathbb{E}_{NETWR}$: spesa totale media per fattura di prodotti di quella categoria.
-\end{itemize}
-Dalla tabella possiamo vedere come la categoria RICAMBI \& ACCESSORI riporti un prezzo medio per fattura molto più basso rispetto alle altre categorie, questo è dovuto al fatto che i pezzi di ricambio ed accessori non sono macchine o sistemi da usare per fornire un servizio quanto un prodotto per riparare ciò che già si possiede. Possiamo vedere che in termini di posizioni l'acquisto di pezzi di ricambio copra una cospicua parte delle posizioni in fattura, oltre che costituire un'importante parte del fatturato per l'azienda. Le altre categorie indicano macchine e sistemi per la pulizia quindi il prezzo medio per prodotto è molto maggiori e per i clienti finali questi rappresentano un investimento.\\
-Da quanto detto finora si vengono a creare due macro categorie di prodotti:
-\begin{itemize}
-	\item \textbf{Macchine}: questa macro categoria racchiude sette categorie di 1° livello (00100, 00200, 00250, 00300, 00400, 00500, 00600);
-	\item \textbf{Ricambi}: questa macro categoria invece racchiude la sola categoria 00900.
+	\item La $DCG@k$ si basa sull'idea che gli item più rilevanti debbano trovarsi il più possibile in testa alla lista $TopK$, quindi si vuole penalizzare un item sempre di più via via questo si trovi nella coda della lista, per far ciò il denominatore aumenta all'aumentare della posizione seguendo una scala logaritmica. 
+	\item La $IDCG@k$ è equivalente a calcolare la $DCG@k$ sulla lista $TopK$ ideale, ossia la lista riportante tutti gli item ordinati in modo ideale secondo score nella posizione corretta, questo equivale al valore massimo ottenibile dalla metrica. 
 \end{itemize}
 
-Dobbiamo dare un'ultima precisazione, la maggior parte delle categorie di 2° e 3° livello risultano essere di prodotti appartenenti alla macro categoria delle macchine, quindi la gerarchia è molto più densa orizzontalmente per le macchine rispetto che i pezzi di ricambio, infatti per le macchine le categorie risultano essere i diversi modelli di macchinari disponibili e i prodotti a catalogo di quella categoria sono le varianti dello stesso modello di macchinario. Per i pezzi di ricambio abbiamo solo poche categorie contenitore che li raggruppano tutti insieme.
-
-\subsection{Gruppo merceologico (MATKL)}
-Il gruppo merceologico (MATKL) non è organizzato come una gerarchia, come lo è invece la gerarchia prodotto (PRODH), bensì come un insieme di prodotti, in totale abbiamo circa 160 gruppi, dove uno di questi contiene tutti i prodotti che prima abbiamo classificato come macchine. Rispetto il codice PRODH, il gruppo merceologico è più divisivo rispetto i ricambi, questo ci può aiutare in quanto ora siamo in grado di categorizzare anche i ricambi. 
-
-\subsection{Dimensione, volume e peso}
-I campi rigurdanti dimensione, volume e peso potrebbero essere utili per ricercare una similarità tra i prodotti.\\
-Le informazioni sulle dimensioni, come lunghezza, larghezza e altezza sono praticamente ridondanti nei campi GROES e (LAENG, BREIT, HOEHE) se non per alcuni prodotti dove le informazioni sono esclusive di uno dei due formati.\\
-Per peso e volume abbiamo i rispettivi campi numerici e altri due campi che riportano le unità di misura, per il volume possono essere i metri cubi o i millimetri cubi, per il peso i kilogrammi o i grammi.
-La criticità di queste misure riguarda la loro scarsità, infatti su 75000 prodotti abbiamo informazioni su volume e peso rispettivamente solo sul 20\% e 39\%, mentre sui prodotti acquistati almeno una volta sul 19\% e 5\%. 
+Quindi andando a dividere il numeratore con il denominatore si attua una normalizzazione, il valore finale di $nDCG@k \in [0,1]$, dove più si avvicina ad 1 più la lista $TopK$ assomiglia a quella ideale.
