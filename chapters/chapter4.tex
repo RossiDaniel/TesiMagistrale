@@ -8,7 +8,7 @@ In questa sezione andremo a vedere diverse tecniche che sono state utilizzate pe
 
 \subsection{Preliminari}
 Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e le matrici grezze user-item $RG$.
-Ciascuna tecnica lavora andando a considerare le matrici $RG$ come un vettore di triplette $V = [(u, i, RG_{(u,i)} \neq 0) |  \forall (u \in U,i \in I)]$ con $RG_{(u,i)} \in \mathbb{R}$.\\
+Ciascuna tecnica lavora andando a considerare le matrici $RG$ come un vettore di triplette $V = [(u, i, RG_{(u,i)} \neq 0) |  \forall (u \in U,i \in I)]$ con $RG_{(u,i)} \in \mathbb{R^+}$.\\
 Facciamo inoltre riferimento a $V_c$ come il vettore delle coppie (user,item), $V_{(u,i)}$ come il valore della tripletta di user u e item i, $V_u$ il vettore dei valori delle triplette con user u e $V_i$ il vettore dei valori delle triplette con item i.\\
 Ciascuna tecnica implementa una diversa funzione $f$ biettiva di trasformazione che possiamo riassumere come segue:
 $$f: [(u, i, V_{(u,i)}) |  \forall (u,i) \in V_c] \rightarrow [(u, i, r \in [1,scale] | \forall (u,i) \in V_c]$$
@@ -29,54 +29,53 @@ Vediamo come vengono assegnati i rating secondo queste due distribuzioni:
 L'assegnazione dei rating secondo tali distribuzioni è implementato da due funzioni che restituiscono un vettore di coppie, formate dall'elemento e dal rating corrispondente.
 
 \subsection{Tecnica product-based}
-La tecnica \textit{prodotto globale} prevede di andare a considerare gli item da un pusto di vista globale. Si procede andando a considerare gli item in termini assoluti, vediamo di seguito le operazioni per applicarlo:
+La tecnica \textit{product-based} permette di analizzare gli item da un punto di vista globale. Si procede considerando gli item in termini assoluti, vediamo di seguito le operazioni per applicarlo:
 \begin{enumerate}
-    \item otteniamo il seguente vettore $[(i,\sum V_i) \forall i \in I]$;
-    \item ordiniamo il vettore ottenuto basandoci sul secondo termine e conserviamo solo il vettore degli item ordinati;
+    \item otteniamo il seguente vettore $p = [(i,\sum V_i)| \forall i \in I]$;
+    \item dopo aver ordinato il vettore $p$ basandoci sul secondo termine delle coppie, conserviamo solo il primo elemento di ciascuna di esse;
     \item andiamo ad applicare la funzione uniforme discreta / gaussian-like a tale vettore, ottenendo per ogni item un rating;
-    \item per ogni tripletta di partenza (user,item,\_) andiamo ad assegnare il rating usato per quello specifico item. 
+    \item per ogni tripletta si va a recuperare il rating corrispondente al suo item e crea una nuova tripletta col suddetto valore.  
 \end{enumerate}
 
-Questa tecnica porta ad avere a dispetto dello user la stessa valutazione per ogni item ed è quindi molto sensibile alla popolarità di un'item nello storico vendite.
+Questa tecnica porta ad avere, indipendentemente dallo user, la stessa valutazione per ogni item ed è quindi molto sensibile alla popolarità dello stesso nello storico vendite.
 
 \subsection{Tecniche group-based}
-Le tecniche presenti in questa sezione permettono di dividere il vettore delle triplette $V$ in diversi gruppi, applicare separatamente a ciascuno di essi il metodo ed infine unire insieme i vettori risultati. 
-Deve essere rispettata la condizione che l'intersezione tra tutti i gruppi deve essere nulla.\\
-Vediamo le possibili divisioni in gruppi delle triplette di volta in volta:
+Le tecniche presenti in questa sezione permettono di dividere il vettore delle triplette $V$ in diversi gruppi, applicare separatamente a ciascuno di essi il metodo ed infine unire insieme i vettori risultanti. \\
+Va rispettata la condizione che l'intersezione tra tutti i gruppi deve essere nulla.\\
+Vediamo le possibili divisioni in gruppi delle triplette:
 \begin{itemize}
     \item un unico gruppo con tutte le triplette;
     \item un gruppo per ogni user contenente solo le sue triplette;
-    \item per ogni user e per ogni categoria un gruppo contente tutte le triplette di quello user con l'item che appartiene a quella categoria;
+    \item per ogni user e per ogni categoria un gruppo contente tutte le triplette di quello user dove gli item appartengonoù a quella categoria;
 \end{itemize}
 
 Vediamo ora i diversi metodi applicati ad un singolo gruppo.
 \subsubsection{Normalizzazione Min-Max}
-Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla andiamo a considerare un gruppo $G \subseteq V$ e applichiamo a ciascuna tripletta la seguente funzione:
-$$[(u, i, \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} \in [0,1]) |  \forall (u,i) \in G_{(u,i)})]$$
+Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla andiamo a considerare un gruppo $G \subseteq V$ e applichiamo a ciascuna tripletta la funziona min-max, in generale otteniamo il seguente vettore risultante:
+$$G = [(u, i, \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} \in [0,1]) |  \forall (u,i) \in G_{c})]$$
 
 Ora tutti i valori delle triplette di $G$ si troveranno in un intervallo $[0,1]$, per portarlo invece nell'intervallo $[1,scale]$ dobbiamo applicare la seguente formula:
-$$[(u, i, (scale -1) \cdot \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} + 1 \in [1,scale]) |  \forall (u,i) \in G_{(u,i)})]$$
+$$[(u, i, (scale -1) \cdot \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} + 1 \in [1,scale]) |  \forall (u,i) \in G_{c})]$$
 
 Inoltre una volta applicata la formula, oltre che tenere i rating così come sono nel dominio dei numeri reali, si è provato anche a convertirli in numeri interi, verranno chiamate rispettivamente \textit{continous} e \textit{rint}.\\
-Si voleva provare in questo modo a capire intanto se gli user avessero volumi d'acquisto diversi e se prodotti delle stesse coppie avessero logiche d'acquisto simili. 
-Inoltre dobbiamo puntualizzare che se guardiamo per esempio la distribuzione della quantità totale rispetto i prodotti, noteremo che risulta assumere il comportamento di una curva discendente, quindi ci sono molti prodotti acquistati in bassa quantità e pochi in grande quantità. Applicando questo metodo, che non va a cambiare la distribuzione iniziale dei valori ma va solo a scalarli, otterremo quindi molti rating bassi.
+Si voleva provare in questo modo a capire se gli user avessero volumi d'acquisto diversi e se prodotti delle stesse coppie avessero logiche d'acquisto simili. 
+Inoltre dobbiamo puntualizzare che se guardiamo per esempio la distribuzione della quantità totale rispetto i prodotti, noteremo che risulta assumere il comportamento di una curva discendente, quindi ci sono molti prodotti acquistati in bassa quantità e pochi in grande quantità. Applicando questo metodo, che non va a cambiare la distribuzione iniziale dei valori ma solo a scalarli, otterremo molti rating bassi.
 
 \subsubsection{Tecnica ordered-based}
 Il seguente metodo prevede di lavorare su un gruppo di triplette $G \subseteq V$ e di eseguire le seguenti operazioni:
 \begin{enumerate}
-    \item ordiniamo il vettore $G$ secondo valore;
-    \item andiamo ad applicare la funzione uniforme discreta / gaussian-like a tale vettore;
-    \item andiamo a sostituire al valore della tripletta quello del rating assegnatogli.
+    \item ordiniamo il vettore $G$ secondo il terzo valore delle triplette;
+    \item applichiamo la funzione uniforme discreta / gaussian-like a tale vettore;
+    \item sostituiamo al valore della tripletta quello del rating assegnatogli.
 \end{enumerate}
 
-Questa tecnica permette di andare a confrontare le triplette attraverso l'ordinamento, permette una migliore distribuzione dei rating rispetto la normalizzazione min-max, ma è da verificare se questa ci fornisca risultati sperimentalmente migliori.
+Questa tecnica permette di confrontare le triplette attraverso l'ordinamento e consente una migliore distribuzione dei rating rispetto la normalizzazione min-max, ma è da verificare se questa ci fornisca risultati sperimentalmente migliori.
 
 \subsection{Approccio implicito}
 Tutti gli approcci che abbiamo visto producono matrici dei rating esplicite, chiaramente un tentativo sarà quello di usare una versione della matrice grezza implicita.
 
 \section{Tecniche combinate}
-Nel capitolo precedente abbiamo visto diverse tecniche di preprocessing per ottenere dei rating dalle matrici grezze.
-In questo capitolo andremo invece a vedere due approcci che si sono tentati per cercare di combinare insieme rating provenienti da fonti diverse.
+Nelle sezioni precedenti abbiamo visto diverse tecniche di preprocessing per ottenere dei rating dalle matrici grezze, in questa andremo invece a descrivere due approcci utili per cercare di combinare insieme rating provenienti dalle diverse \textit{espressioni d'interesse}.
 \subsection{Premesse}
 Come riportato nel capito dell'analisi dei dati, le informazioni disponibili sugli item ci permettono di valutare l'interesse dello user verso gli item secondo diversi \textit{aspetti}, quali la quantità acquistata, la spesa totale, il numero di fatture in cui compaiono e la recentezza dell'ultimo acquisto, definiremo questi aspetti da ora in poi come \textit{espressioni di interesse}.
 Questi \textit{aspetti} sono organizzati in matrici grezze a cui nel capitolo precedente abbiamo applicato diverse tecniche di preprocessing andando a trasformali in rating, da qui cercare di unire insieme queste espressioni di interesse sembra essere un buon modo per migliorare la qualità delle raccomandazioni finali.
