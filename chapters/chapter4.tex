@@ -2,10 +2,11 @@
 
 \hypertarget{(chap:capitolo4)}{}
 \chapter{Preprocessing storico vendite}
-In questo capitolo andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
-Nei capitoli legati ai risultati andremo a vedere pro e contro di queste tecniche.\\
 
-\section{Preliminari}
+\section{Preprocessing matrici grezze}
+In questa sezione andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
+
+\subsection{Preliminari}
 Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e le matrici grezze user-item $RG$.
 Ciascuna tecnica lavora andando a considerare le matrici $RG$ come un vettore di triplette $V = [(u, i, RG_{(u,i)} \neq 0) |  \forall (u \in U,i \in I)]$ con $RG_{(u,i)} \in \mathbb{R}$.\\
 Facciamo inoltre riferimento a $V_c$ come il vettore delle coppie (user,item), $V_{(u,i)}$ come il valore della tripletta di user u e item i, $V_u$ il vettore dei valori delle triplette con user u e $V_i$ il vettore dei valori delle triplette con item i.\\
@@ -27,7 +28,7 @@ Vediamo come vengono assegnati i rating secondo queste due distribuzioni:
 \end{itemize}
 L'assegnazione dei rating secondo tali distribuzioni è implementato da due funzioni che restituiscono un vettore di coppie, formate dall'elemento e dal rating corrispondente.
 
-\section{Tecnica product-based}
+\subsection{Tecnica product-based}
 La tecnica \textit{prodotto globale} prevede di andare a considerare gli item da un pusto di vista globale. Si procede andando a considerare gli item in termini assoluti, vediamo di seguito le operazioni per applicarlo:
 \begin{enumerate}
     \item otteniamo il seguente vettore $[(i,\sum V_i) \forall i \in I]$;
@@ -38,7 +39,7 @@ La tecnica \textit{prodotto globale} prevede di andare a considerare gli item da
 
 Questa tecnica porta ad avere a dispetto dello user la stessa valutazione per ogni item ed è quindi molto sensibile alla popolarità di un'item nello storico vendite.
 
-\section{Tecniche group-based}
+\subsection{Tecniche group-based}
 Le tecniche presenti in questa sezione permettono di dividere il vettore delle triplette $V$ in diversi gruppi, applicare separatamente a ciascuno di essi il metodo ed infine unire insieme i vettori risultati. 
 Deve essere rispettata la condizione che l'intersezione tra tutti i gruppi deve essere nulla.\\
 Vediamo le possibili divisioni in gruppi delle triplette di volta in volta:
@@ -49,7 +50,7 @@ Vediamo le possibili divisioni in gruppi delle triplette di volta in volta:
 \end{itemize}
 
 Vediamo ora i diversi metodi applicati ad un singolo gruppo.
-\subsection{Normalizzazione Min-Max}
+\subsubsection{Normalizzazione Min-Max}
 Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla andiamo a considerare un gruppo $G \subseteq V$ e applichiamo a ciascuna tripletta la seguente funzione:
 $$[(u, i, \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} \in [0,1]) |  \forall (u,i) \in G_{(u,i)})]$$
 
@@ -60,7 +61,7 @@ Inoltre una volta applicata la formula, oltre che tenere i rating così come son
 Si voleva provare in questo modo a capire intanto se gli user avessero volumi d'acquisto diversi e se prodotti delle stesse coppie avessero logiche d'acquisto simili. 
 Inoltre dobbiamo puntualizzare che se guardiamo per esempio la distribuzione della quantità totale rispetto i prodotti, noteremo che risulta assumere il comportamento di una curva discendente, quindi ci sono molti prodotti acquistati in bassa quantità e pochi in grande quantità. Applicando questo metodo, che non va a cambiare la distribuzione iniziale dei valori ma va solo a scalarli, otterremo quindi molti rating bassi.
 
-\subsection{Tecnica ordered-based}
+\subsubsection{Tecnica ordered-based}
 Il seguente metodo prevede di lavorare su un gruppo di triplette $G \subseteq V$ e di eseguire le seguenti operazioni:
 \begin{enumerate}
     \item ordiniamo il vettore $G$ secondo valore;
@@ -70,5 +71,83 @@ Il seguente metodo prevede di lavorare su un gruppo di triplette $G \subseteq V$
 
 Questa tecnica permette di andare a confrontare le triplette attraverso l'ordinamento, permette una migliore distribuzione dei rating rispetto la normalizzazione min-max, ma è da verificare se questa ci fornisca risultati sperimentalmente migliori.
 
-\section{Approccio implicito}
+\subsection{Approccio implicito}
 Tutti gli approcci che abbiamo visto producono matrici dei rating esplicite, chiaramente un tentativo sarà quello di usare una versione della matrice grezza implicita.
+
+\section{Tecniche combinate}
+Nel capitolo precedente abbiamo visto diverse tecniche di preprocessing per ottenere dei rating dalle matrici grezze.
+In questo capitolo andremo invece a vedere due approcci che si sono tentati per cercare di combinare insieme rating provenienti da fonti diverse.
+\subsection{Premesse}
+Come riportato nel capito dell'analisi dei dati, le informazioni disponibili sugli item ci permettono di valutare l'interesse dello user verso gli item secondo diversi \textit{aspetti}, quali la quantità acquistata, la spesa totale, il numero di fatture in cui compaiono e la recentezza dell'ultimo acquisto, definiremo questi aspetti da ora in poi come \textit{espressioni di interesse}.
+Questi \textit{aspetti} sono organizzati in matrici grezze a cui nel capitolo precedente abbiamo applicato diverse tecniche di preprocessing andando a trasformali in rating, da qui cercare di unire insieme queste espressioni di interesse sembra essere un buon modo per migliorare la qualità delle raccomandazioni finali.
+I metodi combinati prendono in input le matrici grezze e vi applicano una tecnica di preprocessing del capitolo precedente.\\
+Fatto questo ci sono due modi per combinarle insieme, vediamoli di seguito:
+
+\subsection{Combinazione liste \textit{TopN}}
+Il primo metodo si propone di ottenere per ogni user una lista $TopN$ di item per ciascuna espressione di interesse, queste poi andranno combinate insieme attraverso l'uso del borda count, un sistema di voting basato sulla posizione.
+Vediamo ora quali sono le operazioni da attuare:
+\begin{enumerate}
+    \item applicare la stessa tecnica di preprocessing a tutte le matrici grezze delle espressioni di interesse ottenendo le corrispettive matrici dei rating;
+    \item applicare uno degli approcci del collaborating filtering alle matrici dei rating ottenendo così le liste $TopN$;
+    \item combinare insieme le liste $TopN$ secondo un sistema di voting, quale il borda count, ogni item nella lista riceve uno score in base alla posizione, si sommano gli score di ciascun item e li si riordina in base a questi.
+\end{enumerate}
+
+\subsection{Media matrici dei rating}
+Mentre il precedente metodo prevedeva di applicare il collaborative filtering separatamente a ciascuna matrice dei rating, in questo andiamo ad effettuare una loro media ottenendo così una sola matrice dei rating.\\
+A questa andiamo poi ad applicare uno degli approcci del collaborative filtering e otteniamo così la lista $TopN$.
+
+\section{Approccio content-based}
+In questo capitolo andremo a vedere un tentativo di applicazione dell'approccio content-based utilizzando le informazioni esterne disponibili sugli item.
+Abbiamo diverse fonti di informazioni:
+\begin{itemize}
+    \item categorie rispetto i diversi livelli;
+    \item gruppo merceologico;
+    \item nome del prodotto;
+    \item dimensioni;
+    \item volume;
+    \item peso.
+\end{itemize}
+
+L'idea di base è di creare un vettore dove ogni posizione corrisponda ad una specifica feature, nel caso questa fosse binaria come l'appartenenza ad una categoria o meno si crea una cella per quella specifica categoria, nel caso invece fosse continua, come per esempio il volume, si creano degli intervalli e si va a creare una cella per intervallo.
+\subsection{Categoria prodotto}
+Per ciascuna categoria  abbiamo individuato una cella del vettore, per ogni prodotto abbiamo impostato ad 1 la cella se quello specifico prodotto appartiene a quella categoria 
+
+Come detto in precedenza per la gerarchia prodotto abbiamo diverse categorie per ogni livello, per ciascuna di esse abbiamo assegnato una cella del vettore delle feature, se un'item apparteneva ad una di queste categorie andavamo ad impostare quella specifica cella a 1, altrimento 0.
+
+\subsection{Gruppo merceologico}
+Per il gruppo merceologico si è fatto come nel caso precedente, quindi per ogni codice merceologico si è andato ad assegnargli una cella del vettore delle feature.
+
+\subsection{Nome prodotto}
+Il nome del prodotto poteva darci informazioni aggiuntive sulla similarità tra di essi, in quanto osservando l'anagrafica materiali i nomi sono assegnati in modo organizzato, quindi prodotti simili in cui cambiano solo alcune parti riportano lo stesso nome con le specifiche diverse.\\
+Per ogni nome prodotto sono state eseguite le seguenti operazioni:
+\begin{enumerate}
+    \item eliminazione di simboli e parti del nome non esplicativi, per esempio alcuni nomi avevano riportata anche la dimensione, già disponibili in altri campi;
+    \item separazione delle restanti parole;
+    \item inserimento delle suddette in un dizionario contenente la totalità delle parole e il rispettivo numero di occorrenze;
+\end{enumerate}
+Dopo un'ulteriore pulizia a mano siamo andati a selezionare quelle con almeno 10 occorrenze, ottenendo alla fine circa 600 parole. Ciascuna parola è stata assegnata ad una cella del vettore delle feature, se un item nel suo titolo contiene una di queste parole, imposta a 1 la cella corrispondente.
+
+\subsection{Dimensione, volume, peso}
+Per le informazioni riguardo lunghezza, larghezza, altezza, volume e peso si volevano creare per ciascuno di essi 20 intervalli ciascuno aventi circa lo stesso numero di item. Si è assegnato al vettore delle feature una cella per ogni intervallo e se un'item aveva una delle misure all'interno dell'intervallo lo si impostava ad 1.
+
+\subsection{Profilo user}
+Una volta creata la matrice avente sulle righe gli item e sulle colonne le feature, si è proceduto a calcolare i profili degli user facendo la media delle righe corrispondenti agli item acquistati dallo stesso.
+
+\section{Approccio next-basket}
+In questo capitolo andremo ad operare sullo storico vendite andando a considerare le fatture come sessioni di d'acquisto applicando la \textit{User Popularity-based CF}.
+Ragionando in termini di logica d'acquisto è possibile che i dealer acquistino sempre circa lo stesso gruppo di item, questo ci porta a parlare del concetto di popolarità e di come questa possa variare nel tempo.
+Dato che questa soluzione è stata provata dopo le altre precedentemente descritte, si è notato come non fosse così facile \textit{battere} il modello MostPop, quindi si è pensato di muoversi nella direzione della popolarità con questa soluzione per vedere se i risultati migliorassero. L'obiettivo è quello di predire per ciascuno user gli item dell'utima fattura.
+
+\subsection{Premesse}
+Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e consideriamo ciascuna fattura come una transazione $b_{t}^{u}$, dove $t$ indica la posizione ordinale nell'insieme ordinato delle transazioni di uno user di cardinalità $B_{u}$ definito come $\mathcal{B}_u = \{b_{u}^{t} | t \in 1, \dots, B_u\}$. Definiamo $\mathcal{B}_{u}^{i} = \{b_{u}^{t}|b_{u}^{t} \in \mathcal{B}_{u} \wedge i \in b_{u}^{t}\}$, ossia l'insieme di tutte le transazione dello user $u$ in cui compare l'item $i$.
+\subsection{Popolarità}
+Possiamo calcolare la popolarità di un item rispetto ad uno user, detta \textit{popularity user-wise}, con la seguente formula: $\pi_{i}^{u} = \frac{\mathcal{B}_{u}^{i}}{\mathcal{B}_{u}}$.
+Dato che la popolarità può variare nel tempo il paper introduce il concetto di recentezza, dicendo che per predirre l'ultima transazione potrebbe non essere efficace guardare nelle transazioni più vecchie, quindi attraverso una finestra temporale sulle transazioni più recenti si va a calcolare la \textit{recency aware user-wise popularity}, un modo di calcolare la popolarità di un item per uno user solo su un ristretto numero di transizioni, di seguito la formula: 
+$$\pi_{u}^{i}@r = \frac{\sum_{t = \max (B_{u}-r,0)}^{B_{u}}[i \in b_{u}^{t}]}{\min(r,B_{u})}$$
+Con il parametro $r$ si definisce la finestra di transazioni, a partire dall'ultima, da tenere in considerazione, la funzione $[i \in b_{u}^{t}]$ ritorna 1 se l'item $i$ è presente nella transazione $b_{u}^{t}$, 0 altrimenti. Se $r \geqslant B_{u}$ allora questa formula diventa equivalente alla \textit{popularity user-wise}.
+\subsection{User Popularity-based CF (UP-CF)}
+Questa soluzione, che si basa sul collaborative filtering, permette di trovare item interessanti per uno user andando ad osservare user simili ad esso, questo viene fatto andando a calcolare la similarità tra due user $u$ e $v$ con la similarità coseno asimmetrica: $w(u,v) = \frac{|I_u \cap I_v|}{|I_u|^{\alpha}|I_v|^{1-\alpha}}$ con $\alpha \in [0,1]$, dove il parametro $\alpha$ permette di bilanciare la probabilità $P(u|v)$ e $P(v|u)$. 
+\subsubsection{Predizione}
+Si vuole ora combinare la similarità tra user e il concetto di popolarità di un item per uno user, per fare ciò usiamo la formula: 
+$$\hat{r}_{i}^{u} = \sum_{v \in U} w(u,v)^{q}\pi_{u}^{i}$$
+Dove il termine $q$ è un parametro operante sulla località degli user, per un alto valore di $q$ consideremo solo user molto simili ad uno target.

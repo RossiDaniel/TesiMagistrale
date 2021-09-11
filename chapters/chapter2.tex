@@ -144,3 +144,13 @@ I campi rigurdanti dimensione, volume e peso potrebbero essere utili per ricerca
 Le informazioni sulle dimensioni, come lunghezza, larghezza e altezza sono praticamente ridondanti nei campi GROES e (LAENG, BREIT, HOEHE) se non per alcuni prodotti dove le informazioni sono esclusive di uno dei due formati.\\
 Per peso e volume abbiamo i rispettivi campi numerici e altri due campi che riportano le unità di misura, per il volume possono essere i metri cubi o i millimetri cubi, per il peso i kilogrammi o i grammi.
 La criticità di queste misure riguarda la loro scarsità, infatti su 75000 prodotti abbiamo informazioni su volume e peso rispettivamente solo sul 20\% e 39\%, mentre sui prodotti acquistati almeno una volta sul 19\% e 5\%. 
+
+\subsection{Preprocessing dati}
+In questa sezione andremo a vedere quali operazioni si sono rese necessarie per preparare i dati:
+\begin{itemize}
+	\item posizioni con spesa totale nulla sono stati eliminati;
+	\item posizioni con valuta in $dollari$ sono state convertiti in $euro$;
+	\item prodotti con misure di dimensione e volume con unità di misura diversa rispettivamente dai $metri$ e $metri^3$ sono stati convertiti negli stessi;
+	\item prodotti con misure del peso con unità di misura diverse dai $kilogrammi$ sono state convertite nello stesso;
+	\item alcuni clienti non sono stati considerati in quanto appartenenti allo stesso gruppo dell'azienda Cliente;
+\end{itemize}
