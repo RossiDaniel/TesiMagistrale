@@ -77,27 +77,27 @@ Tutti gli approcci che abbiamo visto producono matrici dei rating esplicite, chi
 \section{Tecniche combinate}
 Nelle sezioni precedenti abbiamo visto diverse tecniche di preprocessing per ottenere dei rating dalle matrici grezze, in questa andremo invece a descrivere due approcci utili per cercare di combinare insieme rating provenienti dalle diverse \textit{espressioni d'interesse}.
 \subsection{Premesse}
-Come riportato nel capito dell'analisi dei dati, le informazioni disponibili sugli item ci permettono di valutare l'interesse dello user verso gli item secondo diversi \textit{aspetti}, quali la quantità acquistata, la spesa totale, il numero di fatture in cui compaiono e la recentezza dell'ultimo acquisto, definiremo questi aspetti da ora in poi come \textit{espressioni di interesse}.
-Questi \textit{aspetti} sono organizzati in matrici grezze a cui nel capitolo precedente abbiamo applicato diverse tecniche di preprocessing andando a trasformali in rating, da qui cercare di unire insieme queste espressioni di interesse sembra essere un buon modo per migliorare la qualità delle raccomandazioni finali.
-I metodi combinati prendono in input le matrici grezze e vi applicano una tecnica di preprocessing del capitolo precedente.\\
-Fatto questo ci sono due modi per combinarle insieme, vediamoli di seguito:
+Come riportato nel capitolo dell'analisi dei dati, le informazioni disponibili sugli item ci permettono di valutare l'interesse dello user verso di essi secondo diversi \textit{aspetti}, quali la quantità acquistata, la spesa totale, il numero di fatture in cui compaiono e la recentezza dell'ultimo acquisto, definiremo questi aspetti da ora in poi come \textit{espressioni di interesse}.
+Queste sono organizzate in matrici grezze, a cui nella sezione precedente, abbiamo applicato diverse tecniche di preprocessing andando a trasformali in rating. L'idea di unire insieme queste \textit{espressioni di interesse} sembra essere un buon modo per migliorare la qualità delle raccomandazioni finali.
+I metodi combinati prendono in input le matrici grezze e vi applicano una delle tecniche di preprocessing illustrate nella sezione precedente.\\
+Ci sono due modi per combinarle insieme che appronfiremo nelle seguenti sezioni.
 
 \subsection{Combinazione liste \textit{TopN}}
 Il primo metodo si propone di ottenere per ogni user una lista $TopN$ di item per ciascuna espressione di interesse, queste poi andranno combinate insieme attraverso l'uso del borda count, un sistema di voting basato sulla posizione.
 Vediamo ora quali sono le operazioni da attuare:
 \begin{enumerate}
     \item applicare la stessa tecnica di preprocessing a tutte le matrici grezze delle espressioni di interesse ottenendo le corrispettive matrici dei rating;
-    \item applicare uno degli approcci del collaborating filtering alle matrici dei rating ottenendo così le liste $TopN$;
-    \item combinare insieme le liste $TopN$ secondo un sistema di voting, quale il borda count, ogni item nella lista riceve uno score in base alla posizione, si sommano gli score di ciascun item e li si riordina in base a questi.
+    \item usare uno degli approcci del collaborating filtering sulle matrici dei rating ottenendo così le liste $TopN$;
+    \item combinare insieme le liste $TopN$ secondo un sistema di voting, il borda count, nel quale ogni item della lista riceve uno score in base alla posizione, questi si sommano e gli item vengono riordinati in base al punteggio risultante.
 \end{enumerate}
 
 \subsection{Media matrici dei rating}
-Mentre il precedente metodo prevedeva di applicare il collaborative filtering separatamente a ciascuna matrice dei rating, in questo andiamo ad effettuare una loro media ottenendo così una sola matrice dei rating.\\
-A questa andiamo poi ad applicare uno degli approcci del collaborative filtering e otteniamo così la lista $TopN$.
+Mentre il precedente metodo prevedeva di applicare il collaborative filtering separatamente a ciascuna matrice dei rating, in questo calcoliamo una media delle matrici grezze, da cui, dopo aver eseguito una delle tecniche di preprocessing su di essa, ricaviamo una sola matrice dei rating.\\
+A questa andiamo poi ad applicare uno degli approcci del collaborative filtering e così otteniamo la lista $TopN$.
 
 \section{Approccio content-based}
-In questo capitolo andremo a vedere un tentativo di applicazione dell'approccio content-based utilizzando le informazioni esterne disponibili sugli item.
-Abbiamo diverse fonti di informazioni:
+In questa sezione vedremo un'applicazione dell'approccio content-based utilizzando le informazioni descrittiva disponibili sugli item.\\
+Abbiamo diverse fonti d'informazioni:
 \begin{itemize}
     \item categorie rispetto i diversi livelli;
     \item gruppo merceologico;
@@ -107,10 +107,16 @@ Abbiamo diverse fonti di informazioni:
     \item peso.
 \end{itemize}
 
-L'idea di base è di creare un vettore dove ogni posizione corrisponda ad una specifica feature, nel caso questa fosse binaria come l'appartenenza ad una categoria o meno si crea una cella per quella specifica categoria, nel caso invece fosse continua, come per esempio il volume, si creano degli intervalli e si va a creare una cella per intervallo.
-\subsection{Categoria prodotto}
-Per ciascuna categoria  abbiamo individuato una cella del vettore, per ogni prodotto abbiamo impostato ad 1 la cella se quello specifico prodotto appartiene a quella categoria 
+In generale ogni informazione descrittiva, può essere classificata in due modi:
+\begin{itemize}
+    \item Binaria: un'item può avere o meno questa caratteristica;
+    \item Continua: l'item può avere o meno questa caratteristica, ma se ce l'ha l'informazione è un valori in un intervallo.
+\end{itemize}
 
+L'idea di base è di creare un vettore dove ogni posizione corrisponda ad una specifica caratteristica, nel caso l'informazione descrittiva sia binaria si va ad assegnargli una cella dove vi sarà 1 se l'item la possiede, 0 altrimenti. Nel caso questa sia continua verrà divisa in sotto-intervalli gestiti come caratteristiche binarie.
+
+\subsection{Gerarchia prodotto}
+A ciascuna categoria della gerarchia abbiamo assegnato una cella del vettore.
 Come detto in precedenza per la gerarchia prodotto abbiamo diverse categorie per ogni livello, per ciascuna di esse abbiamo assegnato una cella del vettore delle feature, se un'item apparteneva ad una di queste categorie andavamo ad impostare quella specifica cella a 1, altrimento 0.
 
 \subsection{Gruppo merceologico}
