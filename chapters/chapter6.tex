@@ -1,3 +1,79 @@
 \hypertarget{(chap:capitolo6)}{}
 \chapter{Risultati esperimenti matrici dei rating}
-In questo capitolo andremo a vedere i risultati sperimentali per ogni metodo utilizzato rispetto ogni espressione d'interesse e ogni 
+In questo capitolo andremo a vedere i risultati sperimentali per ogni metodo.
+\section{Risultati preprocessing matrici grezze}
+
+\subsection{Risultati base}
+In questa sezione andremo a vedere i risultati del modello MostPop e del VAECF, che verranno utilizzati come bound per valutare quelli succcessivi.
+
+\subsubsection{MostPop}
+Come detto il modello MostPop restituisce per ogni user la stessa lista di item più popolari.
+Andiamo a vedere i risultati per dataset sul validation set:\\
+
+\scalebox{0.8}{%
+\begin{tabular}{|l|c|cccc|cc|}
+    \toprule
+    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$ & $Train (s)$ & $Test (s)$ \\
+              &          &            &             &           &          &     (s)     &  (s)       \\
+    \midrule
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+
+\bottomrule
+\end{tabular}}
+\newpage
+Useremo questi risultati come bound per quelli degli altri modelli (MF,UserKnn), nel caso in cui questi siano migliori si procederà al tuning dei parametri e al calcolo finale dei risultati sul test set.\\
+Quelli riportati qui di seguito sono i risultati del MostPop sul test set.\\
+
+\scalebox{0.8}{%
+\begin{tabular}{|l|c|cccc|cc|}
+    \toprule
+    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$ & $Train (s)$ & $Test (s)$ \\
+              &          &            &             &           &          &     (s)     &  (s)       \\
+    \midrule
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+
+\bottomrule
+\end{tabular}}
+
+\subsubsection{VAECF}
+Il modello VAECF è un modello che funziona su rating impliciti, la fase preliminare ha richiesto il tuning dei parametri riportati di seguito:
+\begin{itemize}
+    \item \textbf{k} è la dimensione della rappresentazione latente interna, i possibili valori sono $\{5,10,15,20,50\}$;
+    \item \textbf{autoencoders structure} è il numero di neuroni del layer dell'encoder e del decoder, i valori possibili sono $\{10,20,30,50,100,200\}$;
+    \item \textbf{activation function} è la funzione applicata nei layer nascosti, che può essere una delle seguenti $\{sigmoid, tanh, elu, relu, relu6\}$.
+\end{itemize}
+
+Andiamo a vedere i risultati per dataset sul validation set:\\
+
+\scalebox{0.8}{%
+\begin{tabular}{|l|c|cccc|cc|}
+    \toprule
+    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$ & $Train (s)$ & $Test (s)$ \\
+              &          &            &             &           &          &     (s)     &  (s)       \\
+    \midrule
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+
+\bottomrule
+\end{tabular}}\\
+
+Useremo questi risultati come bound per quelli degli altri modelli (MF,UserKnn), nel caso in cui questi siano migliori si procederà al tuning dei parametri e al calcolo finale dei risultati sul test set.
+Quelli riportati qui di seguito sono i risultati del MostPop sul test set.
+
+\scalebox{0.8}{%
+\begin{tabular}{|l|c|cccc|cc|}
+    \toprule
+    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$ & $Train (s)$ & $Test (s)$ \\
+              &          &            &             &           &          &     (s)     &  (s)       \\
+    \midrule
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+    ricambi & 0.7766 &  0.1277 &  0.1559 & 0.1050 &  0.2130   &   0.0030 &   0.0550 \\
+
+\bottomrule
+\end{tabular}}
