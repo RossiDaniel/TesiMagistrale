@@ -37,23 +37,27 @@ Si è preferito però dividerli esternamente con le rispettive percentuali: 70\%
 Nella fase di valutazione dei risultati dei \textit{modelli} veniva richiesto un parametro detto \textit{rating\_threshold}, il quale serviva a binarizzare gli item rilevanti e irrilevanti del test set basandosi sul rating corrispondente. Non andava in alcun modo ad intaccare i rating nella fare di training.
  
 \subsection{Esperimenti sulle singole matrici grezze}
-Come riportato nel capitolo relativo il preprocessing delle matrici grezze, non è stata definita una scala dei rating in quanto se ne volevano provare diverse: 3, 5, 7, 9, 13, 19, 25.
+Come riportato nel capitolo relativo il preprocessing delle matrici grezze, non è stata definita una scala dei rating in quanto se ne volevano provare diverse: $scale \in \{3, 5, 7, 9, 13, 19, 25\}$.
 Inoltre per ogni tecnica dove fosse previsto l'utilizzo di una delle distribuzioni disponibili, si è proceduto a testarle entrambe.
-Dalle combinazioni di diversa scala e distribuzione dei rating, unito con la presenza di ben dodici matrici grezze (3 tipi di dataset per 4 espressioni di interesse) si sono ottenute circa 1500 matrici grezze.
+Dalle combinazioni di: scala, distribuzione dei rating, espressione di interesse e dataset, si sono ottenute circa 1500 matrici dei rating.
 Per eseguire i test si è proceduti come segue:
 \begin{enumerate}
-    \item Ottengo un risultato di base con il modello MostPop e con il VAECF;
-    \item Poi per ogni combinazione di matrice dei rating, scala e funzione di distribuzione se usata, si eseguono le seguenti operazioni:
+    \item Ottengo un risultato di base con il modello MostPop;
+    \item Poi per ogni tecnica testo ciascuna combinazione di matrice dei rating, scala e funzione di distribuzione se usata, si eseguono le seguenti operazioni:
+    Poi per ciascuna tecnica si procede a testare tutte le matrici dei rating annesse ad essa, per ciascuna di esse si eseguono le seguenti operazioni:
     \begin{enumerate}
-        \item \textit{Alleno} il modello con valori di deafult con il training set;
-        \item valuto i risultati del modello sul validation set, se questi valori risultano migliori di quelli di base (dati dal MostPop e VAECF), allora si procede ad un tuning dei parametri;
+        \item \textit{Alleno} i modelli ($MF$, $UserKnn$) con valori di deafult con il training set;
+        \item valuto i risultati del modello sul validation set, se questi valori risultano migliori di quelli di base (dati dal $MostPop$), allora si procede ad un tuning dei parametri sul modello con quella matrice dei rating;
         \item Una volta concluso il tuning, si sceglie il modello migliore in accordo al validation set;
-        \item Si restituisce la valutazione finale basata su test set.
+        \item Si va a confrontare la valutazione finale basata sul test set, con quella di base ottenutta con il $VAECF$.
+        \item Tra tutte quelle che superano quest'ultimo passaggio scegliamo la migliore, una per ogni dataset.
     \end{enumerate}
 \end{enumerate}
 
+Il confronto dei risultati non è puramente matematico ma va a valutare il trand generale del metodo, se buona parte dei risultati sono migliori del bound si procede con il tuning, mentre se solo alcuni valori sono leggermente meglio li si lascia perdere.
+
 \subsection{Esperimenti sulle matrici grezze combinate}
-Per prima cosa si è proceduto a dividere in gruppi tutte le matrici dei rating aventi stesso metodo e stessa scala, si sono ottenuti tutti gruppi aventi 4 matrici, una per ogni \textit{espressione d'interesse}. Per ognuno di questi gruppi si è proceduto ad applicare i due metodi combinati descritti nel capitolo precedente. Per gli esperimenti si sono usati lo stesso training, validation e test set usati per gli esperimenti precedenti. La fase preliminare di esperimenti mirava a capire se questo metodo potesse fornire risultati migliori rispetto quelli di base dati da MostPop e VAECF.
+Per prima cosa si è proceduto a dividere in gruppi tutte le matrici dei rating aventi stesso metodo e stessa scala, si sono ottenuti tutti gruppi aventi 4 matrici, una per ogni \textit{espressione d'interesse}. Per ognuno di questi gruppi si è proceduto ad applicare i due metodi combinati descritti nel capitolo precedente. Per gli esperimenti si sono usati lo stesso training, validation e test set usati per gli esperimenti precedenti. La fase preliminare di esperimenti mirava a capire se questo metodo potesse fornire risultati migliori rispetto quelli di base dati da $MostPop$ e $VAECF$.
 
 \section{Esperimenti con approccio content-based}
 Per questo approccio non si è arrivati alla fase sperimentale in quanto dai primi test è risultato chiaro che non si avessero abbastanza informazioni sugli item, infatti i profili degli user erano molto simili tra loro e nonostante diverse modifiche, per ogni user venivano restituiti circa gli stessi item. Probabilmente le misure continue essendo disponibili per un numero limitato di prodotti hanno fatto si di essere poco influenti nella media finale, mentre la gerarchia prodotto e i nomi hanno fatto si di raccomandare i prodotti più popolari. Concludendo non si è voluto sviluppare ulteriormente l'approccio preferendo provare altro.

@@ -21,9 +21,9 @@ Andiamo a vedere i risultati per dataset sul validation set:\\
     totale  & 0.2810 &  0.0733 &   0.0811 &  0.0627 & 0.0360 \\
 
 \bottomrule
-\end{tabular}
+\end{tabular}\\
 
-Useremo questi risultati come bound per quelli degli altri modelli (MF,UserKnn), nel caso in cui questi siano migliori si procederà al tuning dei parametri e al calcolo finale dei risultati sul test set.\\
+Useremo questi risultati come bound per quelli degli altri modelli (MF, UserKnn), nel caso in cui questi siano migliori si procederà al tuning dei parametri e al calcolo finale dei risultati sul test set.\\
 Quelli riportati qui di seguito sono i risultati del MostPop sul test set.\\
 
 \begin{tabular}{|l|c|cccc|}
@@ -65,9 +65,9 @@ Andiamo a vedere i risultati per dataset sul validation set dopo il tuning dei p
     \toprule
     $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
     \midrule
-    macchine & 0.8201 & 0.1768 & 0.3032 & 0.2282 & 0.1325	 \\
-    ricambi & 0.4773 & 0.0452 & 0.1052 & 0.0643 & 0.0506  \\
-    totale  & 0.4190 & 0.0980 & 0.0941 & 0.0741 & 0.1208	 \\
+    macchine & 0.8201 & 0.1768 & 0.3032 & 0.2282 & 0.1325 \\
+    ricambi & 0.4773 & 0.0452 & 0.1052 & 0.0643 & 0.0506 \\
+    totale  & 0.4190 & 0.0980 & 0.0941 & 0.0741 & 0.1208 \\
 \bottomrule
 \end{tabular}\\
 
@@ -87,22 +87,30 @@ Vediamo i risultati del modello validato sul test set:\\
 \end{tabular}
 
 \subsection{Risultati MF e UserKnn}
-In questa sezione andremo a vedere per ogni tecnica di preprocessing adottata sulle matrici grezze i risultati ottenuti. Cominceremo prima con la tecnica basata su min-max, per proseguire poi con quella ordered-based per concludere con quella basata sui prodotti totali.
+In questa sezione andremo a vedere per ogni tecnica di preprocessing adottata sulle matrici grezze i risultati ottenuti.
+La valutazione si è divisa in due fasi: 
+\begin{enumerate}
+    \item preliminare: confrontiamo i risultati dei modelli (MF, UserKnn) con parametri di default sulle matrici dei rating, con il risultato bound dato dal MostPop;
+    \item avanzata: dopo aver effettuato il tuning sui parametri dei modelli con le matrici rimanenti, si confrontano con il bound dato dal VAECF. 
+\end{enumerate} 
+Cominceremo prima con la tecnica basata su min-max, poi con quella ordered-based per concludere infine con quella basata sui prodotti totali. 
+Spesso si farà riferimenti ai risultati dei modelli, intendendo il risultato dato dei modelli basato sulle diverse matrici dei rating.
 
 \subsubsection{Normalizzazione min-max}
-Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i risultati rispetto diversi gruppi di triplette, iniziamo con quelle dal punto di vista globale.
+Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i risultati rispetto diversi gruppi di triplette.
 
 \paragraph{Gruppo globale}
-Tutte le triplette sono state considerate nello stesso gruppo, diamo uno sguardo ai risultati ottenuti:
 
-\includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
 
-Nella tabella di grafici sopra riportati possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle colonne possiamo vedere le espressioni d'interesse (quantità, )
 
 \paragraph{Gruppi user-based}
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo globale, ossia quello contentente tutte le triplette.
+Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
+Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dal UserKnn.
 
 \includegraphics[width=16cm]{figures/risultati_minmax_singolo.png}
 
+Come possiamo vedere come quasi tutti i risultati sono al di sotto del bound a parte che nell'incrocio: dataset ricambi - espressione d'interesse numero di fatture. Dato che la normalizzazione min-max riscala semplicemente i dati, potrebbe essere che la distribuzione del numero di fatture sia più compatta rispetto per esempio quella della quantità. Vedremo nella fase avanzata, il tuning del modello MF con le matrici del numero di fatture.
 
 \paragraph{Gruppo user-category-based}
 
