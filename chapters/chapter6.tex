@@ -97,44 +97,56 @@ Cominceremo prima con la tecnica basata su min-max, poi con quella ordered-based
 Spesso si farà riferimenti ai risultati dei modelli, intendendo il risultato dato dei modelli basato sulle diverse matrici dei rating.
 
 \subsubsection{Normalizzazione min-max}
-Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i risultati rispetto diversi gruppi di triplette.
+Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i risultati rispetto diversi gruppi di triplette.\\
 
-\paragraph{Gruppo globale}
-In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascun gruppo contiene solo le triplette di un singolo user.
-Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
+\paragraph{Gruppo globale}\mbox{} \\
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo globale, ossia quello contenente tutte le triplette.
+Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. \\
+La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
+In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera, a queste due matrici vengono applicati i due modelli, da cui vengono fuori quindi quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
 
 \includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
 
-Possiamo vedere come quasi tutti i grafici riportino risultati scarsi, questo ci fa pensare che questo approcio almeno al gruppo globale non sia funzionale allo scopo.
-L'unico grafico che riporta qualche risultato sopra il bound è quello nell'incrocio (ricambi-numero fatture), potrebbe essere che il numero di fatture sia un modo migliore di descrivere gli acquisti degli item rispetto per esempio la quantità o la soesa totale.
-Vediamo i risultati dopo il tuning dei parametri.
+Diamo un commento ai risultati per ogni tipo di dataset:\\
+\subparagraph{Macchine}\mbox{} \\
 
-\paragraph{Gruppi user-based}
-In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascun gruppo contiene solo le triplette di un singolo user.
-Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
+Per il seguente dataset non presenta alcun risultato che superi il livello di sbarramento, possiamo dire però che le espressioni d'interesse quantità e numero di fatture risultano essere migliori rispetto le restanti. Notiamo anche che la scala sembra avere effetto sui risultati anche se questi possiamo dire che si trovino circa nello stesso intervallo di valori della metrica. Il modello UserKnn sembra funzionare meglio rispetto MF per tutte le espressioni d'interesse tranne che per la recentezza. Per ogni valore della scala si possono vedere due pallini per ciascun colore, questo perché c'è una versione della matrice continua e una intera. Vediamo di seguito come si comportano:
+
+\includegraphics[width=16cm]{figures/scale_func_minmax_glob_macchine.png}
+
+La prima riga utilizza le matrici intere mentre la seconda quelle continue, come possiamo vedere i risultati della versione continua sono più lineari rispetto gli altri. Nonostante ciò possisamo dire che i risultati siano tendenzialmente simili, a parte che per la prima colonna (quantità) dove il modello UserKnn migliora di molto con la versione della matrice continua. In generale questo varà per tutti i grafici che andremo a vedere dove viene applicato min-max.
+
+\subparagraph{Ricambi}\mbox{} \\
+Per questo tipo di dataset abbiamo un'espressione d'interesse che ha superato la soglia di sbarramento, quella del numero di fatture, potrebbe essere che questa abbia una distribuzione dei valori di partenza più piatta rispetto le controparti (quantità, spesa totale), in quanto ciascun prodotto ha una quantità e un costo diverso, mentre il numero di fatture è più legato alla frequenza d'acquisto.
+Per quanto riguarda la scala sembra esserci una tendenza per l'espressione numero di fatture a migliorare all'aumentare del valore massimo di scala.
+Le affermazioni riportate precedentemente per quanto riguarda matrici intere e continue valgono anche qui.
+
+\subparagraph{Totale}\mbox{} \\
+In questo tipo di dataset non abbiamo valutazioni che superino la soglia, la tendenza dei dati richiama molto quella del dataset tipo ricambi, non a caso il totale è formato per buona parte dalle triplette dei ricambi. 
+
+\paragraph{Gruppi user-based}\mbox{} \\
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascun gruppo contiene solo le triplette di un singolo user. Il grafico composto di seguito possiede la stessa disposizione di quello del paragrafo precedente.
 
 \includegraphics[width=16cm]{figures/risultati_minmax_singolo.png}
+Notiamo come ci siano un leggero miglioramento dei risultati rispetto il gruppo globale, vediamo singolarmente ciascun tipo di dataset.
 
-Come possiamo vedere come quasi tutti i risultati sono al di sotto del bound a parte che nell'incrocio: dataset ricambi - espressione d'interesse numero di fatture, probabilmente vale quanto detto per il caso precedente.
-\begin{minipage}[H]{0.45\textwidth}
-    
-\end{minipage}
-\begin{minipage}[H]{0.45\textwidth}
-    
-\end{minipage}
+\subparagraph{Macchine}\mbox{} \\
+Possiamo notare che i risultati siano migliorati rispetto i precedenti, ma non hanno ancora superato la soglia per passare alla fase avanzata, il modello UserKnn fuziona molto bene rispetto MF, come in precedenza le espressioni d'interesse quantità e numero di fatture funzionano meglio delle altre due. Anche qui si nota una tendenza della scala ad avere risultati migliori con valori intorno a 25. 
+
+\subparagraph{Ricambi}\mbox{} \\
+Con questo gruppo possiamo notare come l'espressione numero di fatture rispetto il tipo dataset ricambi sia molto migliorata e ora quasi tutte i risultati con modello MF sono sopra la soglia critica. Inoltre anche la quantità si trova in alcuni risultati intorno al valore soglia. In generale comunque i risultati sembrano in generale migliori del gruppo globale.
+
+\subparagraph{Totale}\mbox{} \\
+Non abbiamo alcun risultato ancora sopra la soglia, anche se i risultati sembrano un po' meglio dei precedenti.
+
 \paragraph{Gruppo user-category-based}
-\begin{comment}
-Nel seguente caso vedremo invece la tecnica applicata solo al dataset totale, possiamo vedere che ci sono sei colonne, le prime tre dividono gli item rispetto le categoria dei tre livelli della gerarchia prodotto, mentre i secondi tre dividono le macchine rispetto la la gerarchia prodotto e i ricambi rispetto il gruppo merceologico.\\ 
-\includegraphics[width=16cm]{figures/risultati_minmax_categoria.png}
+Ora andremo a vedere la normalizzazione min-max applicata però al gruppo user-category-based, dove le triplette vengono divise per user e per categoria.
+Le categorie utilizzate sono quelle della gerarchia prodotto e del gruppo merceologico. Vediamo ora per ogni tipo di dataset i risultati sperimentali.
 
-Possiamo vedere come confrontare i prodotti rispetto 
-\end{comment}
 
 \subsubsection{Tecnica ordered-based}
 
-\paragraph{Gruppo globale}
+\paragraph{Gruppo globale}\mbox{} \\
 In questa sezione vedremo la tacnica di preprocessing ordered-based applicata al gruppo globale, ossia quello contenente tutte le triplette.
 Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
 Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
@@ -143,7 +155,7 @@ Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF
 
 Nella tabella di grafici sopra riportati possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle colonne possiamo vedere le espressioni d'interesse (quantità, )
 
-\paragraph{Gruppi user-based}
+\paragraph{Gruppi user-based}\mbox{} \\
 Di seguito possiamo vedere i risultati relativi la tecnica ordered-based su gruppi di triplette appartenenti allo stesso user.\\
 I grafici sono organizzati come segue: sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
 Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.\\
@@ -152,7 +164,7 @@ Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF
 
 Possiamo vedere come il metodo non funzioni se non per alcuni risultati nell'incrocio (ricambi,quantità) che superano di poco il livello bound.
 
-\paragraph{Gruppo user-category-based}
+\paragraph{Gruppo user-category-based}\mbox{} \\
 \begin{comment}
 \includegraphics[width=16cm]{figures/risultati_ordered_categoria.png}
 \end{comment}
