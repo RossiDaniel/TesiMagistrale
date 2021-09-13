@@ -100,41 +100,62 @@ Spesso si farà riferimenti ai risultati dei modelli, intendendo il risultato da
 Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i risultati rispetto diversi gruppi di triplette.
 
 \paragraph{Gruppo globale}
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascun gruppo contiene solo le triplette di un singolo user.
+Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
+Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
 
+\includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
 
+Possiamo vedere come quasi tutti i grafici riportino risultati scarsi, questo ci fa pensare che questo approcio almeno al gruppo globale non sia funzionale allo scopo.
+L'unico grafico che riporta qualche risultato sopra il bound è quello nell'incrocio (ricambi-numero fatture), potrebbe essere che il numero di fatture sia un modo migliore di descrivere gli acquisti degli item rispetto per esempio la quantità o la soesa totale.
+Vediamo i risultati dopo il tuning dei parametri.
 
 \paragraph{Gruppi user-based}
-In questa sezione vedremo la normalizzazione min-max applicata al gruppo globale, ossia quello contentente tutte le triplette.
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascun gruppo contiene solo le triplette di un singolo user.
 Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dal UserKnn.
+Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
 
 \includegraphics[width=16cm]{figures/risultati_minmax_singolo.png}
 
-Come possiamo vedere come quasi tutti i risultati sono al di sotto del bound a parte che nell'incrocio: dataset ricambi - espressione d'interesse numero di fatture. Dato che la normalizzazione min-max riscala semplicemente i dati, potrebbe essere che la distribuzione del numero di fatture sia più compatta rispetto per esempio quella della quantità. Vedremo nella fase avanzata, il tuning del modello MF con le matrici del numero di fatture.
-
+Come possiamo vedere come quasi tutti i risultati sono al di sotto del bound a parte che nell'incrocio: dataset ricambi - espressione d'interesse numero di fatture, probabilmente vale quanto detto per il caso precedente.
+\begin{minipage}[H]{0.45\textwidth}
+    
+\end{minipage}
+\begin{minipage}[H]{0.45\textwidth}
+    
+\end{minipage}
 \paragraph{Gruppo user-category-based}
-
+\begin{comment}
+Nel seguente caso vedremo invece la tecnica applicata solo al dataset totale, possiamo vedere che ci sono sei colonne, le prime tre dividono gli item rispetto le categoria dei tre livelli della gerarchia prodotto, mentre i secondi tre dividono le macchine rispetto la la gerarchia prodotto e i ricambi rispetto il gruppo merceologico.\\ 
 \includegraphics[width=16cm]{figures/risultati_minmax_categoria.png}
 
+Possiamo vedere come confrontare i prodotti rispetto 
+\end{comment}
 
 \subsubsection{Tecnica ordered-based}
 
 \paragraph{Gruppo globale}
-Tutte le triplette sono state considerate nello stesso gruppo, diamo uno sguardo ai risultati ottenuti:
+In questa sezione vedremo la tacnica di preprocessing ordered-based applicata al gruppo globale, ossia quello contenente tutte le triplette.
+Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
+Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
 
 \includegraphics[width=16cm]{figures/risultati_ordered_globale.png}
 
 Nella tabella di grafici sopra riportati possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle colonne possiamo vedere le espressioni d'interesse (quantità, )
 
 \paragraph{Gruppi user-based}
+Di seguito possiamo vedere i risultati relativi la tecnica ordered-based su gruppi di triplette appartenenti allo stesso user.\\
+I grafici sono organizzati come segue: sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
+Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.\\
 
 \includegraphics[width=16cm]{figures/risultati_ordered_singolo.png}
 
+Possiamo vedere come il metodo non funzioni se non per alcuni risultati nell'incrocio (ricambi,quantità) che superano di poco il livello bound.
 
 \paragraph{Gruppo user-category-based}
-
+\begin{comment}
 \includegraphics[width=16cm]{figures/risultati_ordered_categoria.png}
-
+\end{comment}
 \subsubsection{Tecnica product-based}
 
 \includegraphics[width=16cm]{figures/prodotto.png}
@@ -149,4 +170,47 @@ Vediamo di seguito i risultati delle versioni combinate.
 \includegraphics[width=16cm]{figures/comb_2.png}
 
 \section{Esperimenti con approccio next-basket}
+In questa sezione vedremo i risultati dell'approccio next-based. Per prima cosa andiamo a vedere quali sono stati i parametri selezionati con il tuning per ciascun dataset.\\
 
+\begin{minipage}[H]{0.45\textwidth}
+    \begin{tabular}{|l|ccc|}
+        \toprule
+        $dataset$ &    $\alpha$ &  $q$ & $r$ \\
+        \midrule
+        macchine & 0.5 & 100 & $\infty$ \\
+        ricambi  &	0.75 & 50 & $\infty$ \\
+        totale  & 0 & 100 & $\infty$ \\
+    \bottomrule
+    \end{tabular}
+\end{minipage}
+\begin{minipage}[H]{0.55\textwidth}
+    Possiamo vedere che alla fine il tuning ha portato ad avere una finestra di recentezza  $r = \infty$, quindi stiamo usando la popolarità \textit{popularity user-wise}. 
+\end{minipage}\\
+
+Possiamo inoltre vedere che la località $q$ è comunque alta, mentre per quanto riguarda $alpha$ abbiamo che le macchine calcolano la probabilità composta al 50\%, nei ricambi si da più importanza a quella dello user in esame, ed infine nel totale si considera solo la probabilità composta dello user esterno.
+
+Vediamo i risultati sperimentali con i modelli ottimizzati sul validation set:\\
+
+\begin{tabular}{|l|cccc|}
+    \toprule
+    $dataset$  &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
+    \midrule
+    macchine & 0.5832 & 0.6278 & 0.6506 & 0.6627 \\
+    ricambi & 0.1728 & 0.1892 & 0.2381 & 0.3317 \\
+    totale  & 0.2196 & 0.2295 & 0.2834 & 0.3653 \\
+\bottomrule
+\end{tabular}\\
+
+E ora i corrispondenti risultati con il test set:\\
+
+\begin{tabular}{|l|cccc|}
+    \toprule
+    $dataset$  &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
+    \midrule
+    macchine & 0.6049 & 0.6476 & 0.6726 & 0.6741 \\
+    ricambi & 0.2261 & 0.2403 & 0.2915 & 0.3811 \\
+    totale  & 0.1955 & 0.2045 & 0.2595 & 0.3537 \\
+\bottomrule
+\end{tabular}\\
+
+Ricordiamo che questi risultati non sono confrontabili con quelli delle sezioni precendenti, però i risultati sembrano molti interessanti.
