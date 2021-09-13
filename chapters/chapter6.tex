@@ -96,6 +96,8 @@ La valutazione si è divisa in due fasi:
 Cominceremo prima con la tecnica basata su min-max, poi con quella ordered-based per concludere infine con quella basata sui prodotti totali. 
 Spesso si farà riferimenti ai risultati dei modelli, intendendo il risultato dato dei modelli basato sulle diverse matrici dei rating.
 
+%------------------------------------------------------------------------------------------------------------------------------------------------------
+
 \subsubsection{Normalizzazione min-max}
 Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i risultati rispetto diversi gruppi di triplette.\\
 
@@ -103,7 +105,7 @@ Come spiegato nel capitolo dedicato alle tecniche ora andremo ad osservare i ris
 In questa sezione vedremo la normalizzazione min-max applicata al gruppo globale, ossia quello contenente tutte le triplette.
 Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. \\
 La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera, a queste due matrici vengono applicati i due modelli, da cui vengono fuori quindi quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
+In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera, a queste due matrici vengono applicati i modelli MF e UserKnn, da otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
 
 \includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
 
@@ -142,35 +144,80 @@ Non abbiamo alcun risultato ancora sopra la soglia, anche se i risultati sembran
 \paragraph{Gruppo user-category-based}
 Ora andremo a vedere la normalizzazione min-max applicata però al gruppo user-category-based, dove le triplette vengono divise per user e per categoria.
 Le categorie utilizzate sono quelle della gerarchia prodotto e del gruppo merceologico. Vediamo ora per ogni tipo di dataset i risultati sperimentali.
+Da completare
 
+%------------------------------------------------------------------------------------------------------------------------------------------------------
 
 \subsubsection{Tecnica ordered-based}
 
 \paragraph{Gruppo globale}\mbox{} \\
-In questa sezione vedremo la tacnica di preprocessing ordered-based applicata al gruppo globale, ossia quello contenente tutte le triplette.
-Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.
+In questa sezione vedremo la tecnica di preprocessing ordered-based applicata al gruppo globale, ossia quello contenente tutte le triplette.
+Nella tabella sottostante possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle colonne possiamo vedere le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
+In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, ogni matrice dei rating durante la fase di creazione può utilizzare una distribuzione uniforme discreta o gaussian-like, a queste due matrici vengono applicati i modelli MF e UserKnn da cui otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
 
 \includegraphics[width=16cm]{figures/risultati_ordered_globale.png}
 
-Nella tabella di grafici sopra riportati possiamo vedere sulle righe i dataset (macchine, ricambi, totale), mentre sulle colonne possiamo vedere le espressioni d'interesse (quantità, )
+
+Diamo un commento ai risultati per ogni tipo di dataset:\\
+\subparagraph{Macchine}\mbox{} \\
+Come si può vedere dai grafici nessuna matrice dei rating prodotta con questo metodo ha risultati che superino la soglia critica. 
+Rispetto al metodo min-max, qui le espressioni numero fatture e recentezza sembrano funzionare meglio delle altre, anche se qui lo slack non è così marcato. Possiamo vedere però che qui il modello MF sia più performante. Per quanto riguarda la scala sembra che all'aumentare della scala migliorino i risultati. Andiamo ora a vedere i risultati ottenuti mettendo in luce la distribuzione scelta.
+
+\includegraphics[width=16cm]{figures/scale_func_ordered_global.png}
+
+In questo grafico abbiamo sulle righe le distribuzioni (uniforme discreta, gaussian-like), sulle colonne le espressioni d'interesse, possiamo vedere come tra le due al momento non riesca a dire quale sia quella che permette di ottenere i risultati migliori, si vede come quella discreta abbia un andamento più segmentato mentre la gaussiana una più lineare. Vedremo successivamente se negli altri dataset se ci sono andamenti diversi.
+
+\subparagraph{Ricambi}\mbox{} \\
+Nel dataset di tipo ricambi i risultati ricordano molto quelli ottenuti con la tecnica min-max. Qui quantità e numero di fatture superano la soglia minima e per questo verranno succesivamente valutate. Il modello MF è nettamente più performante dell'altro.
+
+\subparagraph{Totale}\mbox{} \\
+Il dataset di tipo totale non ottiene risultati superiori alla soglia e ricalca quanto detto per i ricambi.
 
 \paragraph{Gruppi user-based}\mbox{} \\
-Di seguito possiamo vedere i risultati relativi la tecnica ordered-based su gruppi di triplette appartenenti allo stesso user.\\
-I grafici sono organizzati come segue: sulle righe i dataset (macchine, ricambi, totale), mentre sulle righe possiamo vedere le \textit{espressioni d'intresse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-Inoltre i puntini di colore blu rappresentano i risultati forniti dal modello MF, mentre quelli arancioni dallo UserKnn.\\
+Di seguito possiamo vedere i risultati relativi la tecnica ordered-based su gruppi di triplette appartenenti allo stesso user.
+Il grafico composto di seguito possiede la stessa disposizione di quello del paragrafo precedente.\\
 
 \includegraphics[width=16cm]{figures/risultati_ordered_singolo.png}
 
-Possiamo vedere come il metodo non funzioni se non per alcuni risultati nell'incrocio (ricambi,quantità) che superano di poco il livello bound.
+Diamo un commento ai risultati per ogni tipo di dataset:\\
+\subparagraph{Macchine}\mbox{} \\
+In questo caso abbiamo risultati che hanno quasi raggiunto la soglia critica e sono migliori rispetto al paragrafo precedente. Qui possiamo notare come le espressioni che restituiscono i risultati migliori siano quelle della quantità e della spesa totale, probabilmente perché descrivono bene l'\textit{iteresse} dello user. Al crescere della scala abbiamo un andamento crescente dei risultati con MF e discendente con UserKnn. Osserviamo ora la divisione tra distribuzione uniforme discreta e gaussian-like, possiamo notare come neanche qui sia possibile dire quale delle due distribuzioni sia la migliore. 
+Possiamo dire che tendenzialmente con quella gaussian-like si possano ottenere risultati leggermente più alti, ma questo non vale in assoluto.
+
+\includegraphics[width=16cm]{figures/scale_func_ordered_singolo.png}
+
+\subparagraph{Ricambi}\mbox{} \\
+Anche per i ricambi notiamo che il comportamento che nel paragrafo precedente, con la differenza che i risultati sono leggermente inferiori.
+
+\subparagraph{Totale}\mbox{} \\
+Per il dataset di tipo totale non cambia nulla rispetto al paragrafo precedente.
 
 \paragraph{Gruppo user-category-based}\mbox{} \\
 \begin{comment}
 \includegraphics[width=16cm]{figures/risultati_ordered_categoria.png}
 \end{comment}
 \subsubsection{Tecnica product-based}
-
+Di seguito possiamo vedere i risultati relativi la tecnica product-based.
+Il grafico composto di seguito possiede la stessa disposizione di quello del paragrafo precedente.\\
 \includegraphics[width=16cm]{figures/prodotto.png}
+Diamo un commento ai risultati per ogni tipo di dataset:\\
+
+\subparagraph{Macchine}\mbox{} \\
+Qui finalmente abbiamo ottenuto dei risultati che superano, anche se di poco, la soglia critica. La recentezza sembra funzionare molto bene, come il numero di fatture e la quantità. All'aumentare della scala migliorano i risultati e per la recentezza UserKnn dia risultati migliori, mentre per le altre due espressioni citate poco fa risulta migliore MF.
+
+
+\subparagraph{Ricambi}\mbox{} \\
+
+
+
+\subparagraph{Totale}\mbox{} \\
+
+
+
+
+
+
+
 
 \section{Risultati matrici grezze combinate}
 Vediamo di seguito i risultati delle versioni combinate.
