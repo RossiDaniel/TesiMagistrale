@@ -2,15 +2,20 @@
 \chapter{Risultati sperimentali}
 In questo capitolo andremo a vedere i risultati sperimentali per ogni metodo.
 \section{Risultati preprocessing matrici grezze}
-Nelle sezione successive andremo a vedere i risultati delle valutazioni di ciascun modello rispetto la metrica $AUC$ e la $NDCG$ con $k\in \{5, 10, 25, 100\}$, in particolare la metrica che riteniamo sia più significativa è la seconda in quanto si basa sul ranking degli item nella lista $TopN$. \\
-Per i confronti abbiamo scelto di usare $NDCG$ con $k=25$. Nei seguenti grafici
+Nelle sezione successive andremo a vedere i risultati delle valutazioni di ciascun modello rispetto la metrica $AUC$ e la $NDCG$ con $k\in \{5, 10, 25, 100\}$.
+La metrica che riteniamo sia più significativa è la $NDCG$ in quanto si basa sul ranking degli item nella lista $TopN$, per i confronti abbiamo scelto di usare $k=25$.\\
+Come riportato nel capitolo precedente la valutazione sarà condotta in due fasi: 
+\begin{enumerate}
+    \item preliminare: confrontiamo i risultati dei modelli (MF, UserKnn) con parametri di default applicati alle matrici dei rating con il valore soglia dato dal modello MostPop, il tutto usando il validation set;
+    \item avanzata: dopo aver effettuato il tuning sui parametri dei modelli con le matrici rimanenti, si confrontano con il bound dato dal VAECF usando il test set.
+\end{enumerate} 
 
-\subsection{Risultati base}
+\subsection{Risultati soglia}
 In questa sezione andremo a vedere i risultati del modello MostPop e del VAECF, che verranno utilizzati come bound per valutare quelli succcessivi. 
 
 \subsubsection{MostPop}
 Come detto il modello MostPop restituisce per ogni user la stessa lista di item più popolari.
-Andiamo a vedere i risultati per dataset sul validation set:\\
+Andiamo a vedere i risultati per dataset sul validation set.\\
 
 \begin{tabular}{|l|c|cccc|}
     \toprule
@@ -23,7 +28,7 @@ Andiamo a vedere i risultati per dataset sul validation set:\\
 \bottomrule
 \end{tabular}\\
 
-Useremo questi risultati come bound per quelli degli altri modelli (MF, UserKnn), nel caso in cui questi siano migliori si procederà al tuning dei parametri e al calcolo finale dei risultati sul test set.\\
+Useremo questi risultati come soglia per la fase preliminare, testando i risultati delle matrici applicate ai modelli MF e UserKnn. Nel caso in cui questi siano migliori, si procederà al tuning dei parametri del modello stesso e al calcolo finale dei risultati sul test set.\\
 Quelli riportati qui di seguito sono i risultati del MostPop sul test set.\\
 
 \begin{tabular}{|l|c|cccc|}
@@ -56,10 +61,10 @@ Il modello VAECF è un modello che funziona su rating impliciti, la fase prelimi
     \end{tabular}\\
 \end{minipage}
 \begin{minipage}[H]{0.55\textwidth}
-    Il tuning dei parametri ha portato a considerare tutte le possibili combinazioni dei parametri sopra citati, andiamo a vedere per ogni dataset quali parametri hanno restituito sul validation set i risultati migliori.
+    Il tuning dei parametri ha portato a considerare tutte le possibili combinazioni degli stessi, vediamo per ogni dataset quali valori degli stessi hanno restituito i risultati migliori sul validation set.
 \end{minipage}\\
 
-Andiamo a vedere i risultati per dataset sul validation set dopo il tuning dei parametri:\\
+Vediamo ora i risultati per dataset sul validation set con il modello ottimizzato:\\
 
 \begin{tabular}{|l|c|cccc|}
     \toprule
@@ -71,9 +76,7 @@ Andiamo a vedere i risultati per dataset sul validation set dopo il tuning dei p
 \bottomrule
 \end{tabular}\\
 
-Dato che i risultati della tabella precedente sono quelli del validation set su un modello con parametri ottimizzati, non possiamo direttamente usarli per il confronto con 
-
-Vediamo i risultati del modello validato sul test set:\\
+Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come soglia nella fase avanzata, mostriamoli di seguito:\\
 
 \begin{tabular}{|l|c|cccc|}
     \toprule
@@ -87,12 +90,7 @@ Vediamo i risultati del modello validato sul test set:\\
 \end{tabular}
 
 \subsection{Fase test preliminare}
-In questa sezione andremo a vedere per ogni tecnica di preprocessing adottata sulle matrici grezze i risultati ottenuti.
-La valutazione si è divisa in due fasi: 
-\begin{enumerate}
-    \item preliminare: confrontiamo i risultati dei modelli (MF, UserKnn) con parametri di default sulle matrici dei rating, con il risultato bound dato dal MostPop;
-    \item avanzata: dopo aver effettuato il tuning sui parametri dei modelli con le matrici rimanenti, si confrontano con il bound dato dal VAECF. 
-\end{enumerate} 
+In questa sezione vedremo per ogni tecnica di preprocessing applicata sulle matrici grezze i risultati ottenuti.\\
 Cominceremo prima con la tecnica basata su min-max, poi con quella ordered-based per concludere infine con quella basata sui prodotti totali. 
 Spesso si farà riferimenti ai risultati dei modelli, intendendo il risultato dato dei modelli basato sulle diverse matrici dei rating.
 
@@ -185,32 +183,33 @@ Nella fase avanzata il nuovo bound era quello del VAECF, quindi ora andiamo a ve
 
 \includegraphics[width=16cm]{figures/validazione_mf.png}
 
-Nel grafico composto dei risultati del test sui modelli MF ottimizzati, le colonne sono rispettivamente il tipo dataset ricambi, macchine, totali con i loro relativi nuovi bound. Possiamo vedere in tutti e tre i grafici i risultati superino di poco il bound e sembra che i risultati miglioi siano prodotto dal metodo product-based.\\
+Nel grafico composto dei risultati del test sui modelli MF ottimizzati, le colonne sono rispettivamente il tipo dataset ricambi, macchine, totali con i loro relativi nuovi bound. Possiamo vedere in tutti e tre i grafici i risultati superino di poco il bound e sembra che i risultati migliori siano prodotti dal metodo product-based.\\
 
 \includegraphics[width=16cm]{figures/validazione_userknn.png}\\
 Nel grafico composto dai risultati del modello UserKnn ottimizzato sul test set, le colonne riportano rispettivamente il tipo dataset macchine e ricambi, nel primo primeggia sempre il metodo product-based mentre nel secondo non è presente alcun risultato oltre la soglia.
 
-Per quanto riguarda la distribuzione dei rating nelle matrici, quelle che hanno risultati superiori alla soglia hanno per circa il 66\% una distribuzione gaussian-like. Inoltre per quanto riguarda i valori della scala, i risultati migliori si sono ottenuti con il valore massimo di questa.
-
-Abbiamo quindi tre matrici dei rating prodotte con il metodo product-based con i seguenti risultati sul test set oltre la soglia del VAECF.\\
-
-\begin{tabular}{|l|cccc|}
-    \toprule
-    $dataset$  & $modello$ & espressione interesse & scala & distribuzione  \\
-    \midrule
-    macchine & UserKnn& recentezza & 25 & gaussian-like   \\
-    ricambi & MF & recentezza & 25 & gaussian-like \\
-    totale  & MF & numero fatture & 25 & gaussian-like \\
-\bottomrule
-\end{tabular}\\
+Per quanto riguarda la distribuzione dei rating nelle matrici, quelle che hanno risultati superiori alla soglia hanno per circa il 66\% una distribuzione gaussian-like. Inoltre per quanto riguarda i valori della scala, i risultati migliori si sono ottenuti con il valore massimo di questa (25).
+Vediamo ora i risultati finali sul test set per ogni tipo di dataset che hanno superato anche la soglia del VAECF.\\
 
 \begin{tabular}{|l|ccccc|}
     \toprule
     $dataset$  & $AUC$ & $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
     \midrule
-    macchine &  & 0.1737 & 0.2223 & 0.2844 & 0.3203 \\
-    ricambi &  & 0.0777 & 0.0810 & 0.0898 & 0.1428 \\
-    totale  &  & 0.0776 & 0.0765 & 0.0808 & 0.1276 \\
+    macchine & 0.7288 & 0.1737 & 0.2223 & 0.2844 & 0.3203 \\
+    ricambi & 0.8861 & 0.0777 & 0.0810 & 0.0898 & 0.1428 \\
+    totale  & 0.8741 & 0.0776 & 0.0765 & 0.0808 & 0.1276 \\
+\bottomrule
+\end{tabular}\\
+
+Riportiamo rispettivamente per ogni dataset tutte le informazioni relative alla matrice dei ratinge al metodo con cui è stata calcolata oltre che il modello che ha portato a tale risultato.\\
+
+\begin{tabular}{|l|ccccc|}
+    \toprule
+    $dataset$  & $modello$ & tecnica &espressione interesse & scala & distribuzione  \\
+    \midrule
+    macchine & UserKnn& product-based &recentezza & 25 & gaussian-like   \\
+    ricambi & MF & product-based &recentezza & 25 & gaussian-like \\
+    totale  & MF & product-based &numero fatture & 25 & gaussian-like \\
 \bottomrule
 \end{tabular}\\
 
@@ -288,7 +287,7 @@ Vediamo i risultati sperimentali con i modelli ottimizzati sul validation set:\\
 
 E ora i corrispondenti risultati con il test set:\\
 
-\begin{tabular}{|l|ccccc|}
+\begin{tabular}{|l|cccc|}
     \toprule
     $dataset$  &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
     \midrule
