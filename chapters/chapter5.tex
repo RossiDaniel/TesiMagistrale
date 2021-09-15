@@ -5,20 +5,21 @@ In questo capitolo andremo a vedere le modalità con cui sono stati svolti gli e
 \subsection{Dataset}
 Le informazioni dello storico vendite sono state organizzate basandosi sulle due macrocategorie individuate nell'analisi: macchine e ricambi.
 Gli item presi in esame sono quelli acquistati almeno una volta, mentre gli user sono quelli che hanno effettuato almeno un acquisto.
-Abbiamo quindi tre tipi matrici grezze user-item, contenenti solo item appartenenti alle macrocategoria delle macchine, solo dei ricambi ed infine una con tutti gli item, detta totale.\\
+Una matrice grezza e la corrispondente matrice dei rating verrano definite di un certo tipo di dataset in base all'insieme di item che contengono, sarà di tipo macchina se contiene solo item della macrocategoria delle macchine, ricambi se sono item di tipo ricambio, totale se ne contiene di entrambi i tipi.\\
 In generale ciascuna matrice sarà di uno dei seguenti tipi di dataset:
+
 \begin{itemize}
     \item \textbf{Macchine}: 254 user e 518 item;
     \item \textbf{Ricambi}: 319 user e 7699 item;
     \item \textbf{Totale}: 322 user e 8217 item.
 \end{itemize}
 
-Per ognuno di questi tipi di matrice abbiamo le quattro espressioni di interesse, che sono state calcolate tra uno user $u$ e un item $i$ come segue:
+Per ognuno di questi tipi di dataset abbiamo le quattro espressioni di interesse, che sono state calcolate tra uno user $u$ e un item $i$ come segue:
 \begin{itemize}
     \item \textbf{Quantità}: somma dei campi quantità (\textit{KWMENG}) di tutte le posizioni delle fatture di $u$ in cui è presente $i$;
     \item \textbf{Spesa totale}: somma dei campi spesa totale (\textit{NETWR}) di tutte le posizioni delle fatture di $u$ in cui è presente $i$;
     \item \textbf{Numero di fatture}: conta del numero di fatture di $u$ in cui compare $i$;
-    \item \textbf{Recentezza}: ricerca della posizione di $i$ nelle fatture di $u$, riportante la data più recente di acquisto. Se l'item è stato acquistato avremo quindi una data a cui andremo a sottrarre quella della fattura più vecchia, la differenza temporale viene trasformato in giorni (più sarà elevata più recente sarà l'acquisto).
+    \item \textbf{Recentezza}: ricerca della posizione di $i$ nelle fatture di $u$, riportante la data più recente di acquisto. Se l'item è stato acquistato avremo quindi una data a cui andremo a sottrarre quella della fattura più vecchia, la differenza temporale viene trasformata in giorni (più sarà elevata più recente sarà l'acquisto).
 \end{itemize}
 
 \subsection{Libreria Cornac}
@@ -26,41 +27,44 @@ La libreria \textit{Cornac} gestisce completamente gli esperimenti, dall'acquisi
 Nello specifico i modelli utilizzati sono stati:
 \begin{itemize}
     \item MostPop: modello basato sulla popolarità, dove un item è più popolare in base al numero di user che lo hanno valutato, usato per ottenere un risultato di base;
-    \item UserKnn: implementazione dell'approccio memory-based del collaborative filtering basato su user, di default prende in considerazione i 20 user più simili ad uno target;
+    \item UserKnn: implementazione dell'approccio memory-based del collaborative filtering basato su user, di default prende in considerazione i 20 user più simili ad uno target, usa la funzione di similarità coseno;
     \item ItemKnn: come il precedente, ma basato sugli item. Non è stato infine utilizzato in quanto durante le fasi iniziali di test non ha mai riportato risultati superiori a quelli di base e richiedeva troppo tempo per la valutazione;
-    \item MF: implementazione del matrix factorization, metodo model-based del collaborative filtering, di default utilizza un vettore di dimensionalità di 10 per lo spazio delle feature,
+    \item MF: implementazione del matrix factorization, metodo model-based del collaborative filtering, di default utilizza un vettore di dimensionalità 10 per lo spazio delle feature;
     \item VAECF: modello per la versione implicita, usato per avere un risultato di base avanzato.
 \end{itemize}
 I dati presi in input sono nel formato \textit{user, item, rating} e volendo potevano essere divisi in training, validation e test set direttamente dalla libreria.
-Si è preferito però dividerli esternamente con le rispettive percentuali: 70\% al training set, 15\% per validation e test set.
-Nella fase di valutazione dei risultati dei \textit{modelli} veniva richiesto un parametro detto \textit{rating\_threshold}, il quale serviva a binarizzare gli item rilevanti e irrilevanti del test set basandosi sul rating corrispondente. Non andava in alcun modo ad intaccare i rating nella fare di training. Il \textit{rating\_threshold} è stato fissato a 1, in modo che le valutazioni su scale diverse fossero sempre confrontabili e si andassero a considerare tutte le triplette del test set.
+Si è preferito però definirli esternamente con le rispettive percentuali: 70\% al training set, 15\% per validation e test set, ciascuno di essi è un insieme di indici, ciascuno dei quali punta ad una specifica tripletta che si trova sempre nella stessa posizione in quanto l'insieme delle triplette finali è ordinato allo stesso modo.
+Nella fase di valutazione dei risultati dei \textit{modelli} veniva richiesto un parametro detto \textit{rating\_threshold}, il quale serviva a binarizzare gli item rilevanti e irrilevanti del test set basandosi sul rating corrispondente. Non andava in alcun modo ad intaccare i rating nella fase di training. Il \textit{rating\_threshold} è stato fissato a 1, in modo che le valutazioni su scale diverse fossero sempre confrontabili e si andassero a considerare tutte le triplette del test set.
  
 \subsection{Esperimenti sulle singole matrici grezze}
-Come riportato nel capitolo relativo il preprocessing delle matrici grezze, non è stata definita un'unica scala dei rating in quanto se ne volevano provare diverse: $scale \in \{3, 5, 7, 9, 13, 19, 25\}$.
-Inoltre per ogni tecnica dove fosse previsto l'utilizzo di un certo numero di funzioni (per esempio per normalizzazione min-max ero disponibili rint e continous, mentre per ordered-based si potevano usare le distribuzioni uniforme discreta e gaussian-like), si è proceduto a testarle tutte.
+Come riportato nel capitolo relativo al preprocessing delle matrici grezze, non è stata definita un'unica scala dei rating in quanto se ne volevano provare diverse: $scale \in \{3, 5, 7, 9, 13, 19, 25\}$.
+Inoltre per ogni tecnica dove fosse previsto l'utilizzo di un certo numero di funzioni (per esempio per normalizzazione min-max erano disponibili rint e continous, mentre per ordered-based si potevano usare le distribuzioni uniforme discreta e gaussian-like), si è proceduto a testarle tutte.
 Considerando tutte le combinazioni di fattori, si sono ottenute in totale 2184 matrici dei rating.
 Per eseguire i test si è proceduti come segue:
 \begin{enumerate}
-    \item Ottengo un risultato di base con il modello MostPop;
-    \item Poi per ogni tecnica testo ciascuna combinazione di matrice dei rating, scala e funzione di distribuzione se usata, si eseguono le seguenti operazioni:
-    Poi per ciascuna tecnica si procede a testare tutte le matrici dei rating annesse ad essa, per ciascuna di esse si eseguono le seguenti operazioni:
+    \item ottengo un risultato di base con il modello MostPop sul validation set;
+    \item procedo con la fase preliminare, dove ogni matrice dei rating viene testata secondo le seguenti operazioni:
     \begin{enumerate}
         \item \textit{Alleno} i modelli ($MF$, $UserKnn$) con valori di deafult con il training set;
-        \item valuto i risultati del modello sul validation set, se questi valori risultano migliori di quelli di base (dati dal $MostPop$), allora si procede ad un tuning dei parametri sul modello con quella matrice dei rating;
-        \item Una volta concluso il tuning, si sceglie il modello migliore in accordo al validation set;
-        \item Si va a confrontare la valutazione finale basata sul test set, con quella di base ottenutta con il $VAECF$.
-        \item Tra tutte quelle che superano quest'ultimo passaggio scegliamo la migliore, una per ogni dataset.
+        \item valuto i risultati del modello sul validation set, se questi valori risultano migliori di quelli di base (dati dal $MostPop$), allora questa matrice accede alla fase avanzata;
     \end{enumerate}
+    \item ottengo un risultato di base del test set con il modello VAECF ottimizzato sul validation set;
+    \item segue la fase avanzata, dove per ogni matrice selezionata vengono eseguite le seguenti operazioni:
+    \begin{enumerate}
+        \item si effettua il tuning dei parametri dei modelli ($MF$, $UserKnn$) usando il validation set per ciascuna matrice e si calcola il risultato finale col test set;
+        \item si va a confrontare la valutazione finale basata sul test set, con quella di base ottenutta con il $VAECF$.
+    \end{enumerate}
+    \item tra tutte quelle che superano quest'ultimo passaggio scegliamo la migliore, una per ogni dataset.
 \end{enumerate}
 
-Il confronto dei risultati non è puramente matematico ma va a valutare il trand generale del metodo, se buona parte dei risultati sono migliori del bound si procede con il tuning, altrimenti non vengono considerati.
+Il confronto dei risultati è matematico quindi se anche un metodo dovesse avere una sola matrice che risulta selezionata nella fase preliminare, si procederà a testare anche quella nonostante il generale trend negativo del metodo. 
 
 \subsection{Esperimenti sulle matrici grezze combinate}
 Per prima cosa si è proceduto a dividere in gruppi tutte le matrici dei rating aventi stesso metodo e stessa scala, si sono ottenuti tutti gruppi aventi 4 matrici, una per ogni \textit{espressione d'interesse}. Per ognuno di questi gruppi si è proceduto ad applicare i due metodi combinati basati su liste $TopN$ e media delle matrici dei rating. Per gli esperimenti si sono usati lo stesso training, validation e test set usati per gli esperimenti precedenti. Gli esperimenti miravano a capire se questo metodo potesse fornire risultati migliori rispetto a quelli di base dati dati da $VAECF$ sul test set.
 
 \section{Esperimenti con approccio content-based}
 Per questo approccio non si è arrivati alla fase sperimentale in quanto dai primi test è risultato chiaro che non si avessero abbastanza informazioni sugli item.\\
-I profili degli user erano molto simili tra loro e, nonostante diverse modifiche, per ogni user venivano restituiti circa gli stessi item. Probabilmente le misure continue essendo disponibili per un numero limitato di prodotti hanno fatto si di essere poco influenti nella media finale, mentre la gerarchia prodotto e i nomi hanno fatto sì che venissero raccomandati i prodotti più popolari. Concludendo non si è voluto sviluppare ulteriormente l'approccio preferendo concentrarsi su altro.
+I profili degli user erano molto simili tra loro e, nonostante diverse modifiche, per ogni user venivano restituiti circa gli stessi item. Probabilmente le misure continue, essendo disponibili per un numero limitato di prodotti, sono risultate poco influenti nella media finale, mentre la gerarchia prodotto e i nomi hanno fatto sì che venissero raccomandati i prodotti più popolari. Concludendo non si è voluto sviluppare ulteriormente l'approccio preferendo concentrarsi su altro.
 
 \section{Esperimenti con approccio next-basket}
 Con questo approccio si è usato un dataset diverso e quindi non è possibile confrontare i risultati con quelli precedenti. Sono stati selezionati tutti gli user che avessero almeno 5 fatture, che ricordiamo in questo approccio vengono viste come transazioni, riducendo il numero di user rispettivamente per il tipo dataset \textit{macchine} da 254 a 224, per i \textit{ricambi} da 319 a 257 e per il \textit{totale} da 322 a 257.\\
@@ -70,7 +74,7 @@ Gli hyper-parametri disponibili sono i seguenti:
 \begin{itemize}
     \item asimmetria $\alpha \in \{0, 0.25, 0.5, 0.75, 1\}$;
     \item località $q \in \{1, 5, 10, 50, 100, 1000\}$;
-    \item finestra di recentezza $r \in \{1, 5, 25, 50, \infty \}$ .
+    \item finestra di recentezza $r \in \{1, 5, 25, 50, \infty \}$.
 \end{itemize}
 
 Si è testata ogni combinazione di hyper-parametri sul validation set e, selezionati quelli migliori in accordo al tipo di dataset, si è calcolata la valutazione finale del test set su ciascun dataset.
