@@ -1,45 +1,44 @@
 \hypertarget{(chap:capitolo6)}{}
-\chapter{Libreria cornac e esperimenti}
+\chapter{Libreria cornac ed esperimenti}
 In questo capitolo andremo a vedere le modalità con cui sono stati svolti gli esperimenti e la libreria utilizzata per gli stessi.
 \section{Esperimenti sulle matrici grezze}
 \subsection{Dataset}
 Le informazioni dello storico vendite sono state organizzate basandosi sulle due macrocategorie individuate nell'analisi: macchine e ricambi.
-Gli item presi in esame sono quelli acquistati almeno una volta, mentre per i clienti sono quelli che hanno effettuato almeno un'acquisto.
-Abbiamo quindi tre tipi matrici grezze user-item contenenti solo item appartenenti alle macrocategoria delle macchine, solo dei ricambi ed infine una con tutti gli item detta totale.
-In generale le divisione rispetto i tipi di dataset sono le seguenti:
+Gli item presi in esame sono quelli acquistati almeno una volta, mentre gli user sono quelli che hanno effettuato almeno un acquisto.
+Abbiamo quindi tre tipi matrici grezze user-item, contenenti solo item appartenenti alle macrocategoria delle macchine, solo dei ricambi ed infine una con tutti gli item, detta totale.\\
+In generale ciascuna matrice sarà di uno dei seguenti tipi di dataset:
 \begin{itemize}
     \item \textbf{Macchine}: 254 user e 518 item;
     \item \textbf{Ricambi}: 319 user e 7699 item;
-    \item \textbf{Totale}: 322 user e 8217 item;
+    \item \textbf{Totale}: 322 user e 8217 item.
 \end{itemize}
 
-Per ognuno di questi tipi di matrice abbiamo le quattro versioni delle espressioni di interesse, che sono state calcolate tra uno user $u$ e un item $i$ come segue:
+Per ognuno di questi tipi di matrice abbiamo le quattro espressioni di interesse, che sono state calcolate tra uno user $u$ e un item $i$ come segue:
 \begin{itemize}
-    \item \textbf{Quantità}: somma dei campi quantità (\textit{KWMENG}) di tutte le posizione delle fatture di $u$ in cui è presente $i$.
-    \item \textbf{Spesa totale}: somma dei campi spesa totale (\textit{NETWR}) di tutte le posizione delle fatture di $u$ in cui è presente $i$.
-    \item \textbf{Numero di fatture}: conta del numero di fatture di $u$ in cui compare $i$.
-    \item \textbf{Recentezza}: ricerca della posizione di $i$ nelle fatture di $u$, riportante la data più recente di acquisto. Se l'item è stato acquistato avremo quindi una data a cui andremo a sottrarre la data della fattura più vecchia, il delta temporale viene trasformato in giorni. Quindi più è alto il delta in giorni più recente sarà l'acquisto.
+    \item \textbf{Quantità}: somma dei campi quantità (\textit{KWMENG}) di tutte le posizioni delle fatture di $u$ in cui è presente $i$;
+    \item \textbf{Spesa totale}: somma dei campi spesa totale (\textit{NETWR}) di tutte le posizioni delle fatture di $u$ in cui è presente $i$;
+    \item \textbf{Numero di fatture}: conta del numero di fatture di $u$ in cui compare $i$;
+    \item \textbf{Recentezza}: ricerca della posizione di $i$ nelle fatture di $u$, riportante la data più recente di acquisto. Se l'item è stato acquistato avremo quindi una data a cui andremo a sottrarre quella della fattura più vecchia, la differenza temporale viene trasformato in giorni (più sarà elevata più recente sarà l'acquisto).
 \end{itemize}
 
 \subsection{Libreria Cornac}
-La libreria cornac gestisce completamente gli esperimenti, dall'acquisizione dei dati fino alla verifica dei risultati.
-Nello specifico è stata scelta per la presenza di molti \textit{modelli} e metriche per la loro valutazione.\\
+La libreria \textit{Cornac} gestisce completamente gli esperimenti, dall'acquisizione dei dati fino alla verifica dei risultati ed è stata scelta per la presenza di molti \textit{modelli} e metriche per la loro valutazione.\\
 Nello specifico i modelli utilizzati sono stati:
 \begin{itemize}
     \item MostPop: modello basato sulla popolarità, dove un item è più popolare in base al numero di user che lo hanno valutato, usato per ottenere un risultato di base;
-    \item UserKnn: implementazione dell'approccio del collaborative filtering memory-based, che di default prende in considerazione i 20 user più simili ad uno target.
+    \item UserKnn: implementazione dell'approccio memory-based del collaborative filtering basato su user, di default prende in considerazione i 20 user più simili ad uno target;
     \item ItemKnn: come il precedente, ma basato sugli item. Non è stato infine utilizzato in quanto durante le fasi iniziali di test non ha mai riportato risultati superiori a quelli di base e richiedeva troppo tempo per la valutazione;
-    \item MF: implementazione del matrix factorization, metodo model-based del collaborative filtering, di default considera 10 user più simili ad uno target;
-    \item VAECF: modello per la versione implicita, usato per avere un risultato di base.
+    \item MF: implementazione del matrix factorization, metodo model-based del collaborative filtering, di default utilizza un vettore di dimensionalità di 10 per lo spazio delle feature,
+    \item VAECF: modello per la versione implicita, usato per avere un risultato di base avanzato.
 \end{itemize}
 I dati presi in input sono nel formato \textit{user, item, rating} e volendo potevano essere divisi in training, validation e test set direttamente dalla libreria.
 Si è preferito però dividerli esternamente con le rispettive percentuali: 70\% al training set, 15\% per validation e test set.
-Nella fase di valutazione dei risultati dei \textit{modelli} veniva richiesto un parametro detto \textit{rating\_threshold}, il quale serviva a binarizzare gli item rilevanti e irrilevanti del test set basandosi sul rating corrispondente. Non andava in alcun modo ad intaccare i rating nella fare di training.
+Nella fase di valutazione dei risultati dei \textit{modelli} veniva richiesto un parametro detto \textit{rating\_threshold}, il quale serviva a binarizzare gli item rilevanti e irrilevanti del test set basandosi sul rating corrispondente. Non andava in alcun modo ad intaccare i rating nella fare di training. Il \textit{rating\_threshold} è stato fissato a 1, in modo che le valutazioni su scale diverse fossero sempre confrontabili e si andassero a considerare tutte le triplette del test set.
  
 \subsection{Esperimenti sulle singole matrici grezze}
-Come riportato nel capitolo relativo il preprocessing delle matrici grezze, non è stata definita una scala dei rating in quanto se ne volevano provare diverse: $scale \in \{3, 5, 7, 9, 13, 19, 25\}$.
-Inoltre per ogni tecnica dove fosse previsto l'utilizzo di una delle distribuzioni disponibili, si è proceduto a testarle entrambe.
-Dalle combinazioni di scala, distribuzione dei rating, espressione di interesse e tipo di dataset, tra tutte le tecniche si sono ottenute in totale 2184 matrici dei rating.
+Come riportato nel capitolo relativo il preprocessing delle matrici grezze, non è stata definita un'unica scala dei rating in quanto se ne volevano provare diverse: $scale \in \{3, 5, 7, 9, 13, 19, 25\}$.
+Inoltre per ogni tecnica dove fosse previsto l'utilizzo di un certo numero di funzioni (per esempio per normalizzazione min-max ero disponibili rint e continous, mentre per ordered-based si potevano usare le distribuzioni uniforme discreta e gaussian-like), si è proceduto a testarle tutte.
+Considerando tutte le combinazioni di fattori, si sono ottenute in totale 2184 matrici dei rating.
 Per eseguire i test si è proceduti come segue:
 \begin{enumerate}
     \item Ottengo un risultato di base con il modello MostPop;
@@ -54,16 +53,18 @@ Per eseguire i test si è proceduti come segue:
     \end{enumerate}
 \end{enumerate}
 
-Il confronto dei risultati non è puramente matematico ma va a valutare il trand generale del metodo, se buona parte dei risultati sono migliori del bound si procede con il tuning, mentre se solo alcuni valori sono leggermente meglio li si lascia perdere.
+Il confronto dei risultati non è puramente matematico ma va a valutare il trand generale del metodo, se buona parte dei risultati sono migliori del bound si procede con il tuning, altrimenti non vengono considerati.
 
 \subsection{Esperimenti sulle matrici grezze combinate}
-Per prima cosa si è proceduto a dividere in gruppi tutte le matrici dei rating aventi stesso metodo e stessa scala, si sono ottenuti tutti gruppi aventi 4 matrici, una per ogni \textit{espressione d'interesse}. Per ognuno di questi gruppi si è proceduto ad applicare i due metodi combinati descritti nel capitolo precedente. Per gli esperimenti si sono usati lo stesso training, validation e test set usati per gli esperimenti precedenti. La fase preliminare di esperimenti mirava a capire se questo metodo potesse fornire risultati migliori rispetto quelli di base dati da $MostPop$ e $VAECF$.
+Per prima cosa si è proceduto a dividere in gruppi tutte le matrici dei rating aventi stesso metodo e stessa scala, si sono ottenuti tutti gruppi aventi 4 matrici, una per ogni \textit{espressione d'interesse}. Per ognuno di questi gruppi si è proceduto ad applicare i due metodi combinati basati su liste $TopN$ e media delle matrici dei rating. Per gli esperimenti si sono usati lo stesso training, validation e test set usati per gli esperimenti precedenti. Gli esperimenti miravano a capire se questo metodo potesse fornire risultati migliori rispetto a quelli di base dati dati da $VAECF$ sul test set.
 
 \section{Esperimenti con approccio content-based}
-Per questo approccio non si è arrivati alla fase sperimentale in quanto dai primi test è risultato chiaro che non si avessero abbastanza informazioni sugli item, infatti i profili degli user erano molto simili tra loro e nonostante diverse modifiche, per ogni user venivano restituiti circa gli stessi item. Probabilmente le misure continue essendo disponibili per un numero limitato di prodotti hanno fatto si di essere poco influenti nella media finale, mentre la gerarchia prodotto e i nomi hanno fatto si di raccomandare i prodotti più popolari. Concludendo non si è voluto sviluppare ulteriormente l'approccio preferendo provare altro.
+Per questo approccio non si è arrivati alla fase sperimentale in quanto dai primi test è risultato chiaro che non si avessero abbastanza informazioni sugli item.\\
+I profili degli user erano molto simili tra loro e, nonostante diverse modifiche, per ogni user venivano restituiti circa gli stessi item. Probabilmente le misure continue essendo disponibili per un numero limitato di prodotti hanno fatto si di essere poco influenti nella media finale, mentre la gerarchia prodotto e i nomi hanno fatto sì che venissero raccomandati i prodotti più popolari. Concludendo non si è voluto sviluppare ulteriormente l'approccio preferendo concentrarsi su altro.
 
 \section{Esperimenti con approccio next-basket}
-Con questo approccio si è usato un dataset diverso e quindi non è possibile confrontare i risultati con quelli precedenti. Si sono andati a selezionare tutti gli user che avessero almeno 5 fatture, che ricordiamo in questo approccio vengono viste come transazioni, riducendo il numero di user rispettivamente per il dataset macchine da 254 a 224, per i ricambi da 319 a 257 e per il totale da 322 a 257, possiamo notare come siano stati eliminati un numero considerevole di user che avevo acquistato ricambi. L'nsieme delle ultime transazioni $\{b_{u}^{Bu}| \forall u \in U\}$ sono andate a formare rispettivamente randomicamente al 50\% validation e test set, mentre le restanti transizioni sono state a formare il training set. 
+Con questo approccio si è usato un dataset diverso e quindi non è possibile confrontare i risultati con quelli precedenti. Sono stati selezionati tutti gli user che avessero almeno 5 fatture, che ricordiamo in questo approccio vengono viste come transazioni, riducendo il numero di user rispettivamente per il tipo dataset \textit{macchine} da 254 a 224, per i \textit{ricambi} da 319 a 257 e per il \textit{totale} da 322 a 257.\\
+Possiamo notare come siano stati eliminati un numero considerevole di user che avevano acquistato ricambi. L'insieme delle ultime transazioni $\{b_{u}^{Bu}| \forall u \in U\}$ sono andate a formare rispettivamente randomicamente al 50\% validation e test set, mentre le restanti sono entrate a fara parte del training set. 
 
 Gli hyper-parametri disponibili sono i seguenti:
 \begin{itemize}
@@ -72,4 +73,4 @@ Gli hyper-parametri disponibili sono i seguenti:
     \item finestra di recentezza $r \in \{1, 5, 25, 50, \infty \}$ .
 \end{itemize}
 
-Si è andato a testare ogni combinazione di hyper-parametri sul validation set, selezionati quelli migliori si è calcolata la valutazione finale del test set.
+Si è testata ogni combinazione di hyper-parametri sul validation set e, selezionati quelli migliori in accordo al tipo di dataset, si è calcolata la valutazione finale del test set su ciascun dataset.

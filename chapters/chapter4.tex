@@ -117,42 +117,43 @@ L'idea di base è di creare un vettore dove ogni posizione corrisponda ad una sp
 
 \subsection{Gerarchia prodotto}
 A ciascuna categoria della gerarchia abbiamo assegnato una cella del vettore.
-Come detto in precedenza per la gerarchia prodotto abbiamo diverse categorie per ogni livello, per ciascuna di esse abbiamo assegnato una cella del vettore delle feature, se un'item apparteneva ad una di queste categorie andavamo ad impostare quella specifica cella a 1, altrimento 0.
+Come detto in precedenza, per la gerarchia prodotto abbiamo diverse categorie per ogni livello, per ciascuna di esse abbiamo assegnato una cella del vettore delle caratteristiche, se un'item apparteneva ad una di queste categorie andavamo ad impostare quella specifica cella a 1, altrimento 0.
 
 \subsection{Gruppo merceologico}
-Per il gruppo merceologico si è fatto come nel caso precedente, quindi per ogni codice merceologico si è andato ad assegnargli una cella del vettore delle feature.
+Per il gruppo merceologico si è fatto come nel caso precedente, quindi per ogni codice merceologico si è andato ad assegnargli una cella del vettore delle caratteristiche.
 
 \subsection{Nome prodotto}
-Il nome del prodotto poteva darci informazioni aggiuntive sulla similarità tra di essi, in quanto osservando l'anagrafica materiali i nomi sono assegnati in modo organizzato, quindi prodotti simili in cui cambiano solo alcune parti riportano lo stesso nome con le specifiche diverse.\\
+Il nome del prodotto poteva darci informazioni aggiuntive sulla similarità tra di essi, osservando l'anagrafica materiali notiamo che i nomi sono assegnati in modo organizzato: prodotti simili in cui cambiano solo alcune componenti riportano lo stesso nome con le specifiche diverse.\\
 Per ogni nome prodotto sono state eseguite le seguenti operazioni:
 \begin{enumerate}
-    \item eliminazione di simboli e parti del nome non esplicativi, per esempio alcuni nomi avevano riportata anche la dimensione, già disponibili in altri campi;
+    \item eliminazione di simboli e informazioni ridondanti, per esempio alcuni nomi avevano riportata anche la dimensione, già disponibile in altri campi;
     \item separazione delle restanti parole;
-    \item inserimento delle suddette in un dizionario contenente la totalità delle parole e il rispettivo numero di occorrenze;
+    \item inserimento delle suddette in un dizionario contenente la totalità delle parole e il rispettivo numero di occorrenze.
 \end{enumerate}
-Dopo un'ulteriore pulizia a mano siamo andati a selezionare quelle con almeno 10 occorrenze, ottenendo alla fine circa 600 parole. Ciascuna parola è stata assegnata ad una cella del vettore delle feature, se un item nel suo titolo contiene una di queste parole, imposta a 1 la cella corrispondente.
+Dopo un'ulteriore pulizia a mano siamo andati a selezionare le parole con almeno 10 occorrenze, ottenendo alla fine circa 600 parole. Ad ognuna di esse è stata assegnata ad una cella del vettore delle caratteristiche, se un item nel suo titolo conteneva una di queste parole, si impostava a 1 la cella corrispondente.
 
 \subsection{Dimensione, volume, peso}
-Per le informazioni riguardo lunghezza, larghezza, altezza, volume e peso si volevano creare per ciascuno di essi 20 intervalli ciascuno aventi circa lo stesso numero di item. Si è assegnato al vettore delle feature una cella per ogni intervallo e se un'item aveva una delle misure all'interno dell'intervallo lo si impostava ad 1.
+Per le informazioni riguardanti lunghezza, larghezza, altezza, volume e peso si volevano creare per ciascuno di essi 20 intervalli aventi circa lo stesso numero di item. Si è assegnato al vettore delle caratteristiche una cella per ogni intervallo e se un'item aveva una delle misure all'interno dello stesso lo si impostava ad 1.
 
 \subsection{Profilo user}
-Una volta creata la matrice avente sulle righe gli item e sulle colonne le feature, si è proceduto a calcolare i profili degli user facendo la media delle righe corrispondenti agli item acquistati dallo stesso.
+Una volta creata la matrice avente sulle righe gli item e sulle colonne le caratteristiche, si è proceduto a calcolare i profili degli user facendo la media delle righe corrispondenti agli item acquistati dallo stesso.
 
 \section{Approccio next-basket}
-In questo capitolo andremo ad operare sullo storico vendite andando a considerare le fatture come sessioni di d'acquisto applicando la \textit{User Popularity-based CF}.
-Ragionando in termini di logica d'acquisto è possibile che i dealer acquistino sempre circa lo stesso gruppo di item, questo ci porta a parlare del concetto di popolarità e di come questa possa variare nel tempo.
-Dato che questa soluzione è stata provata dopo le altre precedentemente descritte, si è notato come non fosse così facile \textit{battere} il modello MostPop, quindi si è pensato di muoversi nella direzione della popolarità con questa soluzione per vedere se i risultati migliorassero. L'obiettivo è quello di predire per ciascuno user gli item dell'utima fattura.
+In questo capitolo opereremo sullo storico vendite considerando le fatture come sessioni d'acquisto a cui applicheremo la \textit{User Popularity-based CF}.\\
+Ragionando in termini di logica d'acquisto è possibile che i dealer acquistino sempre lo stesso gruppo di item, questo ci porta a parlare del concetto di popolarità e di come questa possa variare nel tempo.
+Dato che questa soluzione è stata provata dopo le altre precedentemente descritte, si è notato come non fosse così facile "battere" il modello basato sulla popolarità, quindi si è pensato di muoversi in questa direzione per vedere se i risultati migliorassero.\\
+L'obiettivo era quello di predire per ciascuno user gli item dell'utima fattura.
 
 \subsection{Premesse}
-Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e consideriamo ciascuna fattura come una transazione $b_{t}^{u}$, dove $t$ indica la posizione ordinale nell'insieme ordinato delle transazioni di uno user di cardinalità $B_{u}$ definito come $\mathcal{B}_u = \{b_{u}^{t} | t \in 1, \dots, B_u\}$. Definiamo $\mathcal{B}_{u}^{i} = \{b_{u}^{t}|b_{u}^{t} \in \mathcal{B}_{u} \wedge i \in b_{u}^{t}\}$, ossia l'insieme di tutte le transazione dello user $u$ in cui compare l'item $i$.
+Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e consideriamo ciascuna fattura come una transazione $b_{t}^{u}$, dove $t$ indica la posizione ordinale nell'insieme delle transazioni di uno user di cardinalità $B_{u}$ definito come $\mathcal{B}_u = \{b_{u}^{t} | t \in 1, \dots, B_u\}$. Definiamo $\mathcal{B}_{u}^{i} = \{b_{u}^{t}|b_{u}^{t} \in \mathcal{B}_{u} \wedge i \in b_{u}^{t}\}$, ossia l'insieme di tutte le transazione dello user $u$ in cui compare l'item $i$.
 \subsection{Popolarità}
 Possiamo calcolare la popolarità di un item rispetto ad uno user, detta \textit{popularity user-wise}, con la seguente formula: $\pi_{i}^{u} = \frac{\mathcal{B}_{u}^{i}}{\mathcal{B}_{u}}$.
-Dato che la popolarità può variare nel tempo il paper introduce il concetto di recentezza, dicendo che per predirre l'ultima transazione potrebbe non essere efficace guardare nelle transazioni più vecchie, quindi attraverso una finestra temporale sulle transazioni più recenti si va a calcolare la \textit{recency aware user-wise popularity}, un modo di calcolare la popolarità di un item per uno user solo su un ristretto numero di transizioni, di seguito la formula: 
+Dato che la popolarità può variare nel tempo il paper introduce il concetto di recentezza, concludendo che per predirre l'ultima transazione potrebbe non essere efficace considerare quelle più vecchie, quindi attraverso una finestra temporale sulle quelle più recenti si va a calcolare la \textit{recency aware user-wise popularity}, un modo di stimare la popolarità di un item per uno user solo su un ristretto numero di transizioni, di seguito la formula: 
 $$\pi_{u}^{i}@r = \frac{\sum_{t = \max (B_{u}-r,0)}^{B_{u}}[i \in b_{u}^{t}]}{\min(r,B_{u})}$$
 Con il parametro $r$ si definisce la finestra di transazioni, a partire dall'ultima, da tenere in considerazione, la funzione $[i \in b_{u}^{t}]$ ritorna 1 se l'item $i$ è presente nella transazione $b_{u}^{t}$, 0 altrimenti. Se $r \geqslant B_{u}$ allora questa formula diventa equivalente alla \textit{popularity user-wise}.
 \subsection{User Popularity-based CF (UP-CF)}
-Questa soluzione, che si basa sul collaborative filtering, permette di trovare item interessanti per uno user andando ad osservare user simili ad esso, questo viene fatto andando a calcolare la similarità tra due user $u$ e $v$ con la similarità coseno asimmetrica: $w(u,v) = \frac{|I_u \cap I_v|}{|I_u|^{\alpha}|I_v|^{1-\alpha}}$ con $\alpha \in [0,1]$, dove il parametro $\alpha$ permette di bilanciare la probabilità $P(u|v)$ e $P(v|u)$. 
+Questa soluzione, che si basa sul collaborative filtering, permette di trovare item interessanti per uno user andando ad osservare user simili ad esso, questa similarità tra due user $u$ e $v$ si concretizza nella funzione coseno asimmetrica: $w(u,v) = \frac{|I_u \cap I_v|}{|I_u|^{\alpha}|I_v|^{1-\alpha}}$ con $\alpha \in [0,1]$, dove il parametro $\alpha$ permette di bilanciare la probabilità $P(u|v)$ e $P(v|u)$. 
 \subsubsection{Predizione}
 Si vuole ora combinare la similarità tra user e il concetto di popolarità di un item per uno user, per fare ciò usiamo la formula: 
 $$\hat{r}_{i}^{u} = \sum_{v \in U} w(u,v)^{q}\pi_{u}^{i}$$
-Dove il termine $q$ è un parametro operante sulla località degli user, per un alto valore di $q$ consideremo solo user molto simili ad uno target.
+Dove il termine $q$ è un parametro operante sulla località degli user, per un alto valore di $q$ consideremo solo user molto simili a quello target.
