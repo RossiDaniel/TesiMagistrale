@@ -139,7 +139,7 @@ Per le informazioni riguardanti lunghezza, larghezza, altezza, volume e peso si 
 Una volta creata la matrice avente sulle righe gli item e sulle colonne le caratteristiche, si è proceduto a calcolare i profili degli user facendo la media delle righe corrispondenti agli item acquistati dallo stesso.
 
 \section{Approccio next-basket}
-In questo capitolo opereremo sullo storico vendite considerando le fatture come sessioni d'acquisto a cui applicheremo la \textit{User Popularity-based CF}.\\
+In questo capitolo opereremo sullo storico vendite considerando le fatture come sessioni d'acquisto a cui applicheremo la \bit{\textit{User Popularity-based CF}}{aiolli}.\\
 Ragionando in termini di logica d'acquisto è possibile che i dealer acquistino sempre lo stesso gruppo di item, questo ci porta a parlare del concetto di popolarità e di come questa possa variare nel tempo.
 Dato che questa soluzione è stata provata dopo le altre precedentemente descritte, si è notato come non fosse così facile "battere" il modello basato sulla popolarità, quindi si è pensato di muoversi in questa direzione per vedere se i risultati migliorassero.\\
 L'obiettivo era quello di predire per ciascuno user gli item dell'utima fattura.
