@@ -60,8 +60,9 @@ Nella tabella VBAP ci sono alcune posizioni dove a parità di codice prodotto (M
 Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
 \subsubsection{Selezione categorie di 1° livello}
 
-\begin{minipage}[H]{0.4\textwidth}
-	\scalebox{0.45}{%
+\begin{minipage}[H]{0.50\textwidth}
+	\begin{center}
+	\scalebox{0.65}{%
 	\begin{tabular}{|l|rr|l|}
 		\toprule
 		PRODH &    $\#tot$ &  $\#sold$ &                  titolo \\
@@ -85,18 +86,22 @@ Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
 		09999 &   215 &    0 &                   ALTRO \\ %                    ALTRO \\
 		\bottomrule
 	\end{tabular}
-
 }
+\captionof{table}{Categorie (PRODH) 1° livello, unità totali e vendute.}
+\label{tab:PRODH_tot}
+\end{center}
+
 \end{minipage}
-\begin{minipage}[H]{0.6\textwidth}
-	Nella tabella vengono mostrati i codici PRODH delle categorie di 1° livello, nella colonna $\#tot$ il numero di prodotti diversi per quella categoria, nella colonna $\#sold$ il numero di prodotti diversi acquistati almeno una volta appartententi a quella categoria ed infine il titolo della categoria.\\
-	Come possiamo vedere le prime sei categorie con titolo in minuscolo hanno pochi prodotti catalogati in MARA e nessun prodotto venduto.\\
+\begin{minipage}[H]{0.50\textwidth}
+Nella tabella \ref{tab:PRODH_tot} vengono mostrati i codici PRODH delle categorie di 1° livello, nella colonna $\#tot$ il numero di prodotti diversi per quella categoria, nella colonna $\#sold$ il numero di prodotti diversi acquistati almeno una volta appartententi a quella categoria ed infine il titolo della categoria.\\
+Come possiamo vedere le prime sei categorie con titolo in minuscolo hanno pochi prodotti catalogati in MARA e nessun prodotto venduto.\\
 \end{minipage}
-Chiaramento il fatto che siano tutti a zero è dovuto all'aggiornamento dei codici PRODH di cui abbiamo parlato precedentemente, a prescindere da ciò il numero di posizioni che prima riportavano codici appartenenti alle categorie prese in considerazione non superava la decina, quindi non considerare queste categorie in quanto si è smesso di usarle sembra la scelta più logica.\\
+
+Chiaramente il fatto che siano tutti a zero è dovuto all'aggiornamento dei codici PRODH di cui abbiamo parlato precedentemente, a prescindere da ciò il numero di posizioni che prima riportavano codici appartenenti alle categorie prese in considerazione non superava la decina, quindi non considerare queste categorie in quanto si è smesso di usarle sembra la scelta più logica.\\
 La categoria ALTRO (09999) non è stata considerata in quanto riporta prodotti che non sono disponibili sull'e-commerce.
 Inoltre le categorie CATEGORIA8 (00700) e CATEGORIA10 (00950), dato il basso numero di prodotti presenti in MARA e le basse vendite, si è preferito non considerarle.
 \subsubsection{Overview categorie di 1° livello}
-
+\begin{center}
 \scalebox{0.6}{%
 \begin{tabular}{|l|rrrccc|l|}
 \toprule
@@ -116,9 +121,11 @@ $PRODH$ &    $\#posizioni$ &  $\sum_{KWMENG}$ &  $\mathbb{E}_{KWMENG}$ &     $\m
 
 \bottomrule
 \end{tabular}}
-\newline
+\captionof{table}{Informazioni sulle categorie (PRODH) 1° livello selezionate}
+\label{tab:PRODH_sel}
+\end{center}
 
-Nella tabella per ogni categoria $PRODH$ di 1° livello possiamo vedere:
+Nella tabella \ref{tab:PRODH_sel} per ogni categoria $PRODH$ di 1° livello possiamo vedere:
 \begin{itemize}
 	\item $\#posizioni$: numero di posizioni in cui compaiono prodotti di quella categoria in fattura;
 	\item $\sum_{KWMENG}$: quantità totale di prodotti acquistati appartenenti a quella categoria;

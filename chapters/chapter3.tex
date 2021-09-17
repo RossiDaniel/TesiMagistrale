@@ -19,7 +19,11 @@ Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, se per e
 
 \subsection{User-item interaction matrix}
 \begin{minipage}[H]{0.40\textwidth}
-	\includegraphics[width=5.5cm]{figures/Sample-of-user-item-matrix}
+	\begin{center}
+		\includegraphics[width=5.5cm]{figures/Sample-of-user-item-matrix}
+		\captionof{figure}{Esempio user-item interaction matrix esplicita.}
+		\label{tab:user_item_matrix}
+	\end{center}
 \end{minipage}
 \begin{minipage}[H]{0.55\textwidth}
 	I rating sono organizzati in matrici, dette appunto user-item interaction matrix o semplicemente matrici dei rating (R), dove sulle righe abbiamo gli user mentre sulle colonne abbiamo gli item, nell'incrocio abbiamo riportato il rating. 
@@ -28,7 +32,7 @@ Nel nostro caso di studio però ci ritroviamo a metà strada in quanto, se per e
 \end{minipage}
 
 \subsection{Task}
-L'obiettivo del sistema può essere quello di consigliare ad uno user una lista di N item, detta \textbf{$TopN$} che si ritiene possano interessargli, oppure dato un item si può trovare una lista di item che si considerino simili allo stesso in acccordo con i 'gusti' dello user.
+L'obiettivo del sistema può essere quello di consigliare ad uno user una lista di N item, detta \textbf{$TopN$} che si ritiene possano interessargli, oppure dato un item si può trovare una lista di item che si considerino simili allo stesso in acccordo con i "gusti" dello user.
 
 \section{Approcci}
 Definito quindi il task abbiamo diversi modi per poter soddisfare il nostro obiettivo, in generale abbiamo due principali categorie di RS:
@@ -58,9 +62,12 @@ Questo metodo funziona senza informazioni relative alle caratteristiche degli us
 ItemKnn è un metodo memory-based molto simile al precedente, qui si va a considerare però gli item da raccomandare e il loro "profilo" è la propria colonna della rating matrix. Si calcola la similarità tra tutti gli item e dato uno user si procede a calcolare il rating stimato sugli item che non ha valutato andando a trovare per ciascuno di essi la lista di K item che ha valutato più simili ad esso, poi calcola la media pesata dei rating dei K item selezionati usando come peso la similarità. 
  
 \subsubsection{Matrix Factorization (MF)}
-Nell'approccio model-based, Matrix Factorization (MF) è uno dei modelli più famosi, questo si basa sul concetto che si possa mappare user e item verso uno spazio delle feature comune di una certa dimensionalità K, possiamo quindi creare due matrici P e Q, dove P è una matrice avente sulle righe gli user e come colonne le K feature, mentre Q è una matrice avente sulle righe le k feature e sulle colonne gli item, quello che vogliamo ottenere è una approsimazione della rating matrix attraverso la moltiplicazione di P e Q, ossia $R \approx P \cdot Q^{T} = \hat{R}$.\\
-\includegraphics[width=14.5cm]{figures/MF_disegno}
-
+Nell'approccio model-based, Matrix Factorization (MF) è uno dei modelli più famosi, questo si basa sul concetto che si possa mappare user e item verso uno spazio delle feature comune di una certa dimensionalità K, possiamo quindi creare due matrici P e Q, dove P è una matrice avente sulle righe gli user e come colonne le K feature, mentre Q è una matrice avente sulle righe le k feature e sulle colonne gli item, quello che vogliamo ottenere è una approssimazione della rating matrix attraverso la moltiplicazione di P e Q, ossia $R \approx P \cdot Q^{T} = \hat{R}$, come nella figura \ref{tab:MF}.\\
+\begin{center}
+	\includegraphics[width=14.5cm]{figures/MF_disegno}
+	\captionof{figure}{Idea alla base di Matrix Factorization.}
+	\label{tab:MF}
+\end{center}
 Quello che otteniamo è quindi un profilo sia per gli user che per gli item rispetto lo stesso spazio delle feature. Il problema maggiore risulta però essere quello di ottenere queste due matrici, possiamo farlo creando una funzione di loss apposita e andando ad allenare in modo alternato le matrici P e Q, carcando quindi di ridurre dopo ciascuna iterazione la differenza tra $R$ e $\hat{R}$.\\
 Una volta che il modello è allenato possiamo predire il rating dato da uno user u su un item i moltiplicando i profili corrispondenti $\hat{r}_{ui} = P_u \cdot Q_{i}^{T}$.
 
