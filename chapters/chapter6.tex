@@ -14,9 +14,8 @@ Come riportato nel capitolo precedente la valutazione sarà condotta in due fasi
 In questa sezione vedremo i risultati del modello MostPop e del VAECF, che verranno utilizzati come bound per valutare quelli succcessivi. 
 
 \subsubsection{MostPop}
-Come detto il modello MostPop restituisce per ogni user la stessa lista di item più popolari.
-Riportiamo i risultati per ogni dataset sul validation set.\\
-
+Come detto il modello MostPop restituisce per ogni user la stessa lista di item più popolari e nella tabella \ref{tab:mostpop_val} ne riportiamo i risultati sul validation set.
+\begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
     $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
@@ -26,11 +25,14 @@ Riportiamo i risultati per ogni dataset sul validation set.\\
     totale  & 0.2810 &  0.0733 &   0.0811 &  0.0627 & 0.0360 \\
 
 \bottomrule
-\end{tabular}\\
+\end{tabular}
+\captionof{table}{Risultati modello MostPop per tipo dataset sul validation set}
+\label{tab:mostpop_val}
+\end{center} 
 
 Useremo questi risultati come soglia per la fase preliminare, testando i risultati delle matrici applicate ai modelli MF e UserKnn. Nel caso in cui questi siano migliori, si procederà al tuning dei parametri del modello stesso e al calcolo finale dei risultati sul test set.\\
-Quelli riportati qui di seguito sono i risultati del MostPop sul test set.\\
-
+Quelli riportati nella tabella \ref{tab:mostpop_test} sono i risultati del MostPop sul test set.\\
+\begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
     $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
@@ -41,6 +43,9 @@ Quelli riportati qui di seguito sono i risultati del MostPop sul test set.\\
 
 \bottomrule
 \end{tabular}
+\captionof{table}{Risultati modello MostPop per tipo dataset sul test set}
+\label{tab:mostpop_test}
+\end{center}
 
 \subsubsection{VAECF}
 Il modello VAECF è un modello che funziona su rating impliciti, la fase preliminare ha richiesto il tuning dei parametri riportati di seguito:
@@ -50,22 +55,26 @@ Il modello VAECF è un modello che funziona su rating impliciti, la fase prelimi
     \item $f_{act}$ è la funzione di attivazione applicata nei layer nascosti, che può essere una delle seguenti $\{sigmoid, tanh, elu, relu, relu6\}$.
 \end{itemize}
 \begin{minipage}[H]{0.45\textwidth}
-    \begin{tabular}{|l|ccc|}
-        \toprule
-        $dataset$ &    $n_{int}$ &  $n_{hid}$ & $act\_f$ \\
-        \midrule
-        macchine & 5 & 30 & relu \\
-        ricambi  &	5 & 30 & sigmoid\\
-        totale  & 5 & 30 & sigmoid\\
-    \bottomrule
-    \end{tabular}\\
+    \begin{center}
+        \begin{tabular}{|l|ccc|}
+            \toprule
+            $dataset$ &    $n_{int}$ &  $n_{hid}$ & $act\_f$ \\
+            \midrule
+            macchine & 5 & 30 & relu \\
+            ricambi  &	5 & 30 & sigmoid\\
+            totale  & 5 & 30 & sigmoid\\
+        \bottomrule
+        \end{tabular}
+        \captionof{table}{Parametri selezionati.}
+        \label{tab:tuning_vaecf}
+\end{center}
 \end{minipage}
 \begin{minipage}[H]{0.55\textwidth}
     Il tuning dei parametri ha portato a considerare tutte le possibili combinazioni degli stessi, vediamo per ogni dataset quali valori hanno restituito i risultati migliori sul validation set.
 \end{minipage}\\
 
 Vediamo ora i risultati suddivisi per dataset sul validation set con il modello ottimizzato:\\
-
+\begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
     $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
@@ -75,9 +84,11 @@ Vediamo ora i risultati suddivisi per dataset sul validation set con il modello 
     totale  & 0.4190 & 0.0980 & 0.0941 & 0.0741 & 0.1208 \\
 \bottomrule
 \end{tabular}\\
-
+\captionof{table}{Risultati VAECF ottimizzato per tipo dataset sul validation set.}
+\label{tab:vaecf_val}
+\end{center}
 Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come soglia nella fase avanzata, vediamoli di seguito:\\
-
+\begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
     $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
@@ -88,6 +99,9 @@ Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come so
 
 \bottomrule
 \end{tabular}
+\captionof{table}{Risultati VAECF ottimizzato per tipo dataset sul test set.}
+\label{tab:vaecf_test}
+\end{center}
 
 \subsection{Fase test preliminare}
 In questa sezione vedremo per ogni tecnica di preprocessing applicata sulle matrici grezze i risultati ottenuti.\\
@@ -100,39 +114,51 @@ Come spiegato nei capitoli precedenti i metodi min-max e ordered-based sono appl
 
 \subsubsection{Normalizzazione min-max gruppo globale}
 In questa sezione vedremo la normalizzazione min-max applicata al gruppo globale, ossia quello contenente tutte le triplette.
-Nel grafico composto sottostante possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. \\
+Nel grafico composto sottostante possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$.
+\begin{center}
+    \includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
+    \captionof{figure}{Risultati normalizzazione min-max gruppo globale.}
+    \label{tab:minmax_globale}
+\end{center}
 La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
 In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera. A queste due matrici vengono applicati i modelli MF e UserKnn, da cui otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
 
-\includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
-
 \subsubsection{Normalizzazione min-max gruppo user-based}
-In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascuno di essi contiene solo le triplette di un singolo user. Il grafico composto di seguito possiede la stessa struttura di quello del paragrafo precedente.\\
-Sono presenti risultati positivi nell'incrocio tipo dataset ricambi - espressione d'interesse (numero fatture).\\
-
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascuno di essi contiene solo le triplette di un singolo user. Il grafico composto di seguito possiede la stessa struttura di quello del paragrafo precedente. Sono presenti risultati positivi nell'incrocio tipo dataset ricambi - espressione d'interesse (numero fatture).
+\begin{center}
 \includegraphics[width=16cm]{figures/risultati_minmax_singolo.png}
-\newpage
+\captionof{figure}{Risultati normalizzazione min-max gruppo user-based.}
+\label{tab:minmax_user_based}
+\end{center}
+
 \subsubsection{Normalizzazione min-max gruppo user-category-based}
 Vediamo la normalizzazione min-max applicata al gruppo user-category-based, dove le triplette vengono divise per user e per categoria.
 Le macchine hanno a disposizione solo la divisione in categorie secondo la gerarchia prodotto, mentre i ricambi possono essere divisi secondo le categorie di 2° e 3° livello della gerarchia prodotto e dal gruppo merceologico. Per il tipo dataset totale si proverà ad usare prima solo le categorie della gerarchia prodotto, poi le categorie della gerarchia prodotto solo per le macchine mentre per i ricambi le categorie del gruppo merceologico.
-
 \paragraph{Macchine}\mbox{} \\
 Come possiamo vedere dal grafico composto, sulle righe abbiamo i livelli della gerarchia prodotto (1°, 2°, 3° livello), mentre sulle colonne abbiamo le espressioni d'interesse. 
-Non sono presenti risultati che superino la soglia critica.\\
-
-\includegraphics[width=16cm]{figures/risultati_minmax_categoria_macchine.png}
+Non sono presenti risultati che superino la soglia critica.
+\begin{center}
+\includegraphics[width=15cm]{figures/risultati_minmax_categoria_macchine.png}
+\captionof{figure}{Risultati normalizzazione min-max gruppo user-category based dataset macchine.}
+\label{tab:minmax_macchine}
+\end{center}
 \newpage
 
 \paragraph{Ricambi}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1° e 2° livello della gerarchia prodotto e la divisione del gruppo merceologico (\textit{MATKL}), mentre sulle colonne abbiamo le espressioni d'interesse. Abbiamo risultati che superano la soglia critica dividendo le triplette secondo le categorie di 2° livello della gerarchia prodotto con le espressioni numero di fatture e recentezza.\\
-
+Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1° e 2° livello della gerarchia prodotto e la divisione del gruppo merceologico (\textit{MATKL}), mentre sulle colonne abbiamo le espressioni d'interesse. Abbiamo risultati che superano la soglia critica dividendo le triplette secondo le categorie di 2° livello della gerarchia prodotto con le espressioni numero di fatture e recentezza.
+\begin{center}
 \includegraphics[width=16cm]{figures/risultati_minmax_categoria_ricambi.png}
+\captionof{figure}{Risultati normalizzazione min-max gruppo user-category based dataset ricambi.}
+\label{tab:minmax_ricambi}
+\end{center}
 
 \paragraph{Totale}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1°, 2° e 3° livello della gerarchia prodotto e successivamente le precedenti categorie applicate solo alle macchine, mentre i ricambi si sono divisi secondo il gruppo merceologico. Sulle colonne abbiamo le espressioni d'interesse. Non abbiamo alcun risultato sopra la soglia.\\
-
-\includegraphics[width=16cm]{figures/risultati_minmax_categoria_totale.png}
-
+Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1°, 2° e 3° livello della gerarchia prodotto e successivamente le precedenti categorie applicate solo alle macchine, mentre i ricambi si sono divisi secondo il gruppo merceologico. Sulle colonne abbiamo le espressioni d'interesse. Non abbiamo alcun risultato sopra la soglia.
+\begin{center}
+\includegraphics[width=14.5cm]{figures/risultati_minmax_categoria_totale.png}
+\captionof{figure}{Risultati normalizzazione min-max gruppo user-category based dataset totale.}
+\label{tab:minmax_totale}
+\end{center}
 %------------------------------------------------------------------------------------------------------------------------------------------------------
 
 \subsubsection{Tecnica ordered-based gruppo globale}
