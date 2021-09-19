@@ -114,7 +114,7 @@ Come spiegato nei capitoli precedenti i metodi min-max e ordered-based sono appl
 
 \subsubsection{Normalizzazione min-max gruppo globale}
 In questa sezione vedremo la normalizzazione min-max applicata al gruppo globale, ossia quello contenente tutte le triplette.
-Nel grafico composto sottostante possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$.
+Nel grafico composto \ref{tab:minmax_globale} possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$.
 \begin{center}
     \includegraphics[width=16cm]{figures/risultati_minmax_globale.png}
     \captionof{figure}{Risultati normalizzazione min-max gruppo globale.}
@@ -124,7 +124,7 @@ La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene
 In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera. A queste due matrici vengono applicati i modelli MF e UserKnn, da cui otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
 
 \subsubsection{Normalizzazione min-max gruppo user-based}
-In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascuno di essi contiene solo le triplette di un singolo user. Il grafico composto di seguito possiede la stessa struttura di quello del paragrafo precedente. Sono presenti risultati positivi nell'incrocio tipo dataset ricambi - espressione d'interesse (numero fatture).
+In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-based, ossia quello dove ciascuno di essi contiene solo le triplette di un singolo user. Il grafico composto \ref{tab:minmax_user_based} di seguito possiede la stessa struttura di quello (\ref{tab:minmax_globale}) del paragrafo precedente. Sono presenti risultati positivi nell'incrocio tipo dataset ricambi - espressione d'interesse (numero fatture).
 \begin{center}
 \includegraphics[width=16cm]{figures/risultati_minmax_singolo.png}
 \captionof{figure}{Risultati normalizzazione min-max gruppo user-based.}
@@ -135,7 +135,7 @@ In questa sezione vedremo la normalizzazione min-max applicata al gruppo user-ba
 Vediamo la normalizzazione min-max applicata al gruppo user-category-based, dove le triplette vengono divise per user e per categoria.
 Le macchine hanno a disposizione solo la divisione in categorie secondo la gerarchia prodotto, mentre i ricambi possono essere divisi secondo le categorie di 2° e 3° livello della gerarchia prodotto e dal gruppo merceologico. Per il tipo dataset totale si proverà ad usare prima solo le categorie della gerarchia prodotto, poi le categorie della gerarchia prodotto solo per le macchine mentre per i ricambi le categorie del gruppo merceologico.
 \paragraph{Macchine}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo i livelli della gerarchia prodotto (1°, 2°, 3° livello), mentre sulle colonne abbiamo le espressioni d'interesse. 
+Come possiamo vedere dal grafico composto \ref{tab:minmax_macchine}, sulle righe abbiamo i livelli della gerarchia prodotto (1°, 2°, 3° livello), mentre sulle colonne abbiamo le espressioni d'interesse. 
 Non sono presenti risultati che superino la soglia critica.
 \begin{center}
 \includegraphics[width=15cm]{figures/risultati_minmax_categoria_macchine.png}
@@ -145,7 +145,7 @@ Non sono presenti risultati che superino la soglia critica.
 \newpage
 
 \paragraph{Ricambi}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1° e 2° livello della gerarchia prodotto e la divisione del gruppo merceologico (\textit{MATKL}), mentre sulle colonne abbiamo le espressioni d'interesse. Abbiamo risultati che superano la soglia critica dividendo le triplette secondo le categorie di 2° livello della gerarchia prodotto con le espressioni numero di fatture e recentezza.
+Come possiamo vedere dal grafico composto \ref{tab:minmax_ricambi}, sulle righe abbiamo il 1° e 2° livello della gerarchia prodotto e la divisione del gruppo merceologico (\textit{MATKL}), mentre sulle colonne abbiamo le espressioni d'interesse. Abbiamo risultati che superano la soglia critica dividendo le triplette secondo le categorie di 2° livello della gerarchia prodotto con le espressioni numero di fatture e recentezza.
 \begin{center}
 \includegraphics[width=16cm]{figures/risultati_minmax_categoria_ricambi.png}
 \captionof{figure}{Risultati normalizzazione min-max gruppo user-category based dataset ricambi.}
@@ -153,7 +153,7 @@ Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1° e 2° live
 \end{center}
 
 \paragraph{Totale}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1°, 2° e 3° livello della gerarchia prodotto e successivamente le precedenti categorie applicate solo alle macchine, mentre i ricambi si sono divisi secondo il gruppo merceologico. Sulle colonne abbiamo le espressioni d'interesse. Non abbiamo alcun risultato sopra la soglia.
+Come possiamo vedere dal grafico composto \ref{tab:minmax_totale} sulle righe abbiamo il 1°, 2° e 3° livello della gerarchia prodotto e successivamente le precedenti categorie applicate solo alle macchine, mentre i ricambi si sono divisi secondo il gruppo merceologico. Sulle colonne abbiamo le espressioni d'interesse. Non abbiamo alcun risultato sopra la soglia.
 \begin{center}
 \includegraphics[width=14.5cm]{figures/risultati_minmax_categoria_totale.png}
 \captionof{figure}{Risultati normalizzazione min-max gruppo user-category based dataset totale.}
@@ -163,75 +163,90 @@ Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1°, 2° e 3°
 
 \subsubsection{Tecnica ordered-based gruppo globale}
 In questa sezione vedremo la tecnica di preprocessing ordered-based applicata al gruppo globale, ossia quello contenente tutte le triplette.
-Nel grafico composto sottostante possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. \\
+Nel grafico composto \ref{tab:ordered_globale} sottostante possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. \\
 La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
 In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera. A queste due matrici vengono applicati i modelli MF e UserKnn, da cui otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.
 
-\includegraphics[width=16cm]{figures/risultati_ordered_globale.png}
+\begin{center}
+    \includegraphics[width=16cm]{figures/risultati_ordered_globale.png}
+    \captionof{figure}{Risultati ordered-based gruppo globale.}
+    \label{tab:ordered_globale}
+\end{center}
 
 Abbiamo dei risultati positivi nelle matrici di tipo dataset ricambi e espressione d'interesse quantità e numero fatture.\\
 
 \subsubsection{Tecnica ordered-based gruppo user-based}
 Di seguito possiamo vedere i risultati relativi la tecnica ordered-based su gruppi di triplette appartenenti allo stesso user.
-Il grafico composto di seguito possiede la stessa struttura di quello del paragrafo precedente.\\
-
-\includegraphics[width=16cm]{figures/risultati_ordered_singolo.png}
-
+Il grafico composto \ref{tab:ordered_user_based} possiede la stessa struttura di quello (\ref{tab:ordered_globale}) del paragrafo precedente.
+\begin{center}
+    \includegraphics[width=16cm]{figures/risultati_ordered_singolo.png}
+    \captionof{figure}{Risultati ordered-based gruppo user-based.}
+    \label{tab:ordered_user_based}
+\end{center}
 Abbiamo qualche risultato positivo sempre per il tipo dataset ricambi con espressione d'interesse quantità e numero fatture, possiamo dire che siano leggermente peggiori dei precedenti.
-\newpage
 
 \subsubsection{Tecnica ordered-based gruppo user-category-based}
 Vediamo la tecnica di preprocessing ordered-based applicata al gruppo user-category-based, dove le triplette vengono divise per user e per categoria.
 Le macchine hanno a disposizione solo la divisione in categorie secondo la gerarchia prodotto, mentre i ricambi possono essere divisi secondo le categorie di 2° e 3° livello della gerarchia prodotto e dal gruppo merceologico. Per il tipo dataset totale si proverà ad usare prima solo le categorie della gerarchia prodotto, poi le categorie della gerarchia prodotto solo per le macchine mentre per i ricambi le categorie del gruppo merceologico.
 
 \paragraph{Macchine}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo i livelli della gerarchia prodotto (1°, 2°, 3° livello), mentre sulle colonne abbiamo le espressioni d'interesse. 
-Non sono presenti risultati che superino la soglia critica.\\
-
-\includegraphics[width=16cm]{figures/risultati_ordered_categoria_macchine.png}
-\newpage
+Come possiamo vedere dal grafico composto \ref{tab:ordered_macchine}, sulle righe abbiamo i livelli della gerarchia prodotto (1°, 2°, 3° livello), mentre sulle colonne abbiamo le espressioni d'interesse. 
+Non sono presenti risultati che superino la soglia critica.
+\begin{center}
+    \includegraphics[width=16cm]{figures/risultati_ordered_categoria_macchine.png}
+    \captionof{figure}{Risultati ordered-based gruppo user-category based dataset macchine.}
+    \label{tab:ordered_macchine}
+\end{center}
 
 \paragraph{Ricambi}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo le categorie di 1° e 2° livello della gerarchia prodotto e la divisione del gruppo merceologico (\textit{MATKL}), mentre sulle colonne abbiamo le espressioni d'interesse. Abbiamo risultati che superano la soglia critica dividendo le triplette secondo le categorie di 2° e 3° livello con le espressioni quantità,numero fatture e recentezza.\\
-
-\includegraphics[width=16cm]{figures/risultati_ordered_categoria_ricambi.png}
-
+Come possiamo vedere dal grafico composto \ref{tab:ordered_ricambi}, sulle righe abbiamo le categorie di 1° e 2° livello della gerarchia prodotto e la divisione del gruppo merceologico (\textit{MATKL}), mentre sulle colonne abbiamo le espressioni d'interesse. Abbiamo risultati che superano la soglia critica dividendo le triplette secondo le categorie di 2° e 3° livello con le espressioni quantità,numero fatture e recentezza.
+\begin{center}
+    \includegraphics[width=16cm]{figures/risultati_ordered_categoria_ricambi.png}
+    \captionof{figure}{Risultati ordered-based gruppo user-category based dataset ricambi.}
+    \label{tab:ordered_ricambi}
+\end{center}
 \paragraph{Totale}\mbox{} \\
-Come possiamo vedere dal grafico composto, sulle righe abbiamo il 1°, 2° e 3° livello della gerarchia prodotto e successivamente le precedenti categorie applicate solo alle macchine, mentre i ricambi si sono divisi secondo il gruppo merceologico. Sulle colonne abbiamo le espressioni d'interesse. Non abbiamo alcun risultato sopra la soglia.\\
-
-\includegraphics[width=16cm]{figures/risultati_ordered_categoria_totale.png}
-
+Come possiamo vedere dal grafico composto \ref{tab:ordered_totale}, sulle righe abbiamo il 1°, 2° e 3° livello della gerarchia prodotto e successivamente le precedenti categorie applicate solo alle macchine, mentre i ricambi si sono divisi secondo il gruppo merceologico. Sulle colonne abbiamo le espressioni d'interesse. Non abbiamo alcun risultato sopra la soglia.
+\begin{center}
+\includegraphics[width=14.5cm]{figures/risultati_ordered_categoria_totale.png}
+\captionof{figure}{Risultati ordered-based gruppo user-category based dataset totale.}
+\label{tab:ordered_totale}
+\end{center}
 %-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 \subsubsection{Tecnica product-based}
 In questa sezione vedremo la tecnica di preprocessing product-based, dove si assegna ad ogni item lo stesso rating.
-Nel grafico composto sottostante possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. 
+Nel grafico composto \ref{tab:product_based} possiamo vedere sulle righe i tipi di dataset (macchine, ricambi, totale), mentre sulle colonne le \textit{espressioni d'interesse}. Ciascun grafico poi mostra sulle ascisse la $scale$ della matrice dei rating e sulle ordinate il risultato ottenuto da tale matrice rispetto la metrica $NDCG@25$. 
 La linea tratteggiata blu rappresenta il risultato del modello MostPop che viene usato come bound.
-In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera. A queste due matrici vengono applicati i modelli MF e UserKnn, da cui otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn.\\
+In questo grafico composto per ogni valore della scala vengono riportati quattro puntini, per questa tecnica ogni matrice dei rating è stata tenuta sia in versione continua che in versione intera. A queste due matrici vengono applicati i modelli MF e UserKnn, da cui otteniamo quattro risultati, quelli di colore blu sono i risultati forniti dal modello MF, mentre quelli arancioni quelli del modello UserKnn. Possiamo notare come questo approccio fornisca risultati positivi per ciascun tipo di dataset e per quasi tutte le espressioni d'interesse.
+\begin{center}
+    \includegraphics[width=15cm]{figures/prodotto.png}
+    \captionof{figure}{Risultati tecnica product-based.}
+    \label{tab:product_based}
+\end{center}
 
-\includegraphics[width=16cm]{figures/prodotto.png}
-
-Possiamo notare come questo approccio fornisca risultati positivi per ciascun tipo di dataset e per quasi tutte le espressioni d'interesse.
 
 \subsection{Fase test avanzata}
-Per sintetizzare i risultati precedenti usiamo la seguente tabella dove sulle righe sono presenti i diversi metodi annessi ai gruppi e sulle colonne il tipo dataset, dov'è presente un 1 sappiamo che c'è stato almeno un risultato sopra la soglia.\\
-
-\begin{tabular}{|l|ccc|}
-    \toprule
-    $tecniche$  & $macchine$ & $ricambi$ & $totale$   \\
-    \midrule
-    min-max globale             &   & 1 &   \\
-    min-max user-based          &   & 1 &   \\
-    min-max user-category-based &   & 1 &   \\
-    \bottomrule
-    ordered globale             &   & 1 &   \\
-    ordered user-based          &   & 1 &   \\
-    ordered user-category-based & 1 & 1 &   \\
-    \bottomrule
-    product-based               & 1 & 1 & 1  \\
-    \bottomrule
-\end{tabular}\\
-
+Per sintetizzare i risultati precedenti usiamo la tabella \ref{tab:fase_preliminare} dove sulle righe sono presenti i diversi metodi annessi ai gruppi e sulle colonne il tipo dataset, dov'è presente un 1 sappiamo che c'è stato almeno un risultato sopra la soglia.
+\begin{center}
+    \begin{tabular}{|l|ccc|}
+        \toprule
+        $tecniche$  & $macchine$ & $ricambi$ & $totale$   \\
+        \midrule
+        min-max globale             &   & 1 &   \\
+        min-max user-based          &   & 1 &   \\
+        min-max user-category-based &   & 1 &   \\
+        \bottomrule
+        ordered globale             &   & 1 &   \\
+        ordered user-based          &   & 1 &   \\
+        ordered user-category-based & 1 & 1 &   \\
+        \bottomrule
+        product-based               & 1 & 1 & 1  \\
+        \bottomrule
+    \end{tabular}
+    \captionof{table}{Riassunto tecniche che hanno superato la fase preliminare per dataset.}
+    \label{tab:fase_preliminare}
+\end{center}
 Se dovessimo stilare una classifica su questi risultati preliminari, potremmo affermare i seguenti punti:
 \begin{itemize}
     \item la \textbf{tecnica product-based} funziona molto bene su tutti i dataset e finora ha restituito i risultati migliori;
@@ -241,28 +256,36 @@ Se dovessimo stilare una classifica su questi risultati preliminari, potremmo af
 
 Dopo aver visto i risultati delle tecniche nella fase preliminare, si passa alla fase avanzata selezionando tra tutte le matrici dei rating quelle che hanno ottenuto un valore della metrica superiore alla soglia critica data dal MostPop. \\
 Per ciascuna combinazione di matrice dei rating e modello, che avesse restituito un risultato superiore a quello soglia, si è proceduto ad un tuning dei parametri. Una volta trovato quello migliore, in accordo al validation set, si è calcolato il risultato finale della metrica sul test set.
-Nella fase avanzata il nuovo bound era quello del VAECF, vediamo ora i risultati del test set con relativa soglia.\\
+Nella fase avanzata il nuovo bound era quello del VAECF, vediamo ora i risultati del test set con relativa soglia.
+\begin{center}
+    \includegraphics[width=16cm]{figures/validazione_mf.png}
+    \captionof{figure}{Risultati MF ottimizzato su test set con matrici selezionate.}
+    \label{tab:fase_avanzata_MF}
+\end{center}
+Nel grafico \ref{tab:fase_avanzata_MF} sono riportati i risultati ottenuti dai modelli MF ottimizzati sul test set. Nelle colonne troviamo rispettivamente il tipo dataset ricambi, macchine, totale con i loro relativi nuovi bound. Possiamo vedere in tutti e tre i grafici che i risultati non superano i valori soglia.
+\begin{center}
+    \includegraphics[width=16cm]{figures/validazione_userknn.png}
+    \captionof{figure}{Risultati UserKnn ottimizzato su test set con matrici selezionate.}
+    \label{tab:fase_avanzata_userknn}
+\end{center}
 
-\includegraphics[width=16cm]{figures/validazione_mf.png}
-
-In questo grafico sono riportati i risultati ottenuti dai modelli MF ottimizzati sul test set. Nelle colonne troviamo rispettivamente il tipo dataset ricambi, macchine, totale con i loro relativi nuovi bound. Possiamo vedere in tutti e tre i grafici che i risultati non superano i valori soglia.
-
-\includegraphics[width=16cm]{figures/validazione_userknn.png}\\
-Nel grafico vengono mostrati i risultati ottenuti dai modelli UserKnn ottimizzati sul test set. Le colonne riportano rispettivamente il tipo dataset macchine e ricambi, possiamo vedere come il metodo product-based primeggi anche se ci sono due risultati della tecnica ordered-based, basata su categorie, oltre la soglia. Per il tipo dataset ricambi non c'è alcun risultato oltre la soglia.
+Nel grafico \ref{tab:fase_avanzata_userknn} vengono mostrati i risultati ottenuti dai modelli UserKnn ottimizzati sul test set. Le colonne riportano rispettivamente il tipo dataset macchine e ricambi, possiamo vedere come il metodo product-based primeggi anche se ci sono due risultati della tecnica ordered-based, basata su categorie, oltre la soglia. Per il tipo dataset ricambi non c'è alcun risultato oltre la soglia.
 
 Per quanto riguarda la distribuzione dei rating nelle matrici, quelle che hanno risultati superiori alla soglia hanno per circa il 66\% una distribuzione gaussian-like. Inoltre per quanto riguarda i valori della scala, i risultati migliori si sono ottenuti con il valore massimo di questa (25).\\
 Vediamo ora i risultati finali sul test set per ogni tipo di dataset.\\
-
-\begin{tabular}{|l|ccccc|}
-    \toprule
-    $dataset$  & $AUC$ & $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
-    \midrule
-    macchine & 0.7288 & 0.1737 & 0.2223 & 0.2844 & 0.3203 \\
-    ricambi  & 0.4930 &  0.0801 &    0.0919 &  0.1075 & 0.1401 \\
-    totale  & 0.4343 &   0.0988  &  0.0874 &  0.0964 & 0.1398 \\
-\bottomrule
-\end{tabular}\\
-
+\begin{center}
+    \begin{tabular}{|l|ccccc|}
+        \toprule
+        $dataset$  & $AUC$ & $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
+        \midrule
+        macchine & 0.7288 & 0.1737 & 0.2223 & 0.2844 & 0.3203 \\
+        ricambi  & 0.4930 &  0.0801 &    0.0919 &  0.1075 & 0.1401 \\
+        totale  & 0.4343 &   0.0988  &  0.0874 &  0.0964 & 0.1398 \\
+    \bottomrule
+    \end{tabular}
+    \captionof{figure}{Tabella risultati finali sul test set.}
+    \label{tab:risultati_finali}
+\end{center}
 Riportiamo per ogni tipo di dataset tutte le informazioni relative alla matrice dei rating e alla tecnica con cui è stata generata, oltre che il modello utilizzato.\\
 
 \begin{tabular}{|l|ccccc|}
