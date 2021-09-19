@@ -272,7 +272,7 @@ Nel grafico \ref{tab:fase_avanzata_MF} sono riportati i risultati ottenuti dai m
 Nel grafico \ref{tab:fase_avanzata_userknn} vengono mostrati i risultati ottenuti dai modelli UserKnn ottimizzati sul test set. Le colonne riportano rispettivamente il tipo dataset macchine e ricambi, possiamo vedere come il metodo product-based primeggi anche se ci sono due risultati della tecnica ordered-based, basata su categorie, oltre la soglia. Per il tipo dataset ricambi non c'è alcun risultato oltre la soglia.
 
 Per quanto riguarda la distribuzione dei rating nelle matrici, quelle che hanno risultati superiori alla soglia hanno per circa il 66\% una distribuzione gaussian-like. Inoltre per quanto riguarda i valori della scala, i risultati migliori si sono ottenuti con il valore massimo di questa (25).\\
-Vediamo ora i risultati finali sul test set per ogni tipo di dataset.\\
+Vediamo ora i risultati finali sul test set per ogni tipo di dataset ndella tabella \ref{tab:risultati_finali}.
 \begin{center}
     \begin{tabular}{|l|ccccc|}
         \toprule
@@ -287,30 +287,34 @@ Vediamo ora i risultati finali sul test set per ogni tipo di dataset.\\
     \label{tab:risultati_finali}
 \end{center}
 Riportiamo per ogni tipo di dataset tutte le informazioni relative alla matrice dei rating e alla tecnica con cui è stata generata, oltre che il modello utilizzato.\\
+\begin{center}
+    \begin{tabular}{|l|ccccc|}
+        \toprule
+        $dataset$  & $modello$ & tecnica &espressione interesse & scala & distribuzione  \\
+        \midrule
+        macchine & UserKnn& product-based &recentezza & 25 & gaussian-like   \\
+        ricambi & VAECF& implicito &  & 1  &    \\
+        totale & VAECF& implicito &  &  1 &     \\
 
-\begin{tabular}{|l|ccccc|}
-    \toprule
-    $dataset$  & $modello$ & tecnica &espressione interesse & scala & distribuzione  \\
-    \midrule
-    macchine & UserKnn& product-based &recentezza & 25 & gaussian-like   \\
-    ricambi & VAECF& implicito &  & 1  &    \\
-    totale & VAECF& implicito &  &  1 &     \\
-
-\bottomrule
-\end{tabular}\\
-
+    \bottomrule
+    \end{tabular}
+    \captionof{figure}{Informazioni sul modello e la tecnica dei risultati della tabella \ref{tab:risultati_finali}}
+    \label{tab:info_finali}
+\end{center}
 \newpage
 \section{Risultati matrici grezze combinate}
 Vediamo i risultati delle tecniche basate sulla combinazione delle matrici, si è utilizzato il validation set per il training e il test set per i risultati finali.
 Entrambe le tecniche restituiscono risultati simili tra loro e di poco al di sotto di quelli ottenuti con le matrici singole. Nelle sezioni successive vedremo due grafici aventi sulle righe i tipi di dataset e sulle colonne le espressioni d'interesse. La linea tratteggiata è il bound dato dal VAECF sul test set.
 
 \subsection{Combinazione liste \textit{TopN}}
-Questa tecnica, nonostante nell'incrocio dataset macchine - tecnica product-based sembri funzionare, in realtà è stato fatto un test misurando il coefficiente di similarità delle liste $TopN$ prodotte da ciascun modello e si è visto che è quasi sempre molto alto. Quindi la combinazione delle liste non produce una lista così diversa da quelle di partenza.\\
-
+Questa tecnica, nonostante nell'incrocio dataset macchine - tecnica product-based sembri funzionare, in realtà è stato fatto un test misurando il coefficiente di similarità delle liste $TopN$ prodotte da ciascun modello e si è visto che è quasi sempre molto alto. Quindi la combinazione delle liste non produce una lista così diversa da quelle di partenza.
+\begin{center}
 \includegraphics[width=16cm]{figures/comb_1.png}
-
+\captionof{figure}{Tabella risultati finali sul test set.}
+\label{tab:risultati_finali}
+\end{center}
 I risultati migliori ottenuti si attestano per ciascun dataset sui seguenti valori:\\
-
+\begin{center}
 \begin{tabular}{|l|ccccc|}
     \toprule
     $dataset$ & $AUC$ & $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
@@ -319,8 +323,10 @@ I risultati migliori ottenuti si attestano per ciascun dataset sui seguenti valo
     ricambi &  0.7873  &0.0756 & 0.0759 & 0.0865 & 0.1427 \\
     totale  & 0.7782   &0.0577 & 0.0648 & 0.0767 & 0.1273 \\
 \bottomrule
-\end{tabular}\\
-
+\end{tabular}
+\captionof{table}{Tabella risultati finali combinazione liste $TopN$.}
+\label{tab:risultati_finali}
+\end{center}
 
 \subsection{Media matrici dei rating}
 Il motivo per cui la versione basata sulle liste $TopN$ non funziona è che le liste di partenza non sono così diverse in quanto molte di esse si basano sull'ordinamento o su una normalizzazione su scala simile, la matrice media ottenuta sarà quindi molto simile a quelle di partenza.\\
