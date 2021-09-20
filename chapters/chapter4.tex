@@ -4,7 +4,7 @@
 \chapter{Preprocessing storico vendite}
 
 \section{Preprocessing matrici grezze}
-In questa sezione andremo a vedere diverse tecniche che sono state utilizzate per trasformare le matrici grezze user-item in matrici dei rating.\\
+In questa sezione andremo a vedere diverse tecniche che sono state utilizzate per trasformare le \glo{matrici grezze} user-item in matrici dei rating.\\
 
 \subsection{Preliminari}
 Definiamo l'insieme degli user $U$, l'insieme degli item $I$ e le matrici grezze user-item $RG$.
@@ -75,7 +75,7 @@ Questa tecnica permette di confrontare le triplette attraverso l'ordinamento e c
 Tutti gli approcci che abbiamo visto producono matrici dei rating esplicite, chiaramente un tentativo sarà quello di usare una versione della matrice grezza implicita.
 
 \section{Tecniche combinate}
-Nelle sezioni precedenti abbiamo visto diverse tecniche di preprocessing per ottenere dei rating dalle matrici grezze, in questa andremo invece a descrivere due approcci utili per cercare di combinare insieme rating provenienti dalle diverse \textit{espressioni d'interesse}.
+Nelle sezioni precedenti abbiamo visto diverse tecniche di preprocessing per ottenere dei rating dalle matrici grezze, in questa andremo invece a descrivere due approcci utili per cercare di combinare insieme rating provenienti dalle diverse \glo{espressioni d'interesse}.
 \subsection{Premesse}
 Come riportato nel capitolo dell'analisi dei dati, le informazioni disponibili sugli item ci permettono di valutare l'interesse dello user verso di essi secondo diversi \textit{aspetti}, quali la quantità acquistata, la spesa totale, il numero di fatture in cui compaiono e la recentezza dell'ultimo acquisto, definiremo questi aspetti da ora in poi come \textit{espressioni di interesse}.
 Queste sono organizzate in matrici grezze, a cui nella sezione precedente, abbiamo applicato diverse tecniche di preprocessing andando a trasformali in rating. L'idea di unire insieme queste \textit{espressioni di interesse} sembra essere un buon modo per migliorare la qualità delle raccomandazioni finali.
