@@ -51,7 +51,7 @@ Vediamo le possibili divisioni in gruppi delle triplette:
 
 Vediamo ora i diversi metodi applicati ad un singolo gruppo.
 \subsubsection{Normalizzazione Min-Max}
-Una delle tecniche che viene proposta nella letteratura è quella della normalizzazione min-max, per applicarla andiamo a considerare un gruppo $G \subseteq V$ e applichiamo a ciascuna tripletta la funziona min-max, in generale otteniamo il seguente vettore risultante:
+Una delle prime tecniche usate per il preprocessing dei dati è quella della normalizzazione min-max, per applicarla andiamo a considerare un gruppo $G \subseteq V$ e applichiamo a ciascuna tripletta la funziona min-max, in generale otteniamo il seguente vettore risultante:
 $$G = [(u, i, \frac{G_{(u,i)} - min(G_r)}{max(G_r) - min(G_r)} \in [0,1]) |  \forall (u,i) \in G_{c})]$$
 
 Ora tutti i valori delle triplette di $G$ si troveranno in un intervallo $[0,1]$, per portarlo invece nell'intervallo $[1,scale]$ dobbiamo applicare la seguente formula:

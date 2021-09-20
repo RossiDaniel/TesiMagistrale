@@ -1,4 +1,4 @@
-\hypertarget{(chap:capitolo6)}{}
+\hypertarget{(chap:capitolo5)}{}
 \chapter{Libreria cornac ed esperimenti}
 In questo capitolo andremo a vedere le modalità con cui sono stati svolti gli esperimenti e la libreria utilizzata per gli stessi.
 \section{Esperimenti sulle matrici grezze}
@@ -23,14 +23,14 @@ Per ognuno di questi tipi di dataset abbiamo le quattro espressioni di interesse
 \end{itemize}
 
 \subsection{Libreria Cornac}
-La libreria \textit{Cornac} gestisce completamente gli esperimenti, dall'acquisizione dei dati fino alla verifica dei risultati ed è stata scelta per la presenza di molti \textit{modelli} e metriche per la loro valutazione.\\
+La libreria \bit{\textit{Cornac}}{salah2020cornac} gestisce completamente gli esperimenti, dall'acquisizione dei dati fino alla verifica dei risultati ed è stata scelta per la presenza di molti \textit{modelli} e metriche per la loro valutazione.\\
 Nello specifico i modelli utilizzati sono stati:
 \begin{itemize}
     \item MostPop: modello basato sulla popolarità, dove un item è più popolare in base al numero di user che lo hanno valutato, usato per ottenere un risultato di base;
-    \item UserKnn: implementazione dell'approccio memory-based del collaborative filtering basato su user, di default prende in considerazione i 20 user più simili ad uno target, usa la funzione di similarità coseno;
-    \item ItemKnn: come il precedente, ma basato sugli item. Non è stato infine utilizzato in quanto durante le fasi iniziali di test non ha mai riportato risultati superiori a quelli di base e richiedeva troppo tempo per la valutazione;
-    \item MF: implementazione del matrix factorization, metodo model-based del collaborative filtering, di default utilizza un vettore di dimensionalità 10 per lo spazio delle feature;
-    \item VAECF: modello per la versione implicita, usato per avere un risultato di base avanzato.
+    \item \bit{UserKnn}{userknn}: implementazione dell'approccio memory-based del collaborative filtering basato su user, di default prende in considerazione i 20 user più simili ad uno target, usa la funzione di similarità coseno;
+    \item \bit{ItemKnn}{itemknn}: come il precedente, ma basato sugli item. Non è stato infine utilizzato in quanto durante le fasi iniziali di test non ha mai riportato risultati superiori a quelli di base e richiedeva troppo tempo per la valutazione;
+    \item \bit{MF}{mf}: implementazione del matrix factorization, metodo model-based del collaborative filtering, di default utilizza un vettore di dimensionalità 10 per lo spazio delle feature;
+    \item \bit{VAECF}{vaecf} modello per la versione implicita, usato per avere un risultato di base avanzato.
 \end{itemize}
 I dati presi in input sono nel formato \textit{user, item, rating} e volendo potevano essere divisi in training, validation e test set direttamente dalla libreria.
 Si è preferito però definirli esternamente con le rispettive percentuali: 70\% al training set, 15\% per validation e test set, ciascuno di essi è un insieme di indici, ciascuno dei quali punta ad una specifica tripletta che si trova sempre nella stessa posizione in quanto l'insieme delle triplette finali è ordinato allo stesso modo.
