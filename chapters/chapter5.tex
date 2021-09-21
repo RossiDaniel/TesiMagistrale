@@ -1,11 +1,11 @@
 \hypertarget{(chap:capitolo5)}{}
 \chapter{Libreria cornac ed esperimenti}
-In questo capitolo andremo a vedere le modalità con cui sono stati svolti gli esperimenti e la libreria utilizzata per gli stessi.
-\section{Esperimenti sulle matrici grezze}
-\subsection{Dataset}
+In questo capitolo vedremo le modalità con cui sono stati svolti gli esperimenti e la libreria utilizzata per gli stessi.
+
+\section{Dataset}
 Le informazioni dello storico vendite sono state organizzate basandosi sulle due macrocategorie individuate nell'analisi: macchine e ricambi.
 Gli item presi in esame sono quelli acquistati almeno una volta, mentre gli user sono quelli che hanno effettuato almeno un acquisto.
-Una matrice grezza e la corrispondente matrice dei rating verrano definite di un certo tipo di dataset in base all'insieme di item che contengono, sarà di tipo macchina se contiene solo item della macrocategoria delle macchine, ricambi se sono item di tipo ricambio, totale se ne contiene di entrambi i tipi.\\
+Le matrici dei rating verrano definite di un certo tipo di dataset in base all'insieme di item che contengono, sarà di tipo macchina se contiene solo item della macrocategoria delle macchine, ricambi se sono item di tipo ricambio, totale se ne contiene di entrambi i tipi.\\
 In generale ciascuna matrice sarà di uno dei seguenti tipi di dataset:
 
 \begin{itemize}
@@ -14,7 +14,8 @@ In generale ciascuna matrice sarà di uno dei seguenti tipi di dataset:
     \item \textbf{Totale}: 322 user e 8217 item.
 \end{itemize}
 
-Per ognuno di questi tipi di dataset abbiamo le quattro espressioni di interesse, che sono state calcolate tra uno user $u$ e un item $i$ come segue:
+\section{Esperimenti sulle matrici grezze}
+In questa sezione vedremo come sono stati condotti i test sulle matrici grezze, dato un tipo di dataset avremo una matrice grezza per ognuna delle quattro espressioni di interesse, che sono state calcolate tra uno user $u$ e un item $i$ come segue:
 \begin{itemize}
     \item \textbf{Quantità}: somma dei campi quantità (\textit{KWMENG}) di tutte le posizioni delle fatture di $u$ in cui è presente $i$;
     \item \textbf{Spesa totale}: somma dei campi spesa totale (\textit{NETWR}) di tutte le posizioni delle fatture di $u$ in cui è presente $i$;

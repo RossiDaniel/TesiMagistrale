@@ -1,17 +1,17 @@
 %!TEX root = ../dissertation.tex
 
 \chapter{Introduzione}
+In questo capitolo introduttivo vedremo l'idea e il contesto del progetto, ne delineeremo gli obiettivi e riporteremo un elenco dei capitoli con una loro breve descrizione.
 \section{Contesto progetto}
-Nel mondo dei software ERP \textit{(Enterprise Resource Planning)}, ossia prodotti software pensati per le aziende che permettono la gestione e il controllo dei processi e delle funzioni aziendali, uno dei più famosi è di certo il gestionale SAP, il quale è sviluppato in moduli integrabili che, a seconda delle esigenze dell'azienda utilizzatrice, possono essere attivati in qualunque combinazione.\\
-Uno di questi moduli è l'e-commerce hybris, utilizzato dalle aziende come canale di vendita online e alcune delle sue potenzialità sono: l'alto livello di personalizzazione e la possibilità di essere perfettamente integrato con i sistemi SAP, come per esempio con il modulo CRM (\textit{(Customer Relationship Management)}), il quale si occupa di tutte le modalità di gestione delle relazioni con il cliente.
-
+Nel mondo dei software Enterprise Resource Planning (ERP), ossia prodotti software pensati per le aziende che permettono la gestione e il controllo dei processi e delle funzioni aziendali, uno dei più famosi è di certo il gestionale SAP, il quale è sviluppato in moduli integrabili che, a seconda delle esigenze dell'azienda utilizzatrice, possono essere attivati in qualunque combinazione.\\
+Uno di questi moduli è l'e-commerce Hybris, utilizzato dalle aziende come canale di vendita online e alcune delle sue potenzialità sono: l'alto livello di personalizzazione e la possibilità di essere perfettamente integrato con i sistemi SAP, come per esempio con il modulo Customer Relationship Management (CRM), il quale si occupa di tutte le modalità di gestione delle relazioni con il cliente.
 
 \section{L'idea di progetto}
-L'idea nasce, in un'ottica di innovazione del prodotto, all'interno di un progetto aziendale che mira all'ampliamento e miglioramento delle funzionalità di hybris. Uno degli aspetti su cui si vuole lavorare è quello della personalizzazione dei prodotti mostrati agli utenti dell'e-commerce: si vuole quindi sperimentare raccomandazioni sui prodotti basate sullo storico vendite e non sui feedback lasciati dall'utente, in quanto la loro raccolta non è prevista dal sistema trattandosi di un e-commerce BTB (dove gli acquirenti sono dealer, ossia aziende che a loro volta rivendono i prodotti).
-Partendo quindi dallo storico vendite di un'azienda Cliente, con hybris configurato in versione BTB, l'obiettivo era quello di utilizzare i dati disponibili per raccomandare a ciascun cliente una lista di prodotti $TopN$ che gli risultassero interessanti.\\ 
+Il progetto nasce, in un'ottica di innovazione del prodotto, all'interno di un progetto aziendale che mira all'ampliamento e miglioramento delle funzionalità di Hybris. Uno degli aspetti su cui si vuole lavorare è quello della personalizzazione dei prodotti mostrati agli utenti dell'e-commerce: si vuole quindi sperimentare raccomandazioni sui prodotti basate sullo storico vendite e non sui feedback lasciati dall'utente, in quanto la loro raccolta non è prevista dal sistema trattandosi di un e-commerce BTB (dove gli acquirenti sono \glo{dealer}, ossia aziende che a loro volta rivendono i prodotti).
+Partendo quindi dallo storico vendite di un'azienda Cliente, con Hybris configurato in versione BTB, l'obiettivo era quello di utilizzare i dati disponibili per raccomandare a ciascun cliente una lista di prodotti $TopN$ che gli risultassero interessanti.\\ 
 Inoltre per ciascun prodotto si vuole presentare una lista di prodotti simili ad esso, sempre interessanti per il cliente a cui viene mostrato quello specifico articolo.\\
-Come detto solitamente si parte da feedback impliciti/espliciti dati dagli utenti ai prodotti, ma non essendo disponibili si cercherà di estrarre informazioni relative l'interesse del cliente rispetto diversi punti di vista, quali può essere la quantità acquistata, la recentezza dell'acquisto, il numero di fatture in cui compare o la spesa totale per quello specifico articolo.\\
-Una volta che le informazioni sono state organizzate in matrici grezze user-item, si voleva eseguire una sorta di preprocessing su di esse, andando a trasformarle in dei rating rispetto una scala comune che fornisse una misura d'interesse del cliente.\\
+Come detto, solitamente si parte da feedback impliciti/espliciti dati dagli utenti ai prodotti, ma non essendo disponibili si cercherà di estrarre informazioni relative l'interesse del cliente rispetto diversi punti di vista, quali può essere la quantità acquistata, la recentezza dell'acquisto, il numero di fatture in cui compare o la spesa totale per quello specifico articolo.\\
+Una volta che le informazioni sono state organizzate in \glo{matrici grezze user-item}, si voleva eseguire una sorta di \glo{preprocessing} su di esse, andando a trasformarle in delle \glo{matrici dei rating} rispetto una scala comune che fornisse una misura d'interesse del cliente.\\
 Sono state applicate le tecniche più popolari usate nei sistemi di raccomandazione, quali il collaborative filtering alle rating matrix ottenute dal preprocessing descritto precedentemente e il content-based filtering ai dati descrittivi dei prodotti.
 Data la non disponibilità di rating si è poi pensato di considerare il problema anche come una next basket recommendation, dove si vanno a considerare le sessioni d'acquisto e in base a queste si predice quella finale, questo approccio potrebbe funzionare nel caso in sui i clienti acquistino spesso gli stessi prodotti.
 
@@ -22,62 +22,12 @@ Di seguito viene riportata per ogni capitolo una piccola descrizione delle temat
 	\item \hyperlink{(chap:capitolo4)}{\textbf{Capitolo 3}}: breve riepilogo della teoria sui sistemi di raccomandazione, spiegando meglio gli approcci del collaborative filtering e del content based filtering, oltre che descrivendo il funzionamento degli algoritmi utilizzati e delle metriche;
 	\item \hyperlink{(chap:capitolo5)}{\textbf{Capitolo 4}}: descrizione del preprocessing delle matrici grezze, dei metodi per combinarle, dell'approccio content-based e next-basket recommendation;
 	\item \hyperlink{(chap:capitolo5)}{\textbf{Capitolo 5}}: descrizione di come si sono attuati i test per ciascun approccio;
-	\item \hyperlink{(chap:capitolo6)}{\textbf{Capitolo 6}}: report sui risultati ottenuti e breve analisi dei risultati per ciascun metodo
+	\item \hyperlink{(chap:capitolo6)}{\textbf{Capitolo 6}}: report sui risultati ottenuti e breve analisi dei risultati per ciascun metodo;
 	\item \hyperlink{(chap:conclusioni)}{\textbf{Capitolo 7}}: conclusioni del lavoro, questioni aperte e possibili futuri sviluppi.
 \end{itemize}
 \section{Convenzioni tipografiche}
 Il testo adotta le seguenti convenzioni tipografiche:
 \begin{itemize}
-	\item ogni acronimo, abbreviazione, parola ambigua o tecnica viene spiegata e chiarificata alla fine del testo;
+	\item ogni acronimo, abbreviazione, parola ambigua o tecnica viene spiegata e chiarita alla fine del testo;
 	\item ogni parola di glossario alla prima apparizione verrà etichetta come segue $parola^{[g]}$.
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\begin{comment}
-
-\section{Contesto progetto}
-L'azienda Estilos, attiva già da diversi anni nella consulenza informatica rivolta alle aziende, è specializzata in customizzazioni del popolare gestionale SAP.\\
-Il software gestionale SAP è organizzato a moduli, che possono essere collegati tra loro mettendo in comune le informazioni secondo le esigenze specifiche dei clienti, uno di questi moduli è l'e-commerce hybris, il quale permette alle aziende possessori di SAP di avere un canale online per la vendita integrato con il resto dei sistemi di gestione.\\ 
-In quest'ottica l'azienda A, cliente di Estilos, si è prestata mettendo a disposizione il proprio storico vendite relativo al modulo e-commerce hybris.\\
-Il modulo hybris non è provvisto di un sistema di raccomandazione integrato che permettesse di personalizzare i prodotti consigliati ai diversi utenti, quindi l'azienda al momento mostra per tutti la stessa lista di prodotti e per ogni prodotto è stata selezionata una lista di prodotti complementari e simili a mano.
-
-\section{L'idea}
-Partendo quindi dallo storico vendite del modulo hybris, l'idea era quella di utilizzare i dati disponibili per raccomandare a ciascun cliente una lista di prodotti (top-n) che gli risultassero interessanti e per ciascun prodotto una lista di prodotti simili ad esso, sempre interessanti per il cliente a cui viene mostrato quello specifico prodotto.
-Solitamente si parte da rating impliciti / espliciti dati dagli utenti ai prodotti, in questo caso la nostra fonte di dati è lo storico vendite, dove non sono presenti rating, si voleva quindi estrarre dai dati informazioni relative l'interesse del cliente verso un prodotto rispetto diversi punti di vista, quali può essere la quantità acquistata, la recentezza dell'acquisto, il numero di fatture in cui compare o la spesa totale per quello specifico articolo.\\
-Una volta organizzate le informazioni in delle matrici cliente-prodotto grezze, si voleva eseguire una sorta di preprocessing su di esse, andando a trasformarle in dei rating rispetto una scala comune che fornisse una misura d'interesse del cliente rispetto il prodotto.\\
-Si è voluto applicare le tecniche più popolari usate nei sistemi di raccomandazione, quali il collaborative filtering alle rating matrix ottenute dal preprocessing descritto precedentemente e il content-based filtering ai dati descrittivi dei prodotti.\\
-Data la non disponibilità di rating si è poi pensato di considerare il problema anche come una next basket recommendation, dove si vanno a vedere le sessioni d'acquisto e in base a queste si predice quella finale, questo approccio potrebbe funzionare nel caso i clienti acquistino spesso gli stessi prodotti. 
-
-\end{comment}

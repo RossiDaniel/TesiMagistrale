@@ -1,6 +1,6 @@
 \hypertarget{(chap:capitolo6)}{}
 \chapter{Risultati sperimentali}
-In questo capitolo vedremo i risultati sperimentali per ogni metodo.
+In questo capitolo vedremo i risultati sperimentali per ogni metodo, vedremo prima quelli applicati alle matrici grezze, poi quelli basati sulla combinazione delle stesse, i risultati dell'approccio next-based per concludere infine con un confronto critico dei risultati.
 \section{Risultati preprocessing matrici grezze}
 Nelle sezioni successive saranno riportati i risultati delle valutazioni di ciascun modello rispetto la metrica $AUC$ e la $NDCG$ con $k\in \{5, 10, 25, 100\}$.
 La metrica che riteniamo sia più significativa è la $NDCG$ in quanto si basa sul ranking degli item nella lista $TopN$, per i confronti abbiamo scelto di usare $k=25$.\\
@@ -73,7 +73,7 @@ Il modello VAECF è un modello che funziona su rating impliciti, la fase prelimi
     Il tuning dei parametri ha portato a considerare tutte le possibili combinazioni degli stessi, vediamo per ogni dataset quali valori hanno restituito i risultati migliori sul validation set.
 \end{minipage}\\
 
-Vediamo ora i risultati suddivisi per dataset sul validation set con il modello ottimizzato:\\
+Vediamo ora i risultati suddivisi per dataset sul validation set con il modello ottimizzato nella Figura \ref{tab:vaecf_val}.
 \begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
@@ -87,7 +87,7 @@ Vediamo ora i risultati suddivisi per dataset sul validation set con il modello 
 \captionof{table}{Risultati VAECF ottimizzato per tipo dataset sul validation set.}
 \label{tab:vaecf_val}
 \end{center}
-Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come soglia nella fase avanzata, vediamoli di seguito:\\
+Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come soglia nella fase avanzata, questi sono presenti in Figura \ref{tab:vaecf_test}.
 \begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
@@ -104,7 +104,7 @@ Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come so
 \end{center}
 
 \subsection{Fase test preliminare}
-In questa sezione vedremo per ogni tecnica di preprocessing applicata sulle matrici grezze i risultati ottenuti.\\
+In questa sezione vedremo per ogni tecnica di preprocessing applicata sulle matrici grezze i risultati ottenuti.
 Cominceremo prima con la tecnica basata su min-max, poi con quella ordered-based per concludere con quella product-based. 
 Spesso si farà riferimenti ai risultati dei modelli, intendendo il risultato della metrica dato dall'applicazione del modello alla matrice dei rating.
 Come spiegato nei capitoli precedenti i metodi min-max e ordered-based sono applicabili a diversi gruppi di triplette, vedremo i risultati per ciascuno di essi.\\
@@ -403,3 +403,8 @@ E ora i corrispondenti risultati, in tabella \ref{tab:next_basket_test}, con il 
 \label{tab:next_basket_test}
 \end{center}
 Ricordiamo che questi risultati non sono confrontabili con quelli delle sezioni precendenti, ma sono comunque molti interessanti.
+
+\section{Confronto critico}
+In questo capitolo abbiamo visto i risultati per ciascuno dei metodi vagliati, possiamo dire con certezza che il preprocessing sulle matrici grezze non funziona e di riflesso neanche quello combinato. Le tecniche group-based hanno in generale restituito risultati scadenti su tutti i tipi di dataset e su quasi tutte le espressioni d'interesse. Il metodo product-based si basa sulla popolarità rispetto le espressioni d'interesse e questo sembra aver dato risultati superiori rispetto ai precedenti ma ancora troppo bassi. In generale anche i risultati ottenuti con MostPop e VAECF sono bassi, quindi su tutta la linea i metodi basati su matrici grezze non sembrano funzionare.
+Il metodo next-based invece sembra fornire risultati promettenti anche se allenato su dataset più ristretti e per questo più incline ad ottenere risultati positivi. Il dataset tipo macchina è relativamete piccolo quindi risulta ancora più facile ottenere buoni risultati, mentre quello totale funziona comunque peggio rispetto a quello di tipo ricambi, dall'unione di macchine e ricambi non sembra si possa ottenere quindi risultati positivi.
+Ciò che si può concludere da questi test è che la popolarità giochi un ruolo importante nelle raccomandazioni.

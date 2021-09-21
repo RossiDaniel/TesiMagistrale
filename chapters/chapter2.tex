@@ -2,21 +2,14 @@
 
 \hypertarget{(chap:capitolo2)}{}
 \chapter{Analisi dei dati}
+Nel seguente capitolo vedremo com'è composto lo storico ordini e quali solo le informazioni disponibili, inoltre descriveremo con maggior dettaglio alcuni 'campi'. Inoltre verranno descritte alcune operazioni di preparazione dei dati.
 \section{Principali tabelle}
-Lo storico vendite dell'azienda Cliente è stato estratto dal modulo hybris, questo è organizzato secondo le tabelle SAP, avremo quindi lo storico delle fatture, composto da una tabella per la testata della fattura, ossia la parte descrittiva dove viene riportato l'acquirente, e una tabella per le posizioni della fattura, ossia la parte dove vengono riportati i materiali acquistati.\\
-Abbiamo inoltre due tabelle che contengono rispettivamente l'anagrafica cliente e materiali, dove possiamo trovare informazioni aggiuntive che li descrivono.\\
-Mi è stato inoltre fornito un glossario che riportava per ciascuna tabella una breve spiegazione di ogni campo.\\
+Lo storico vendite dell'azienda Cliente è stato estratto dal modulo hybris, questo è organizzato secondo le tabelle SAP, avremo quindi lo storico delle fatture, composto da una tabella per la testata della fattura (VBAK), ossia la parte descrittiva dove viene riportato l'acquirente, e una tabella per le posizioni della fattura (VBAP), ossia la parte dove vengono riportati i materiali acquistati. 
+Abbiamo inoltre due tabelle che contengono rispettivamente l'anagrafica cliente (KNA1) e materiali (MARA), dove possiamo trovare informazioni aggiuntive che li descrivono. 
+Mi è stato inoltre fornito un glossario che riportava per ciascuna tabella una breve spiegazione di ogni campo. 
 Tutte queste tabelle sono in formato Excel.
+Vediamo ora per ciascuna di queste tabelle i campi annessi e alcune informazioni di natura statistica.
 
-Quindi ricapitolando le principali tabelle disponibili sono le seguenti:
-\begin{itemize}
-	\item \textbf{VBAK}: testata della fattura;
-	\item \textbf{VBAP}: posizioni della fattura;
-	\item \textbf{MARA}: anagrafica prodotto;
-	\item \textbf{KNA1}: anagrafica materiali.
-\end{itemize}
-
-Andiamo ora a vedere per ciascuna di queste tabelle i campi annessi e alcune informazioni di natura statistica.
 \subsection{Tabella VBAK}
 La tabella VBAK contiene la testata di circa 35000 fatture, datate dall'anno 2016 fino a maggio 2021.\\
 Ciascuna riga della tabella è la testata di una fattura e ne riporta il suo codice identificativo (\textbf{VBELN}) insieme con il codice del cliente a cui è associata (\textbf{KUNNR}). Inoltre ciascuna fattura riporta data e ora (\textbf{ERDAT}, \textbf{ERZET}) in cui è stata emessa, l'importo totale e la valuta corrispondente (\textbf{NETWR}, \textbf{WAERK}).
@@ -34,6 +27,13 @@ Ciascuna riga della tabella riporta quindi un prodotto univoco composto dal suo 
 Per le dimensioni abbiamo un campo (\textbf{GROES}) che le fornisce nel formato lunghezza X larghezza X altezza, oppure altri (\textbf{LAENG}, \textbf{BREIT}, \textbf{HOEHE}), che indicano rispettivamente lunghezza, larghezza e altezza e l'unità di misura per entrambi i formati viene riportata nello stesso campo (\textbf{MEABM}). \\
 Poi abbiamo due campi per volume e peso (\textbf{VOLUM}, \textbf{NTGEW}) e altri due per le loro rispettive unità di misura (\textbf{VOLEH}, \textbf{GEEWI}).
 
+Vediamo ora nella Figura \ref{tab:sapone} il diagramma ER delle tabelle sopra descritte con le relative dipendenze.
+\begin{center}
+	\includegraphics[width=13cm]{figures/ER_sap.png}
+	\captionof{figure}{Diagramma ER tabelle Mara, Kna1, Vbak e Vbap.}
+	\label{tab:sapone}
+\end{center}
+
 \section{Prodotti}
 Da questo momento in poi faremo riferimento ai materiali chiamandoli prodotti come detto in precedenza.\\
 In totale nella tabella anagrafica materiali (MARA) sono presenti circa 75000 prodotti diversi, mentre i prodotti effettivamente venduti risultano essere molti meno attestandosi all'incirca verso gli 8000.\\
@@ -41,13 +41,12 @@ Abbiamo però due campi interessanti che riguardano la gerarchia prodotto (PRODH
 
 \subsection{Gerarchia prodotto (PRODH)}
 Il campo gerarchia prodotto (PRODH) è un campo numerico di 18 cifre utile per separare i prodotti rispetto le diverse categorie su più livelli.
-Nella tabella secondaria T179 vengono definiti i livelli di gerarchia e le diverse categorie. 
-Vediamoli di seguito:
-\begin{itemize}
-	\item \textbf{PRODH}: codice gerarchia prodotto;
-	\item \textbf{STUFE}: livello gerarchia;
-	\item \textbf{VTEXT}: descrizione testuale.
-\end{itemize} 
+Nella tabella secondaria T179 vengono definiti i livelli di gerarchia e le diverse categorie, abbiamo il codice gerarchia prodotto (\textbf{PRODH}), il livello (\textbf{STUFE}) e il titolo (\textbf{VTEXT}), quindi la tabella Mara fa riferimento a questa come mostrato nella Figura \ref{tab:er_t179}.
+\begin{center}
+	\includegraphics[width=10cm]{figures/ER_T179.png}
+	\captionof{figure}{Diagramma ER tabelle Mara e T179.}
+	\label{tab:er_t179}
+\end{center}
 
 Ciascun codice PRODH contenuto nella tabella T179 avrà rispettivamente il seguente numero di cifre in base al livello di gerarchia (STUFE):
 \begin{itemize}
@@ -62,7 +61,7 @@ Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
 
 \begin{minipage}[H]{0.50\textwidth}
 	\begin{center}
-	\scalebox{0.65}{%
+	\scalebox{0.55}{%
 	\begin{tabular}{|l|rr|l|}
 		\toprule
 		PRODH &    $\#tot$ &  $\#sold$ &                  titolo \\
@@ -87,7 +86,7 @@ Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
 		\bottomrule
 	\end{tabular}
 }
-\captionof{table}{Categorie (PRODH) 1° livello, unità totali e vendute.}
+\captionof{table}{Categorie (PRODH) 1°\\ livello, unità totali e vendute.}
 \label{tab:PRODH_tot}
 \end{center}
 
@@ -95,7 +94,7 @@ Il numero di prodotti interessati sono circa 100 su 10000 posizioni.\\
 \begin{minipage}[H]{0.50\textwidth}
 Nella tabella \ref{tab:PRODH_tot} vengono mostrati i codici PRODH delle categorie di 1° livello, nella colonna $\#tot$ il numero di prodotti diversi per quella categoria, nella colonna $\#sold$ il numero di prodotti diversi acquistati almeno una volta appartententi a quella categoria ed infine il titolo della categoria.\\
 Come possiamo vedere le prime sei categorie con titolo in minuscolo hanno pochi prodotti catalogati in MARA e nessun prodotto venduto.\\
-\end{minipage}
+\end{minipage}\\
 
 Chiaramente il fatto che siano tutti a zero è dovuto all'aggiornamento dei codici PRODH di cui abbiamo parlato precedentemente, a prescindere da ciò il numero di posizioni che prima riportavano codici appartenenti alle categorie prese in considerazione non superava la decina, quindi non considerare queste categorie in quanto si è smesso di usarle sembra la scelta più logica.\\
 La categoria ALTRO (09999) non è stata considerata in quanto riporta prodotti che non sono disponibili sull'e-commerce.
@@ -156,7 +155,7 @@ La criticità di queste misure riguarda la loro scarsità, infatti su 75000 prod
 In questa sezione andremo a vedere quali operazioni si sono rese necessarie per preparare i dati:
 \begin{itemize}
 	\item posizioni con spesa totale nulla sono stati eliminati;
-	\item posizioni con valuta in $dollari$ sono state convertiti in $euro$;
+	\item posizioni con valuta in $Usd$ sono state convertiti in $Eur$;
 	\item prodotti con misure di dimensione e volume, con unità di misura diversa rispettivamente dai $metri$ e $metri^3$, sono stati convertiti negli stessi;
 	\item prodotti con misure del peso con unità di misura diverse dal $kilogrammo$ sono state convertite nello stesso;
 	\item alcuni clienti non sono stati considerati in quanto appartenenti allo stesso gruppo dell'azienda Cliente.
