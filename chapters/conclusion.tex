@@ -10,7 +10,7 @@ Per quanto riguarda l'approccio combinato non si sono ottenuti i risultati spera
 L'approccio next-basket ha restituito buoni risultati ma va ricordato che il bacino di utenti si è ridotto da circa 320 a 250 user, in ogni caso i risultati per quanto riguarda il dataset tipo macchine sono molto buoni, mentre per i ricambi siamo su valori inferiori, anche se c'è da dire che rispettivamente i due dataset lavorano su circa 500 e 7500 item.
 In conclusione i risultati ottenuti sul dataset macchine sono incoraggianti, non si può dire lo stesso per quello dei ricambi, ma l'idea è quella di trattarli separatamente.
 
-\section{Questioni aperte}
+\section{Problemi aperti}
 Credo possa esistere una relazione tra i risultati positivi del metodo product-based, con espressione d'interesse recentezza, e quelli dati dall'approccio next-basket, in quanto entrambi sono basati sulla popolarità e sulla recentezza. Sarebbe interessante indagare in questo senso per capire eventualmente se si possano combinare i due approcci. Sarebbe possibile trovare nei dati altre espressioni d'interesse o possiamo usarle come feature per l'approccio content-based. Non abbiamo esplicitato il confronto tra item in quanto l'approccio content-based non aveva abbastanza informazioni e il modello ItemKnn, sia per risultati scarsi che per tempi di valutazione è stato accantonato. Non sono stati affrontati problemi quali cold start per nuovi user e item.
 
 \section{Futuri sviluppi}
