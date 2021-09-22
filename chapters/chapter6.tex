@@ -18,12 +18,11 @@ Come detto il modello MostPop restituisce per ogni user la stessa lista di item 
 \begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
-    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
+    $dataset$ &    $AUC$ &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
     \midrule
-    macchine & 0.7644 & 0.1263 &   0.2414 &  0.1647 & 0.0920 \\
-    ricambi  & 0.3427 &  0.0299 &   0.0732 &  0.0358 & 0.0000 \\
-    totale  & 0.2810 &  0.0733 &   0.0811 &  0.0627 & 0.0360 \\
-
+    macchine & 0.7644 & 0.0920 & 0.1263 & 0.1647 &  0.2414 \\
+    ricambi  & 0.3427 & 0.0000 & 0.0299 & 0.0358 &  0.0732 \\
+    totale   & 0.2810 & 0.0360 & 0.0733 & 0.0627 &  0.0811 \\
 \bottomrule
 \end{tabular}
 \captionof{table}{Risultati modello MostPop per tipo dataset sul validation set}
@@ -35,12 +34,11 @@ Quelli riportati nella tabella \ref{tab:mostpop_test} sono i risultati del MostP
 \begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
-    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
+    $dataset$ &    $AUC$ &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
     \midrule
-    macchine & 0.7897 &  0.1364 &   0.2610 &  0.1875 & 0.1001 \\
-    ricambi  & 0.3924 &  0.0753 &   0.1365 &  0.0793 & 0.0619 \\
-    totale  & 0.3101 &  0.0807 &   0.1281 &  0.0866 & 0.0944 \\
-
+    macchine & 0.7897 & 0.1001 &  0.1364 &  0.1875 & 0.2610 \\
+    ricambi  & 0.3924 & 0.0619 &  0.0753 &  0.0793 & 0.1365 \\
+    totale   & 0.3101 & 0.0944 &  0.0807 &  0.0866 & 0.1281 \\
 \bottomrule
 \end{tabular}
 \captionof{table}{Risultati modello MostPop per tipo dataset sul test set}
@@ -77,11 +75,11 @@ Vediamo ora i risultati suddivisi per dataset sul validation set con il modello 
 \begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
-    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
+    $dataset$ &    $AUC$ &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
     \midrule
-    macchine & 0.8201 & 0.1768 & 0.3032 & 0.2282 & 0.1325 \\
-    ricambi & 0.4773 & 0.0452 & 0.1052 & 0.0643 & 0.0506 \\
-    totale  & 0.4190 & 0.0980 & 0.0941 & 0.0741 & 0.1208 \\
+    macchine & 0.8201 & 0.1325 & 0.1768 & 0.2282 & 0.3032 \\
+    ricambi  & 0.4773 & 0.0506 & 0.0452 & 0.0643 & 0.1052 \\
+    totale   & 0.4190 & 0.1208 & 0.0980 & 0.0741 & 0.0941 \\
 \bottomrule
 \end{tabular}\\
 \captionof{table}{Risultati VAECF ottimizzato per tipo dataset sul validation set.}
@@ -91,12 +89,11 @@ Dato che si utilizzeranno i risultati del VAECF ottimizzato sul test set come so
 \begin{center}
 \begin{tabular}{|l|c|cccc|}
     \toprule
-    $dataset$ &    $AUC$ &  $NDCG@10$ & $NDCG@100$  & $NDCG@25$ & $NDCG@5$  \\
+    $dataset$ &    $AUC$ &  $NDCG@5$ & $NDCG@10$  & $NDCG@25$ & $NDCG@100$  \\
     \midrule
-    macchine & 0.8269 &  0.1948 &   0.3301 &  0.2487 & 0.1473 \\
-    ricambi  & 0.4930 &  0.0919 &   0.1401 &  0.1075 & 0.0801 \\
-    totale  & 0.4343 &  0.0874 &   0.1398 &  0.0964 & 0.0988 \\
-
+    macchine & 0.8269 & 0.1473 &  0.1948 & 0.2487 & 0.3301 \\
+    ricambi  & 0.4930 & 0.0801 &  0.0919 & 0.1075 & 0.1401 \\
+    totale   & 0.4343 & 0.0988 &  0.0874 & 0.0964 & 0.1398 \\
 \bottomrule
 \end{tabular}
 \captionof{table}{Risultati VAECF ottimizzato per tipo dataset sul test set.}
@@ -405,6 +402,7 @@ E ora i corrispondenti risultati, in tabella \ref{tab:next_basket_test}, con il 
 Ricordiamo che questi risultati non sono confrontabili con quelli delle sezioni precendenti, ma sono comunque molti interessanti.
 
 \section{Confronto critico}
-In questo capitolo abbiamo visto i risultati per ciascuno dei metodi vagliati, possiamo dire con certezza che il preprocessing sulle matrici grezze non funziona e di riflesso neanche quello combinato. Le tecniche group-based hanno in generale restituito risultati scadenti su tutti i tipi di dataset e su quasi tutte le espressioni d'interesse. Il metodo product-based si basa sulla popolarità rispetto le espressioni d'interesse e questo sembra aver dato risultati superiori rispetto ai precedenti ma ancora troppo bassi. In generale anche i risultati ottenuti con MostPop e VAECF sono bassi, quindi su tutta la linea i metodi basati su matrici grezze non sembrano funzionare.
-Il metodo next-based invece sembra fornire risultati promettenti anche se allenato su dataset più ristretti e per questo più incline ad ottenere risultati positivi. Il dataset tipo macchina è relativamete piccolo quindi risulta ancora più facile ottenere buoni risultati, mentre quello totale funziona comunque peggio rispetto a quello di tipo ricambi, dall'unione di macchine e ricambi non sembra si possa ottenere quindi risultati positivi.
-Ciò che si può concludere da questi test è che la popolarità giochi un ruolo importante nelle raccomandazioni.
+Il metodo di normalizzazione min-max non altera l'iniziale distribuzione dei valori, questi dopo essere stati scalati saranno per la maggior parte concentrati all'inizio dell'intervallo di rating. Questo fa sì che molti user abbiano solo item considerati pessimi, questo porta a similarità molto alta tra tutti gli user e non permette di distinguere gli item interessanti per esso. Il metodo in generale non funziona e non se ne raccomanda l'applicazione.\\
+Il metodo ordered-based rispetto al precedente risolve molti problemi legati alla distribuzione dei rating, infatti ora la cardinalità di ciascun valore nella scala dei rating è circa uguale. La media dei rating degli user è collocala nella parte centrale della scala, mentre quella degli item copre tutta la scala, anche questo metodo non sembra funzionare proprio in virtù della variabilità dei rating per ogni item, anche se i risultati sono leggermente migliori dei precedenti.\\
+Il metodo product-based assegnando ad un item lo stesso rating per tutti gli user ha fatto si che la media dei rating degli user non sia più centrata, in compenso però nella similarità è aiutata in quanto i rating di uno stesso item sono tutti uguali. Il suo funzionamento è molto legato alla popolarità rispetto le espressioni d'interesse e questo sembra aver dato risultati superiori rispetto ai precedenti, sicuramente la popolarità è uno degli ingredienti fondamentali per il raggiungimento degli obiettivi prefissati. In generale anche i risultati ottenuti con MostPop e VAECF sono bassi, possiamo quindi dire osservando i dati che il preprocessing sulle matrici grezze non funzioni e di riflesso neanche quello combinato che si basa su di esse. Lavorare sullo storico vendite con i precedenti metodi potrebbe non essere la strada giusta, con il metodo next-basket invece si sono ottenuti risultati promettenti anche se allenato su dataset più ristretti e per questo più incline ad ottenere risultati positivi. Il dataset tipo macchina è relativamete piccolo già di suo, quindi risulta ancora più facile ottenere buoni risultati, mentre quello totale funziona comunque peggio rispetto a quello di tipo ricambi, dall'unione di macchine e ricambi non sembra si possa ottenere quindi risultati positivi.
+Ciò che si può concludere da questi test è che la popolarità giochi un ruolo importante nelle raccomandazioni e che l'approccio da seguire sia quello next-basket magari combinato con le espressioni d'interesse.
